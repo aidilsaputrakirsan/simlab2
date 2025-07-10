@@ -1,0 +1,33 @@
+import { UserRepository } from "@/infrastructure/user/UserRepository";
+import { UserInputDTO, UserTableParams } from "./dto/UserDTO";
+import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { UserView } from "./UserView";
+
+export class UserService {
+    private userRepository = new UserRepository()
+
+    async getUserData(params: UserTableParams): Promise<PaginatedResponse<UserView>> {
+        const users = await this.userRepository.getAll(params)
+
+        return {
+            ...users,
+            data: users.data.map(UserView.fromDomain)
+        }
+    }
+
+    async createData(data: UserInputDTO) {
+        return await this.userRepository.createData(data)
+    }
+
+    async updateData(id: number, data: UserInputDTO) {
+        return await this.userRepository.updateData(id, data)
+    }
+
+    async deleteData(id: number) {
+        return await this.userRepository.deleteData(id)
+    }
+
+    async restoreToDosen(id: number): Promise<ApiResponse> {
+        return await this.userRepository.restoreToDosen(id)
+    }
+}

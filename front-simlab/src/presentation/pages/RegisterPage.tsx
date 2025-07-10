@@ -1,0 +1,242 @@
+import { useEffect, useState } from "react";
+import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { AuthResponse, RegisterCredentials } from "../../types/Auth";
+import { StudyProgram } from "../../domain/study-program/StudyProgram";
+import { useAuth } from "../../application/hooks/useAuth";
+import { StudyProgramRepository } from "../../infrastructure/study-program/StudyProgramRepository";
+import { useValidationErrors } from "../hooks/useValidationError";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Button } from "../components/ui/button";
+
+const studyProgramRepository = new StudyProgramRepository()
+
+export const RegisterPage: React.FC = () => {
+    const [formData, setFormData] = useState<RegisterCredentials>({
+        name: '',
+        identity_num: '',
+        role: '',
+        prodi_id: '',
+        email: '',
+        password: '',
+        c_password: ''
+    });
+    const { errors, setErrors, processErrors } = useValidationErrors()
+    const [isLoading, setIsLoading] = useState(false);
+    const [studyProgram, setStudyProgram] = useState<StudyProgram[]>([])
+    const { user, register } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const getProdi = async () => {
+        try {
+            const response = await studyProgramRepository.getPublicData()
+            setStudyProgram(response.data || [])
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        setFormData((prev: RegisterCredentials) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            setErrors({})
+            await register(formData);
+
+            navigate('/login', {
+                state: { register_status: { type: 'success', message: 'Berhasil mendaftar, silahkan login!' } }
+            });
+        } catch (error) {
+            processErrors((error as AuthResponse).errors)
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getProdi()
+    }, []);
+
+    if (user) {
+        return <Navigate to="/panel" state={{ from: location }} replace />;
+    }
+
+    return (
+        <div className="grid min-h-screen bg-white md:grid-cols-2 xl:grid-cols-9">
+            <div className="flex flex-col items-center w-full px-5 py-10 space-y-8 sm:px-10 md:px-10 xl:px-16 h-fit xl:col-span-4">
+                <img src="https://labterpadu.itk.ac.id/gambar_pendukung/logo_depan.jpg" className="w-56" alt="" />
+                <div className="w-full text-left">
+                    <h3 className="text-3xl font-medium">Pendaftaran Akun</h3>
+                    <h4 className="text-base">Daftar akun untuk mengakases SIMLAB!</h4>
+                </div>
+                <form className="grid w-full grid-cols-1 mt-8 gap-5 md:grid-cols-2" onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="name">
+                            Nama <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                            id="name"
+                            type="name"
+                            name="name"
+                            placeholder="Nama Lengkap"
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                        {errors['name'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="email">
+                            Email <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="xxx@xxx.xxx"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                        {errors['email'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['email']}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2 md:col-span-2">
+                        <Label htmlFor="identity_num">
+                            NIM / NIP / NIPH / Identitas Lainnya <span className="text-red-500">*</span>
+                        </Label>
+                        <div>
+                            <Input
+                                id="identity_num"
+                                type="identity_num"
+                                name="identity_num"
+                                placeholder="NIM / NIP / NIPH / Identitas Lainnya"
+
+                                value={formData.identity_num}
+                                onChange={handleChange}
+                            />
+                            {errors['identity_num'] && (
+                                <p className="mt-1 text-xs italic text-red-500">{errors['identity_num']}</p>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="role">
+                            Daftar Sebagai <span className="text-red-500">*</span>
+                        </Label>
+                        <Select name='role' onValueChange={(value) =>
+                            handleChange({
+                                target: {
+                                    name: 'role',
+                                    value: value
+                                }
+                            } as React.ChangeEvent<HTMLSelectElement>)}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Daftar Sebagai" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Daftar Sebagai</SelectLabel>
+                                    <SelectItem value="Mahasiswa">Mahasiswa</SelectItem>
+                                    <SelectItem value="Dosen">Dosen</SelectItem>
+                                    <SelectItem value="Pihak Luar">Pihak Luar</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        {errors['role'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['role']}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="prodi_id">
+                            Program Studi (Kosongkan jika eksternal)
+                        </Label>
+                        <Select name='prodi_id' onValueChange={(value) =>
+                            handleChange({
+                                target: {
+                                    name: 'prodi_id',
+                                    value: value
+                                }
+                            } as React.ChangeEvent<HTMLSelectElement>)}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Program Studi" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Program Studi</SelectLabel>
+                                    <SelectItem value=" ">Eksternal</SelectItem>
+                                    {studyProgram?.map((option) => (
+                                        <SelectItem key={option.id} value={option.id.toString()}>{option.name}</SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        {errors['prodi_id'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['prodi_id']}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="password">
+                            Password <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="xxxxxxxxx"
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                        {errors['password'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['password']}</p>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="c_password">
+                            Konfirmasi Password <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                            id="c_password"
+                            name="c_password"
+                            type="password"
+                            placeholder="xxxxxxxxx"
+                            value={formData.c_password}
+                            onChange={handleChange}
+                        />
+                        {errors['c_password'] && (
+                            <p className="mt-1 text-xs italic text-red-500">{errors['c_password']}</p>
+                        )}
+                    </div>
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full md:col-span-2"
+                    >
+                        {isLoading ? 'Registering...' : 'Register'}
+                    </Button>
+                    <div className="flex gap-2 text-sm md:col-span-2">
+                        <p>Sudah punya akun?</p>
+                        <NavLink to={'/login'} className='font-medium hover:text-blue-500'>Login</NavLink>
+                    </div>
+                </form>
+            </div>
+            <div className="relative hidden xl:col-span-5 md:block">
+                <div className="absolute w-full h-full col-span-2 bg-black opacity-50"></div>
+                <img src="https://labterpadu.itk.ac.id/halaman_depan/07.png" alt="" className="object-cover w-full h-full" />
+            </div>
+        </div>
+    );
+};
