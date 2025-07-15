@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\TestingTypeRequest;
 use App\Models\JenisPengujian;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -9,24 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class JenisPengujianController extends BaseController
 {
-    public function validateTestingType(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'testing_type' => "required|string|max:255",
-        ], [
-            'testing_type.required' => 'Jenis Pengujian is required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
-
     public function index(Request $request)
     {
         try {
@@ -67,20 +50,10 @@ class JenisPengujianController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(TestingTypeRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'testing_type' => "required|string|max:255",
-            ], [
-                'testing_type.required' => 'Jenis Pengujian is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $testing_type = JenisPengujian::create($request->all());
+            $testing_type = JenisPengujian::create($request->validated());
 
             return $this->sendResponse($testing_type, "Testing Type Create Sucessfully");
         } catch (\Exception $e) {
@@ -100,21 +73,11 @@ class JenisPengujianController extends BaseController
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(TestingTypeRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'testing_type' => "required|string|max:255",
-            ], [
-                'testing_type.required' => 'Jenis Pengujian is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $testing_type = JenisPengujian::findOrFail($id);
-            $testing_type->update($request->all());
+            $testing_type->update($request->validated());
 
             return $this->sendResponse($testing_type, "Testing Type Updated Successfully");
         } catch (ModelNotFoundException $e) {

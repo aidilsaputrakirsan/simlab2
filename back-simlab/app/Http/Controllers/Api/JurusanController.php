@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MajorRequest;
 use App\Models\Jurusan;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -10,26 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class JurusanController extends BaseController
 {
-    public function validateMajor(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'major_code' => "required|string|max:255|min:4",
-            'name' => "required|string|max:255|min:4"
-        ], [
-            'major_code.required' => 'Kode Jurusan is required',
-            'name.required' => 'Nama Jurusan is required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
-
     public function index(Request $request)
     {
         try {
@@ -68,22 +49,10 @@ class JurusanController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(MajorRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'major_code' => "required|string|max:255|min:4",
-                'name' => "required|string|max:255|min:4"
-            ], [
-                'major_code.required' => 'Kode Jurusan is required',
-                'name.required' => 'Nama Jurusan is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $major = Jurusan::create($request->all());
+            $major = Jurusan::create($request->validated());
 
             return $this->sendResponse($major, "Major Create Sucessfully");
         } catch (\Exception $e) {
@@ -103,23 +72,11 @@ class JurusanController extends BaseController
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(MajorRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'major_code' => "required|string|max:255|min:4",
-                'name' => "required|string|max:255|min:4"
-            ], [
-                'major_code.required' => 'Kode Jurusan is required',
-                'name.required' => 'Nama Jurusan is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $major = Jurusan::findOrFail($id);
-            $major->update($request->all());
+            $major->update($request->validated());
 
             return $this->sendResponse($major, "Major Updated Successfully");
         } catch (ModelNotFoundException $e) {

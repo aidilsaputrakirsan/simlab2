@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\PracticalWorkRequest;
 use App\Models\Praktikum;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -9,28 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PraktikumController extends BaseController
 {
-    public function validatePracticalWork(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|min:4',
-            'prodi_id' => 'required',
-            'sks' => 'required|numeric|min:1'
-        ], [
-            'name.required' => 'Nama Jurusan is required',
-            'prodi_id.required' => 'Prodi is required',
-            'sks.required' => 'SKS is required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
-
     public function index(Request $request)
     {
         try {
@@ -75,24 +54,10 @@ class PraktikumController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(PracticalWorkRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|min:4',
-                'prodi_id' => 'required',
-                'sks' => 'required|numeric|min:1'
-            ], [
-                'name.required' => 'Nama praktikum is required',
-                'prodi_id.required' => 'Prodi is required',
-                'sks.required' => 'SKS is required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $practical_works = Praktikum::create($request->all());
+            $practical_works = Praktikum::create($request->validated());
 
             return $this->sendResponse($practical_works, 'Practikcal Work Created Successfully');
         } catch (\Exception $e) {
@@ -110,25 +75,11 @@ class PraktikumController extends BaseController
         // return $this->sendError("Practial Work Not Found");
     }
 
-    public function update(Request $request, $id)
+    public function update(PracticalWorkRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|min:4',
-                'prodi_id' => 'required',
-                'sks' => 'required|numeric|min:1'
-            ], [
-                'name.required' => 'Nama praktikum is required',
-                'prodi_id.required' => 'Prodi is required',
-                'sks.required' => 'SKS is required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $practical_work = Praktikum::findOrFail($id);
-            $practical_work->update($request->all());
+            $practical_work->update($request->validated());
 
             return $this->sendResponse($practical_work, "Practical Work Updated Successfully");
         } catch (ModelNotFoundException $e) {

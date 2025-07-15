@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudyProgramRequest;
 use App\Models\Prodi;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -10,26 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProdiController extends BaseController
 {
-    public function ValidateStudyProgram(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'jurusan_id' => 'required',
-            'name' => "required|string|max:255|min:4",
-        ], [
-            'jurusan_id.required' => 'Kode Jurusan is required',
-            'name.required' => 'Nama Jurusan is required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
-
     public function getPublicStudyProgramData()
     {
         $study_programs = Prodi::select('id', 'name')->get();
@@ -81,22 +62,10 @@ class ProdiController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(StudyProgramRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'jurusan_id' => 'required',
-                'name' => "required|string|max:255|min:4",
-            ], [
-                'jurusan_id.required' => 'Kode Jurusan is required',
-                'name.required' => 'Nama Jurusan is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $study_program = Prodi::create($request->all());
+            $study_program = Prodi::create($request->validated());
 
             return $this->sendResponse($study_program, "Study Program Created Successfully");
         } catch (\Exception $e) {
@@ -116,23 +85,11 @@ class ProdiController extends BaseController
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(StudyProgramRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'jurusan_id' => 'required',
-                'name' => "required|string|max:255|min:4",
-            ], [
-                'jurusan_id.required' => 'Jurusan is required',
-                'name.required' => 'Nama Jurusan is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $study_program = Prodi::findOrFail($id);
-            $study_program->update($request->all());
+            $study_program->update($request->validated());
 
             return $this->sendResponse($study_program, "Study Program Updated Successfully");
         } catch (ModelNotFoundException $e) {

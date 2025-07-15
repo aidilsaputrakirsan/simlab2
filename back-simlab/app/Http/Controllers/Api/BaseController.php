@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class BaseController extends Controller
+abstract class BaseController extends Controller
 {
     public function sendResponse($result, $message)
     {

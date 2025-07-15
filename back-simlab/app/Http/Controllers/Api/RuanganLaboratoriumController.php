@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\LaboratoryRoomRequest;
 use App\Models\RuanganLaboratorium;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -9,28 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class RuanganLaboratoriumController extends BaseController
 {
-    public function validateLaboratoryRoom(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => "required|string|max:255|min:4",
-            'floor' => "required|string|max:255|min:4",
-            'user_id' => 'required',
-        ], [
-            'name.required' => 'Nama ruangan is required',
-            'floor.required' => 'Lokasi lantai is required',
-            'user_id.required' => 'Laboran is required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
-
     public function index(Request $request)
     {
         try {
@@ -66,24 +45,10 @@ class RuanganLaboratoriumController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(LaboratoryRoomRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => "required|string|max:255|min:4",
-                'floor' => "required|string|max:255|min:4",
-                'user_id' => 'required',
-            ], [
-                'name.required' => 'Nama ruangan is required',
-                'floor.required' => 'Lokasi lantai is required',
-                'user_id.required' => 'Laboran is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $laboratory_room = RuanganLaboratorium::create($request->all());
+            $laboratory_room = RuanganLaboratorium::create($request->validated());
 
             return $this->sendResponse($laboratory_room, "Laboratory Room Created Successfully");
         } catch (\Exception $e) {
@@ -91,25 +56,11 @@ class RuanganLaboratoriumController extends BaseController
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(LaboratoryRoomRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => "required|string|max:255|min:4",
-                'floor' => "required|string|max:255|min:4",
-                'user_id' => 'required',
-            ], [
-                'name.required' => 'Nama ruangan is required',
-                'floor.required' => 'Lokasi lantai is required',
-                'user_id.required' => 'Laboran is required',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $laboratory_room = RuanganLaboratorium::findOrFail($id);
-            $laboratory_room->update($request->all());
+            $laboratory_room->update($request->validated());
 
             return $this->sendResponse($laboratory_room, "Laboratory Room Updated Successfully");
         } catch (ModelNotFoundException $e) {

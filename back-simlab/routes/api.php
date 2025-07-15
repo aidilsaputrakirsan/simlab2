@@ -36,17 +36,6 @@ Route::prefix('pub')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group( function () {
-
-    Route::post('/academic-year/validate/{id?}', [TahunAkademikController::class, 'validateAcademicYear']);
-    Route::post('/testing-type/validate/{id?}', [JenisPengujianController::class, 'validateTestingType']);
-    Route::post('/major/validate/{id?}', [JurusanController::class, 'validateMajor']);
-    Route::post('/study-program/validate/{id?}', [ProdiController::class, 'validateStudyProgram']);
-    Route::post('/practical-work/validate/{id?}', [PraktikumController::class, 'validatePracticalWork']);
-    Route::post('/user/validate/{id?}', [UserController::class, 'validateUser']);
-    Route::post('/laboratory-room/validate/{id?}', [RuanganLaboratoriumController::class, 'validateLaboratoryRoom']);
-    Route::post('/laboratory-equipment/validate/{id?}', [AlatLaboratoriumController::class, 'validateLaboratoryEquipment']);
-    Route::post('/laboratory-material/validate/{id?}', [BahanLaboratoriumController::class, 'validateLaboratoryMaterial']);
-
     Route::put('/academic-year/{id}/toggle-status', [TahunAkademikController::class, 'toggleStatus']);
     Route::resource('academic-year', TahunAkademikController::class);
     Route::resource('major', JurusanController::class);

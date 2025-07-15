@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -10,36 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
-    public function validateUser($request, $id = null)
-    {
-        $rules = [
-            'email' => "required|unique:users,email,{$id},id|max:191",
-            'name' => 'required|max:191',
-            'password' => ($id == 'undefined' ? 'required' : 'nullable') . '|min:8',
-            'role' => 'required',
-        ];
-        $messages = [
-            'email.required' => 'Email tidak boleh kosong!',
-            'email.unique' => 'Email tidak boleh sama dengan yang sudah ada!',
-            'email.max' => 'Email maximal 191 digit karakter!',
-            'name.required' => 'Nama Akun User tidak boleh kosong!',
-            'nama.max' => 'Nama Akun User maximal 191 digit karakter!',
-            'password.required' => 'Password tidak boleh kosong!',
-            'password.min' => 'Password minimal 8 digit karakter!',
-        ];
-
-        if ($request->role == 'dosen') {
-            $rules['prodi_id'] = 'required';
-            $messages['prodi_id.required'] = 'Prodi tidak boleh kosong!';
-        }
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return $this->sendError('Invalid input', $validator->errors(), 400);
-        }
-    }
-
     public function index(Request $request)
     {
         try {
@@ -84,41 +55,14 @@ class UserController extends BaseController
         }
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         try {
-            $rules = [
-                'email' => "required|unique:users,email|max:191",
-                'name' => 'required|max:191',
-                'password' => 'required|min:8',
-                'role' => 'required',
-            ];
-            $messages = [
-                'email.required' => 'Email tidak boleh kosong!',
-                'email.unique' => 'Email tidak boleh sama dengan yang sudah ada!',
-                'email.max' => 'Email maximal 191 digit karakter!',
-                'name.required' => 'Nama Akun User tidak boleh kosong!',
-                'nama.max' => 'Nama Akun User maximal 191 digit karakter!',
-                'password.required' => 'Password tidak boleh kosong!',
-                'password.min' => 'Password minimal 8 digit karakter!',
-            ];
-
-            if ($request->role == 'Dosen') {
-                $rules['prodi_id'] = 'required';
-                $messages['prodi_id.required'] = 'Prodi tidak boleh kosong!';
-            }
-
-            $validator = Validator::make($request->all(), $rules, $messages);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             if ($this->checkIsSingleRoleExist($request->role, $request->prodi_id)) {
                 return $this->sendError('Sudah ada user dengan prodi ini di role tersebut.', [], 400);
             }
 
-            $user = User::create($request->all());
+            $user = User::create($request->validated());
 
             return $this->sendResponse($user, 'User Created Successfully', 201);
         } catch (\Exception $e) {
@@ -126,39 +70,12 @@ class UserController extends BaseController
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         try {
-            $rules = [
-                'email' => "required|unique:users,email,{$id},id|max:191",
-                'name' => 'required|max:191',
-                'password' => ($id == 'undefined' ? 'required' : 'nullable') . '|min:8',
-                'role' => 'required',
-            ];
-            $messages = [
-                'email.required' => 'Email tidak boleh kosong!',
-                'email.unique' => 'Email tidak boleh sama dengan yang sudah ada!',
-                'email.max' => 'Email maximal 191 digit karakter!',
-                'name.required' => 'Nama Akun User tidak boleh kosong!',
-                'nama.max' => 'Nama Akun User maximal 191 digit karakter!',
-                'password.required' => 'Password tidak boleh kosong!',
-                'password.min' => 'Password minimal 8 digit karakter!',
-            ];
-
-            if ($request->role == 'Dosen') {
-                $rules['prodi_id'] = 'required';
-                $messages['prodi_id.required'] = 'Prodi tidak boleh kosong!';
-            }
-
-            $validator = Validator::make($request->all(), $rules, $messages);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $user = User::findOrFail($id);
 
-            $data = $request->all();
+            $data = $request->validated();
 
             if (!$request->password) {
                 unset($data['password']);

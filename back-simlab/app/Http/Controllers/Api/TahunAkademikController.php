@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\AcademicYearRequest;
 use App\Models\TahunAkademik;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,24 +10,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TahunAkademikController extends BaseController
 {
-    public function validateAcademicYear(Request $request, $id = null)
-    {
-        $validator = Validator::make($request->all(), [
-            'academic_year' => "required|string|max:255|unique:tahun_akademiks,academic_year,{$id},id",
-        ], [
-            'academic_year.required' => 'Tahun Akademik is required',
-            'academic_year.unique' => 'Tahun Akademik already exists',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $validator->errors(),
-            ], 200);
-        }
-
-        return response()->json(['valid' => true], 200);
-    }
     /**
      * Display a paginated and filterable list of academic years
      *
@@ -75,22 +57,11 @@ class TahunAkademikController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(AcademicYearRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'academic_year' => "required|string|max:255|unique:tahun_akademiks,academic_year",
-            ], [
-                'academic_year.required' => 'Tahun Akademik is required',
-                'academic_year.unique' => 'Tahun Akademik already exists',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
-            $academicYear = TahunAkademik::create($request->all());
-
+            dd();
+            $academicYear = TahunAkademik::create($request->validated());
             return $this->sendResponse($academicYear, 'Academic Year Created Successfully', 201);
         } catch (\Exception $e) {
             return $this->sendError('Failed to create academic year', [$e->getMessage()], 500);
@@ -122,22 +93,11 @@ class TahunAkademikController extends BaseController
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(AcademicYearRequest $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'academic_year' => "required|string|max:255|unique:tahun_akademiks,academic_year,{$id},id",
-            ], [
-                'academic_year.required' => 'Tahun Akademik is required',
-                'academic_year.unique' => 'Tahun Akademik already exists',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->sendError('Invalid input', $validator->errors(), 400);
-            }
-
             $academicYear = TahunAkademik::findOrFail($id);
-            $academicYear->update($request->all());
+            $academicYear->update($request->validated());
 
             return $this->sendResponse($academicYear, "Academic Year Updated Successfully");
         } catch (ModelNotFoundException $e) {
