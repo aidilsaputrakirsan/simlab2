@@ -30,7 +30,7 @@ Route::controller(AuthController::class)->group(function (){
     Route::get('/user/me', 'getCurrentUser');
 });
 
-// Universal Api
+// Universal Apis
 Route::prefix('pub')->group(function () {
     Route::get('/study-program', [ProdiController::class, 'getPublicStudyProgramData']);
 });
