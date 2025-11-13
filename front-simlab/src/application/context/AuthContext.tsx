@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthRepository } from "../../infrastructure/auth/AuthRepository";
 import { LoginCredentials, RegisterCredentials } from "../../domain/Auth/Auth";
 import { StorageManager } from "../../infrastructure/StorageManager";
@@ -26,21 +26,20 @@ export const AuthProvider = ({ children }: AuthProps) => {
     const [token, setToken] = useState<string | null>(StorageManager.getAccessToken())
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const initialAuth = async () => {
             try {
                 const user = await authRepository.getCurrentUser(token || '')
-                if (!user) {
-                    throw Error("Unauthorized")
-                }
                 setUser(UserView.fromDomain(user))
-            } catch {
-                StorageManager.clear()
-                setToken(null)
-                navigate('/login') // redirect to login when token invalid
+            } catch (error: any) {
+                if (error.code === 401 && !location.pathname.startsWith('/login')) {
+                    navigate('/login')
+                }
+            } finally {
+                setLoading(false)
             }
-            setLoading(false)
         }
 
         initialAuth();
@@ -66,7 +65,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
     }
 
     if (loading) {
-        return <LoadingPage/>
+        return <LoadingPage />
     }
 
     return (

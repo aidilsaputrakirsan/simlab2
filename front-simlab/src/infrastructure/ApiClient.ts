@@ -1,6 +1,6 @@
 import { StorageManager } from "./StorageManager";
 
-const API_URL = `http://localhost:8000/api`
+const API_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL + '/api'
 
 interface RequestOptions extends RequestInit {
     token?: string;
@@ -49,12 +49,6 @@ export async function fetchApi(endpoint: string, options: RequestOptions = {}) {
         headers
     });
 
-    if (response.status === 401) {
-        StorageManager.clear();
-        window.location.href = '/login';
-        throw new Error('Session expired');
-    }
-
     return response;
 }
 
@@ -66,5 +60,6 @@ export function jsonToFormData(obj: Record<string, any>, method: 'POST' | 'PUT' 
             formData.append(key, value);
         }
     });
+    
     return formData;
 }
