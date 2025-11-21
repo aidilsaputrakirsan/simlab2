@@ -1,6 +1,6 @@
 import { AcademicYear } from "../../domain/academic-year/AcademicYear";
 import { IAdacemicYearRepository } from "../../domain/academic-year/IAcademicYearRepository";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { AcademicYearAPI, toDomain } from "./AcademicYearAPI";
 import { generateQueryStringFromObject } from "../Helper";

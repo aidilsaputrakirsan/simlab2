@@ -6,7 +6,7 @@ import { Input } from '@/presentation/components/ui/input'
 import { Label } from '@/presentation/components/ui/label'
 import { ScrollArea } from '@/presentation/components/ui/scroll-area'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

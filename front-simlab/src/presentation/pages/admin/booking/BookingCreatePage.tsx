@@ -10,7 +10,7 @@ import { useAuth } from '@/application/hooks/useAuth';
 import { Label } from '@/presentation/components/ui/label';
 import { Input } from '@/presentation/components/ui/input';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
-import { ApiResponse } from '@/shared/Types';
+import { ApiResponse } from '@/presentation/shared/Types';
 import BookingDateTimeRangePicker from '@/presentation/components/custom/BookingDateTimePicker';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select';
 import { toast } from 'sonner';

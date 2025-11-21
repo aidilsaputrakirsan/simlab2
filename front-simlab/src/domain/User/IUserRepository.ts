@@ -1,5 +1,5 @@
 import { User } from "./User"
-import { ApiResponse, PaginatedResponse } from "../../shared/Types"
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types"
 import { userRole } from "./UserRole"
 import { UserSelect } from "./UserSelect"
 

@@ -7,7 +7,7 @@ import { Button } from '@/presentation/components/ui/button';
 import { Plus } from 'lucide-react';
 import Table from '@/presentation/components/Table';
 import { PracticumModuleColumn } from './PracticumModuleColumn';
-import { ModalType } from '@/shared/Types';
+import { ModalType } from '@/presentation/shared/Types';
 import { toast } from 'sonner';
 import { PracticumModuleInputDTO } from '@/application/practicum-module/PracticumModuleDTO';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';

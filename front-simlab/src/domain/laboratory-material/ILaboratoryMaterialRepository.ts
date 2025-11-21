@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResponse } from "../../shared/Types"
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types"
 import { LaboratoryMaterial } from "./LaboratoryMaterial"
 
 export interface ILaboratoryMaterialRepository {

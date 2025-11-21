@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import { Button } from '@/presentation/components/ui/button'
 import { AcademicYearView } from '@/application/academic-year/AcademicYearView'
 import { AcademicYearInputDTO } from '@/application/academic-year/AcademicYearDTO'

@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
-import { ApiResponse } from '@/shared/Types';
+import { ApiResponse } from '@/presentation/shared/Types';
 import { toast } from 'sonner';
 import { useUserSelect } from '@/presentation/pages/admin/user/hooks/useUserSelect';
 

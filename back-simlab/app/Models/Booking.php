@@ -11,6 +11,40 @@ class Booking extends Model
 {
     use HasFactory;
     protected $fillable = ['academic_year_id', 'user_id', 'phone_number', 'purpose', 'supporting_file', 'activity_name', 'supervisor', 'supervisor_email', 'start_time', 'end_time', 'status', 'booking_type', 'total_participant', 'participant_list', 'laboratory_room_id', 'laboran_id', 'is_allowed_offsite'];
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time'   => 'datetime',
+    ];
+
+    public function getStartTimeApiAttribute()
+    {
+        return $this->start_time ? $this->start_time->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function getEndTimeApiAttribute()
+    {
+        return $this->end_time ? $this->end_time->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function setStartTimeAttribute($value)
+    {
+        $this->attributes['start_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+    }
+
+    public function setEndTimeAttribute($value)
+    {
+        $this->attributes['end_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+    }
+
+    public function getCreatedAtApiAttribute()
+    {
+        return $this->created_at ? $this->created_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function getUpdatedAtApiAttribute()
+    {
+        return $this->updated_at ? $this->updated_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
 
     public function academicYear()
     {
@@ -47,30 +81,6 @@ class Booking extends Model
         return $this->hasMany(BookingApproval::class, 'booking_id');
     }
 
-    protected $casts = [
-        'start_time' => 'datetime',
-        'end_time'   => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    public function setStartTimeAttribute($value)
-    {
-        $this->attributes['start_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-    }
-
-    public function setEndTimeAttribute($value)
-    {
-        $this->attributes['end_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-    }
-
-    protected function serializeDate(\DateTimeInterface $date): string
-    {
-        // Convert stored (likely UTC) datetime into application timezone for output
-        return Carbon::instance($date)->setTimezone(config('app.timezone'))
-            ->format(\DateTimeInterface::ATOM); // Y-m-d\TH:i:sP
-    }
-
     public function getKepalaLabApprovalAttribute()
     {
         $approval = $this->approvals()
@@ -95,7 +105,7 @@ class Booking extends Model
 
         // Return true only if there is NO approved 'return_by_requestor' record
         $hasApprovedReturn = $this->approvals()
-            ->where('action', 'return_by_requestor')
+            ->where('action', 'returned_by_requestor')
             ->where('is_approved', true)
             ->exists();
 
@@ -145,11 +155,7 @@ class Booking extends Model
                 'role' => $flow['role'],
                 'status' => $status,
                 'information' => $approval?->information,
-                'approved_at' => $approval?->created_at
-                    ? Carbon::parse($approval->created_at)
-                    ->setTimezone(config('app.timezone'))
-                    ->toIso8601String()
-                    : null,
+                'approved_at' => $approval?->created_at_api,
                 'approver' => $approval?->approver?->name,
             ];
 

@@ -186,11 +186,46 @@ class BookingController extends BaseController
             }
 
             // $isApprove: 1 = approve, 2 = revision, 0 = reject/other
-            $this->recordApproval($booking->id, 'returned_by_requestor', $user->id, 1);
+            if ($booking->is_requestor_can_return) {
+                $this->recordApproval($booking->id, 'returned_by_requestor', $user->id, 1);
+            }
             $this->recordApproval($booking->id, 'return_confirmed_by_laboran', $user->id, 1, $request->information);
 
             $booking->update(['status' => 'returned']);
 
+            DB::commit();
+            return $this->sendResponse($booking->fresh(), 'Booking Successfully');
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return $this->sendError('Booking Not Found', [], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Failed to verify booking', [$e->getMessage()], 500);
+        }
+    }
+
+    public function bookingReturnConfirmation(BookingReturnRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $user = auth()->user();
+            $booking = Booking::findOrFail($id);
+
+            // Validate by booking status
+            if ($booking->status !== 'approved') {
+                return $this->sendError('Konfirmasi pengembalian hanya bisa dilakukan jika status peminjaman disetujui', [], 400);
+            }
+
+            // Validate if requestor/laboran has do the return confirmation
+            if (!$booking->is_requestor_can_return) {
+                return $this->sendError('Pengembalan alat untuk peminjaman ini telah dikonfirmasi sebelumnya', [], 400);
+            }
+
+            // Validate if the user is requestor
+            if ($booking->user_id !== $user->id) {
+                return $this->sendError('Hanya pemohon yang bisa melakukan konfirmasi ini', [], 400);
+            }
+            $this->recordApproval($booking->id, 'returned_by_requestor', $user->id, 1, $request->information);
             DB::commit();
             return $this->sendResponse($booking->fresh(), 'Booking Successfully');
         } catch (ModelNotFoundException $e) {

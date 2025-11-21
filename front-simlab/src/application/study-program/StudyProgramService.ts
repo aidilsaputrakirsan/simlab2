@@ -1,5 +1,5 @@
 import { StudyProgramRepository } from "../../infrastructure/study-program/StudyProgramRepository";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { StudyProgramInputDTO, StudyProgramTableParam } from "./StudyProgramDTO";
 import { StudyProgramSelectView } from "./StudyProgramSelectView";
 import { StudyProgramView } from "./StudyProgramView";

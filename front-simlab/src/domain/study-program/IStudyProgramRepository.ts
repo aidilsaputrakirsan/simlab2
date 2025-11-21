@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResponse } from "../../shared/Types"
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types"
 import { StudyProgram } from "./StudyProgram"
 import { StudyProgramSelect } from "./StudyProgramSelect"
 

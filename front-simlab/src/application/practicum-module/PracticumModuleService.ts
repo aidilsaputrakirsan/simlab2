@@ -1,6 +1,6 @@
 import { PracticumModuleRepository } from "@/infrastructure/practicum-module/PracticumModuleRepository";
 import { PracticumModuleInputDTO, PracticumModuleTableParams } from "./PracticumModuleDTO";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumModuleView } from "./PracticumModuleView";
 
 export class PracticumModuleService {

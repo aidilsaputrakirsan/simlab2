@@ -1,6 +1,6 @@
 import { ILaboratoryMaterialRepository } from "../../domain/laboratory-material/ILaboratoryMaterialRepository";
 import { LaboratoryMaterial } from "../../domain/laboratory-material/LaboratoryMaterial";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { LaboratoryMaterialAPI, toDomain } from "./LaboratoryMaterialAPI";
 import { generateQueryStringFromObject } from "../Helper";

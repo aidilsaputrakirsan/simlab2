@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react"
 import { AcademicYearColumn } from "./AcademicYearColumn";
 import Table from "../../../components/Table";
-import { ModalType } from "../../../../shared/Types";
+import { ModalType } from "../../../shared/Types";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import Header from "@/presentation/components/Header";
 import { Plus } from "lucide-react";
@@ -14,6 +14,7 @@ import { AcademicYearInputDTO } from "@/application/academic-year/AcademicYearDT
 import AcademicYearFormDialog from "./components/AcademicYearFormDialog";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useAcademicYearDataTable } from "./hooks/useAcademicYearDataTable";
+import { AcademicYearView } from "@/application/academic-year/AcademicYearView";
 
 const AcademicYearPage = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)

@@ -10,15 +10,11 @@ class BookingApproval extends Model
 {
     use HasFactory;
 
-    // Always return created_at in WITA timezone as ISO 8601 string
-    public function getCreatedAtAttribute($value)
-    {
-        return $this->asDateTime($value)
-            ->setTimezone('Asia/Makassar')
-            ->toIso8601String();
-    }
-
     protected $fillable = ['booking_id', 'action', 'approver_id', 'is_approved', 'information'];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     public function booking()
     {
@@ -30,16 +26,14 @@ class BookingApproval extends Model
         return $this->belongsTo(User::class, 'approver_id');
     }
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    protected function serializeDate(\DateTimeInterface $date): string
+    public function getCreatedAtApiAttribute()
     {
-        // Convert stored (likely UTC) datetime into application timezone for output
-        return Carbon::instance($date)->setTimezone(config('app.timezone'))
-            ->format(\DateTimeInterface::ATOM); // Y-m-d\TH:i:sP
+        return $this->created_at ? $this->created_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function getUpdatedAtApiAttribute()
+    {
+        return $this->updated_at ? $this->updated_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
     }
 
     public function getApprovalStatusLabelAttribute()

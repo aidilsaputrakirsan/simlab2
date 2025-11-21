@@ -13,7 +13,7 @@ import {
 import { Button } from '@/presentation/components/ui/button'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { ApiResponse } from '@/shared/Types';
+import { ApiResponse } from '@/presentation/shared/Types';
 
 interface ConductedClassDialogProps {
     open: boolean,

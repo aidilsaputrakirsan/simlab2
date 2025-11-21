@@ -1,7 +1,7 @@
 import { UserInputDTO } from '@/application/user/UserDTO'
 import Header from '@/presentation/components/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import { ModalType } from '@/shared/Types'
+import { ModalType } from '@/presentation/shared/Types'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { useRef, useState } from 'react'

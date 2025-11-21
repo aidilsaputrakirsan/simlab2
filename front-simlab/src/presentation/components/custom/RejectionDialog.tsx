@@ -3,7 +3,7 @@ import { Button } from "@/presentation/components/ui/button";
 import { Label } from "@/presentation/components/ui/label";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/presentation/components/ui/textarea";
-import { ApiResponse } from "@/shared/Types";
+import { ApiResponse } from "@/presentation/shared/Types";
 import { useValidationErrors } from "@/presentation/hooks/useValidationError";
 import { toast } from "sonner";
 

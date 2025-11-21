@@ -13,7 +13,7 @@ import { Label } from '@/presentation/components/ui/label'
 import { Textarea } from '@/presentation/components/ui/textarea'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { toast } from 'sonner'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 
 interface LaboranBookingApprovalDialogProps {
     open: boolean,

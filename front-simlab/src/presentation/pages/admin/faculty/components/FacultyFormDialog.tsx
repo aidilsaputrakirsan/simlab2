@@ -1,7 +1,7 @@
 import { FacultyInputDTO } from '@/application/faculty/FacultyDTO'
 import { FacultyView } from '@/application/faculty/FacultyView'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { Button } from '@/presentation/components/ui/button'

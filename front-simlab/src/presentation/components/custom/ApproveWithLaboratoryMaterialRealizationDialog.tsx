@@ -1,5 +1,5 @@
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import {

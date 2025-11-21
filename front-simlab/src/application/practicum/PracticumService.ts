@@ -1,5 +1,5 @@
 import { PracticumRepository } from "@/infrastructure/practicum/PracticumRepository";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumView } from "./PracticumView";
 import { PracticumInputDTO, PracticumTableParam } from "./PracticumDTO";
 import { PracticumSelectView } from "./PracticumSelectView";

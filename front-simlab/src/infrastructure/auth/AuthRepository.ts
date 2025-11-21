@@ -1,7 +1,7 @@
 import { LoginCredentials, RegisterCredentials } from "../../domain/Auth/Auth";
 import { IAuthRepository } from "../../domain/Auth/IAuthRepository";
 import { User } from "../../domain/User/User";
-import { ApiResponse } from "../../shared/Types";
+import { ApiResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { StorageManager } from "../StorageManager";
 import { toDomain, UserApi } from "../user/UserApi";

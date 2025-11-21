@@ -11,7 +11,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Plus, Trash } from 'lucide-react';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
 import { toast } from 'sonner';
-import { ApiResponse } from '@/shared/Types';
+import { ApiResponse } from '@/presentation/shared/Types';
 import { Combobox } from '@/presentation/components/custom/combobox';
 import { DateTimePicker } from '@/presentation/components/ui/datetime-picker';
 import { usePracticumSchedulingForm } from './hooks/usePracticumSchedulingForm';

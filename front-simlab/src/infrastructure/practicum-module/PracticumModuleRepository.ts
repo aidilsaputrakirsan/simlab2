@@ -1,6 +1,6 @@
 import { IPracticumModuleRepository } from "@/domain/practicum-module/IPracticumModuleRepository";
 import { PracticumModule } from "@/domain/practicum-module/PracticumModule";
-import { PaginatedResponse, ApiResponse } from "@/shared/Types";
+import { PaginatedResponse, ApiResponse } from "@/presentation/shared/Types";
 import { generateQueryStringFromObject } from "../Helper";
 import { fetchApi } from "../ApiClient";
 import { PracticumModuleAPI, toDomain } from "./PracticumModuleAPI";

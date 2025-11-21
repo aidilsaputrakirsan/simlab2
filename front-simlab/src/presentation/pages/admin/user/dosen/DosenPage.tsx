@@ -5,7 +5,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presenta
 import { useGSAP } from '@gsap/react'
 import { useRef, useState } from 'react'
 import { DosenColumn } from './DosenColumn'
-import { ModalType } from '@/shared/Types'
+import { ModalType } from '@/presentation/shared/Types'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import { toast } from 'sonner';
 import { UserInputDTO } from '@/application/user/UserDTO';

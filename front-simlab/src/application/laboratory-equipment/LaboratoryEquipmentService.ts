@@ -1,6 +1,6 @@
 import { LaboratoryEquipmentRepository } from "@/infrastructure/laboratory-equipment/LaboratoryEquipmentRepository";
 import { LaboratoryEquipmentInputDTO, LaboratoryEquipmentTableParams } from "./LaboratoryEquipmentDTO";
-import { PaginatedResponse } from "@/shared/Types";
+import { PaginatedResponse } from "@/presentation/shared/Types";
 import { LaboratoryEquipmentView } from "./LaboratoryEquipmentView";
 
 export class LaboratoryEquipmentService {

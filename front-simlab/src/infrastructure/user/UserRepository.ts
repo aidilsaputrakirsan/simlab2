@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/User/IUserRepository";
 import { User } from "../../domain/User/User";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { toDomain, UserApi } from "./UserApi";
 import { userRole } from "@/domain/User/UserRole";

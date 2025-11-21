@@ -1,6 +1,6 @@
 import { Booking } from "@/domain/booking/Booking";
 import { IBookingRepository } from "@/domain/booking/IBookingRepository";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { fetchApi, jsonToFormData } from "../ApiClient";
 import { BookingAPI, toDomain } from "./BookingAPI";
 import { BookingType } from "@/domain/booking/BookingType";
@@ -167,6 +167,20 @@ export class BookingRepository implements IBookingRepository {
 
     async verifyBookingReturn(booking_id: number, information: string): Promise<ApiResponse> {
         const response = await fetchApi(`/bookings/${booking_id}/verify-return`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({information: information})
+        });
+        
+        const json = await response.json();
+        if (response.ok) {
+            return json
+        }
+        throw json;
+    }
+    
+    async confirmBookingReturn(booking_id: number, information: string): Promise<ApiResponse> {
+        const response = await fetchApi(`/bookings/${booking_id}/confirm-return`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({information: information})

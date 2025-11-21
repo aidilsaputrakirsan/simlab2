@@ -1,6 +1,6 @@
 import { FacultyRepository } from "@/infrastructure/faculty/FacultyRepository";
 import { FacultyInputDTO, FacultyTableParam } from "./FacultyDTO";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { FacultyView } from "./FacultyView";
 import { FacultySelectView } from "./FacultySelectView";
 

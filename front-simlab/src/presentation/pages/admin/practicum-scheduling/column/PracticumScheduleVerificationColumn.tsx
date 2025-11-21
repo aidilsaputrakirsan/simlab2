@@ -44,7 +44,7 @@ export const PracticumScheduleVerificationColumn = ({ role, openApproval, openRe
         header: 'Verifikasi Pengajuan', accessorKey: 'id', cell: ({ row }) => {
             const renderApprovalBadge = (is_approved: number | null | undefined) => {
                 if (is_approved === 1) {
-                    return <Badge>Pengajuan Disetujui</Badge>;
+                    return <Badge variant={'success'}>Pengajuan Disetujui</Badge>;
                 }
 
                 if (is_approved === 2) {

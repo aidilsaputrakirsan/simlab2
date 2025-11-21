@@ -1,6 +1,6 @@
 import { ILaboratoryEquipmentRepository } from "../../domain/laboratory-equipment/ILaboratoryEquipmentRepository";
 import { LaboratoryEquipment } from "../../domain/laboratory-equipment/LaboratoryEquipment";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi, jsonToFormData } from "../ApiClient";
 import { LaboratoryEquipmentAPI, toDomain } from "./LaboratoryEquipmentAPI";
 import { generateQueryStringFromObject } from "../Helper";

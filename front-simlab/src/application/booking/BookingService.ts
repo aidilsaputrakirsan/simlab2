@@ -1,6 +1,6 @@
 import { BookingRepository } from "@/infrastructure/booking/BookingRepository";
 import { BookingInputDTO, BookingReportTableParam, BookingRoomNEquipmentInputDTO, BookingTableParam, BookingVerifyDTO } from "./dto/BookingDTO";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { BookingView } from "./BookingView";
 import { BookingApprovalView } from "./BookingApprovalView";
 
@@ -83,5 +83,9 @@ export class BookingService {
 
     async verifyBookingReturn(booking_id: number, information: string): Promise<ApiResponse> {
         return await this.bookingRepository.verifyBookingReturn(booking_id, information)
+    }
+
+    async confirmBookingReturn(booking_id: number, information: string): Promise<ApiResponse> {
+        return await this.bookingRepository.confirmBookingReturn(booking_id, information)
     }
 }

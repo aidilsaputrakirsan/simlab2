@@ -1,6 +1,6 @@
 import { UserRepository } from "@/infrastructure/user/UserRepository";
 import { UserInputDTO, UserTableParams } from "./UserDTO";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { UserView } from "./UserView";
 import { userRole } from "@/domain/User/UserRole";
 import { UserSelectView } from "./UserSelectView";

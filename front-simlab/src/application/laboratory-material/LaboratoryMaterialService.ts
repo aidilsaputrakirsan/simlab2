@@ -1,6 +1,6 @@
 import { LaboratoryMaterialRepository } from "@/infrastructure/laboratory-material/LaboratoryMaterialRepository";
 import { LaboratoryMaterialInputDTO, LaboratoryMaterialTableParams } from "./LaboratoryMaterialDTO";
-import { PaginatedResponse } from "@/shared/Types";
+import { PaginatedResponse } from "@/presentation/shared/Types";
 import { LaboratoryMaterialView } from "./LaboratoryMaterialView";
 
 export class LaboratoryMaterialService {

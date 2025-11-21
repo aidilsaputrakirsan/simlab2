@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react"
 import Table from "../../../components/Table";
 import { LaboratoryRoomColumn } from "./LaboratoryRoomColumn";
-import { ModalType } from "@/shared/Types";
+import { ModalType } from "@/presentation/shared/Types";
 import { LaboratoryRoomInputDTO } from "@/application/laboratory-room/LaboratoryRoomDTO";
 import { toast } from "sonner";
 import Header from "@/presentation/components/Header";

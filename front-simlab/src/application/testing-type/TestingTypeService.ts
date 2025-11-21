@@ -1,5 +1,5 @@
 import { TestingTypeRepository } from "../../infrastructure/testing-type/TestingTypeRepository";
-import { PaginatedResponse } from "../../shared/Types";
+import { PaginatedResponse } from "../../presentation/shared/Types";
 import { TestingTypeInputDTO, TestingTypeTableParam } from "./dtos/TestingTypeDTO";
 import { TestingTypeView } from "./TestingTypeView";
 

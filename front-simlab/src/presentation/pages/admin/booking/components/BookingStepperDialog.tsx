@@ -35,13 +35,13 @@ const BookingStepperDialog: React.FC<BookingStepperDialogProps> = ({
         switch (steps) {
             case BookingApprovalStatus.Approved:
                 return (
-                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-green-400 text-white'>
+                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-green-600 text-white'>
                         <CheckCircle />
                     </div>
                 )
             case BookingApprovalStatus.Rejected:
                 return (
-                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-red-400 text-white'>
+                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-red-600 text-white'>
                         <X />
                     </div>
                 )
@@ -51,7 +51,7 @@ const BookingStepperDialog: React.FC<BookingStepperDialogProps> = ({
                 )
             default:
                 return (
-                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-gray-400 text-white'>
+                    <div className='absolute left-0 top-3.5 flex size-4 items-center justify-center rounded-full bg-gray-600 text-white'>
                         <InfoIcon />
                     </div>
                 )
@@ -67,7 +67,7 @@ const BookingStepperDialog: React.FC<BookingStepperDialogProps> = ({
             case BookingApprovalStatus.Revision:
                 return (<span className="self-center text-[10px] tracking-wide px-2 py-0.5 rounded-full font-semibold bg-yellow-100 text-yellow-700">REVISION</span>)
             default:
-                return (<span className="self-center text-[10px] tracking-wide px-2 py-0.5 rounded-full font-semibold bg-gray-100 text-gray-500">PENDING</span>)
+                return (<span className="self-center text-[10px] tracking-wide px-2 py-0.5 rounded-full font-semibold bg-gray-100 text-gray-700">PENDING</span>)
         }
     }
 
@@ -117,7 +117,7 @@ const BookingStepperDialog: React.FC<BookingStepperDialogProps> = ({
                                                     <span className="text-sm text-muted-foreground rounded-xl tracking-tight">
                                                         {step.approvedAt ? String(step.approvedAt.formatForInformation()) : ''}
                                                     </span>
-                                                    {step.role !== 'pemohon' && (
+                                                    {step.action !== BookingApprovalAction.RequestBooking && (
                                                         <div className='flex flex-col mt-2'>
                                                             <span className='text-sm font-semibold'>
                                                                 {step.status === BookingApprovalStatus.Rejected ? 'Alasan: ' : 'Catatan:'}

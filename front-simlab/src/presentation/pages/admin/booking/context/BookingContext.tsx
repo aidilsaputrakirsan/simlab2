@@ -1,5 +1,5 @@
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
-import { ApiResponse } from "@/shared/Types";
+import { ApiResponse } from "@/presentation/shared/Types";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface BookingContextType {

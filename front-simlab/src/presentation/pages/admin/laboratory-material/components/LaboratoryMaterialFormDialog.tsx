@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/presentation/componen
 import { ScrollArea } from "@/presentation/components/ui/scroll-area"
 import { Textarea } from "@/presentation/components/ui/textarea"
 import { useValidationErrors } from "@/presentation/hooks/useValidationError"
-import { ApiResponse } from "@/shared/Types"
+import { ApiResponse } from "@/presentation/shared/Types"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 

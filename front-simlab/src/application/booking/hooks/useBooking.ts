@@ -3,7 +3,7 @@ import { BookingView } from "../BookingView"
 import { BookingService } from "../BookingService"
 import { BookingInputDTO, BookingRoomNEquipmentInputDTO, BookingVerifyDTO } from "../dto/BookingDTO"
 import { BookingType } from "@/domain/booking/BookingType"
-import { ApiResponse } from "@/shared/Types"
+import { ApiResponse } from "@/presentation/shared/Types"
 
 export const useBooking = ({
     currentPage,

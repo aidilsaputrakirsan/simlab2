@@ -1,7 +1,7 @@
 import { StudyProgramSelect } from "@/domain/study-program/StudyProgramSelect";
 import { IStudyProgramRepository } from "../../domain/study-program/IStudyProgramRepository";
 import { StudyProgram } from "../../domain/study-program/StudyProgram";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { generateQueryStringFromObject } from "../Helper";
 import { StudyProgramAPI, toDomain } from "./StudyProgramAPI";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogDescription, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import { Button } from '@/presentation/components/ui/button'
 import { UserView } from '@/application/user/UserView'
 import { Label } from '@/presentation/components/ui/label'

@@ -1,5 +1,5 @@
 import { IFacultyRepository } from "@/domain/faculty/IFacultyRepository";
-import { PaginatedResponse, ApiResponse } from "@/shared/Types";
+import { PaginatedResponse, ApiResponse } from "@/presentation/shared/Types";
 import { generateQueryStringFromObject } from "../Helper";
 import { fetchApi } from "../ApiClient";
 import { FacultyAPI, toDomain } from "./FacultyAPI";

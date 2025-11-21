@@ -1,7 +1,7 @@
 import { PracticumSchedulingRepository } from "@/infrastructure/practicum-scheduling/PracticumSchedulingRepository";
 import { PracticumSchedulingEquipmentNMaterialInputDTO, PracticumSchedulingInputDTO, PracticumSchedulingLecturerNotesDTO, PracticumSchedulingSessionConductedDTO, PracticumSchedulingTableParam, PracticumSchedulingVerifyDTO } from "./dto/PracticumSchedulingDTO";
 import { PracticumSchedulingView } from "./PracticumSchedulingView";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumStepperView } from "./PracticumStepperView";
 
 export class PracticumSchedulingService {

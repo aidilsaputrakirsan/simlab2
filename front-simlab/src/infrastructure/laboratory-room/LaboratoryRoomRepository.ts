@@ -1,6 +1,6 @@
 import { ILaboratoryRoomRepository } from "../../domain/laboratory-room/ILaboratoryRoomRepository";
 import { LaboratoryRoom } from "../../domain/laboratory-room/LaboratoryRoom";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { LaboratoryRoomAPI, toDomain } from "./LaboratoryRoomAPI";
 import { generateQueryStringFromObject } from "../Helper";

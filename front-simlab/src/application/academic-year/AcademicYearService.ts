@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { AcademicYearView } from "./AcademicYearView";
 import { AcademicYearInputDTO, AcademicYearTableParam } from "./AcademicYearDTO";
 import { AcademicYearRepository } from "@/infrastructure/academic-year/AcademicYearRepository";

@@ -1,7 +1,7 @@
 import { MajorSelect } from "@/domain/major/MajorSelect";
 import { IMajorReporsitory } from "../../domain/major/IMajorRepository";
 import { Major } from "../../domain/major/Major";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { MajorAPI, toDomain } from "./MajorAPI";
 import { MajorSelectAPI, toDomain as toMajorSelect } from "./MajorSelectAPI";

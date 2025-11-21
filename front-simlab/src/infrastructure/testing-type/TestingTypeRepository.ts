@@ -1,6 +1,6 @@
 import { ITestingTypeRepository } from "../../domain/testing-type/ITestingTypeRepository";
 import { TestingType } from "../../domain/testing-type/TestingType";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { generateQueryStringFromObject } from "../Helper";
 import { TestingTypeApi, toDomain } from "./TestingTypeApi";

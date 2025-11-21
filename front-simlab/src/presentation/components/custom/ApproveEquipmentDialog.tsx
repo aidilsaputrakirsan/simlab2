@@ -1,6 +1,6 @@
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { useLaboratoryRoomSelect } from '@/presentation/pages/admin/laboratory-room/hooks/useLaboratoryRoomSelect'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import {
     Dialog,
     DialogContent,

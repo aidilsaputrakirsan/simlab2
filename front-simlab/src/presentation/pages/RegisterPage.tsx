@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Button } from "../components/ui/button";
 import { toast, Toaster } from "sonner";
 import { Combobox } from "../components/custom/combobox";
-import { ApiResponse } from "@/shared/Types";
+import { ApiResponse } from "@/presentation/shared/Types";
 import { RegisterCredentials } from "@/domain/Auth/Auth";
 import ItkLogo from '../assets/itk_logo.png'
 

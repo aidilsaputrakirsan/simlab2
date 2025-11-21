@@ -2,7 +2,7 @@ import { PracticumModuleInputDTO } from '@/application/practicum-module/Practicu
 import { PracticumModuleView } from '@/application/practicum-module/PracticumModuleView'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
 import { Input } from '@/presentation/components/ui/input'
 import { Label } from '@/presentation/components/ui/label'

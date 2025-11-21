@@ -1,6 +1,6 @@
 import { LaboratoryRoomRepository } from "@/infrastructure/laboratory-room/LaboratoryRoomRepository";
 import { LaboratoryRoomInputDTO, LaboratoryRoomParam } from "./LaboratoryRoomDTO";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { LaboratoryRoomView } from "./LaboratoryRoomView";
 import { LaboratoryRoomSelectView } from "./LaboratoryRoomSelectView";
 

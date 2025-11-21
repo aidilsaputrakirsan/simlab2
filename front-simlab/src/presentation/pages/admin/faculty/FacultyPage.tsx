@@ -7,7 +7,7 @@ import { Button } from '@/presentation/components/ui/button';
 import { Plus } from 'lucide-react';
 import Table from '@/presentation/components/Table';
 import { FacultyColumn } from './FacultyColumn';
-import { ModalType } from '@/shared/Types';
+import { ModalType } from '@/presentation/shared/Types';
 import { FacultyInputDTO } from '@/application/faculty/FacultyDTO';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';

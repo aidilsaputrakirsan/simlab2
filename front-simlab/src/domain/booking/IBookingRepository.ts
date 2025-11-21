@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { Booking } from "./Booking";
 import { BookingType } from "./BookingType";
 import { BookingApproval } from "./BookingApproval";
@@ -63,6 +63,11 @@ export interface IBookingRepository {
     ): Promise<ApiResponse>;
 
     verifyBookingReturn(
+        booking_id: number,
+        information: string
+    ): Promise<ApiResponse>
+
+    confirmBookingReturn(
         booking_id: number,
         information: string
     ): Promise<ApiResponse>

@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react"
 import Table from "../../../components/Table";
 import { TestingTypeColumn } from "./TestingTypeColumn";
-import { ModalType } from "../../../../shared/Types";
+import { ModalType } from "../../../shared/Types";
 import { TestingTypeInputDTO } from "../../../../application/testing-type/dtos/TestingTypeDTO";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";

@@ -1,5 +1,5 @@
 import { IPracticumRepository } from "@/domain/practicum/IPracticumRepository";
-import { ApiResponse, PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { PracticumAPI, toDomain } from "./PracticumAPI";
 import { Practicum } from "@/domain/practicum/Practicum";

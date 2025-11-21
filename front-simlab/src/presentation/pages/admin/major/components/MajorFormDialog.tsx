@@ -5,7 +5,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/presentation/components/ui/input';
 import { Label } from '@/presentation/components/ui/label';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
-import { ApiResponse } from '@/shared/Types';
+import { ApiResponse } from '@/presentation/shared/Types';
 import React, { useEffect, useState } from 'react'
 import { Combobox } from '@/presentation/components/custom/combobox';
 import { FacultySelectView } from '@/application/faculty/FacultySelectView';

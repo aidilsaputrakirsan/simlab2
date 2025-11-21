@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { LoginCredentials } from "../../domain/Auth/Auth";
 import { useAuth } from "../../application/hooks/useAuth";
-import { ApiResponse } from "../../shared/Types";
+import { ApiResponse } from "../shared/Types";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";

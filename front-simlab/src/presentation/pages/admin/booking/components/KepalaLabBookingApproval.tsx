@@ -1,16 +1,15 @@
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import Table from '@/presentation/components/Table';
 import { BookingVerificationColumn } from '../column/BookingVerificationColumn';
-import { toast } from 'sonner';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select'
 import { useBookingVerificationDataTable } from '../hooks/useBookingVerificationDataTable';
-import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { userRole } from '@/domain/User/UserRole';
 import ApproveWithLaboranSelectDialog from '@/presentation/components/custom/ApproveWithLaboranSelectDialog';
 import RejectionDialog from '@/presentation/components/custom/RejectionDialog';
+import { useBookingVerification } from '../hooks/useBookingVerification';
 
 const KepalaLabBookingApproval = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -33,20 +32,16 @@ const KepalaLabBookingApproval = () => {
     }, [])
 
     const [selectedStatus, setSelectedStatus] = useState<string>('')
-    const handleFilterStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedStatus])
 
-        setSelectedStatus(value);
-        setCurrentPage(1);
-    }
-
-    const {bookingService} = useDepedencies()
     const {
         bookings,
         isLoading,
         searchTerm,
         refresh,
-    
+
         // TableHandler
         perPage,
         handleSearch,
@@ -56,46 +51,20 @@ const KepalaLabBookingApproval = () => {
         totalPages,
         currentPage,
         setCurrentPage,
-      } = useBookingVerificationDataTable({filter_status: selectedStatus})
+    } = useBookingVerificationDataTable({ filter_status: selectedStatus })
 
-    const [selectedBookingId, setSelectedBookingId] = useState<number>(0);
-    const [openApprovalDialog, setOpenApprovalDialog] = useState<boolean>(false)
-    const [openRejectionDialog, setOpenRejectionDialog] = useState<boolean>(false)
-
-    const openApproval = (id: number) => {
-        setSelectedBookingId(id);
-        setOpenApprovalDialog(true)
-    }
-
-    const openRejection = (id: number) => {
-        setSelectedBookingId(id);
-        setOpenRejectionDialog(true)
-    }
-
-    const handleApproval = async (laboran_id: number, information: string): Promise<void> => {
-        if (selectedBookingId) {
-            const res = await bookingService.verifyBooking(selectedBookingId, {
-                action: 'approve',
-                information: information,
-                laboran_id: laboran_id
-            })
-            toast.success(res.message)
-            setOpenApprovalDialog(false)
-            refresh()
-        }
-    }
-
-    const handleRejection = async (information: string): Promise<void> => {
-        if (selectedBookingId) {
-            const res = await bookingService.verifyBooking(selectedBookingId, {
-                action: 'reject',
-                information: information
-            })
-            toast.success(res.message)
-            setOpenRejectionDialog(false)
-            refresh()
-        }
-    }
+    const {
+        dialogs,
+        // openers
+        openKepalaLabApproval,
+        openRejection,
+        // closers
+        closeKepalaLabApproval,
+        closeRejection,
+        // actions
+        handleKepalaLabApproval,
+        handleRejection,
+    } = useBookingVerification(bookings, refresh)
 
     return (
         <>
@@ -107,13 +76,7 @@ const KepalaLabBookingApproval = () => {
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
                             <div className="relative">
-                                <Select name='filter_status' onValueChange={(value) =>
-                                    handleFilterStatus({
-                                        target: {
-                                            name: 'filter_status',
-                                            value: value
-                                        }
-                                    } as React.ChangeEvent<HTMLSelectElement>)}>
+                                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Pilih Status" />
                                     </SelectTrigger>
@@ -131,7 +94,7 @@ const KepalaLabBookingApproval = () => {
                         </div>
                         <Table
                             data={bookings}
-                            columns={BookingVerificationColumn({ role: userRole.KepalaLabTerpadu, openApproval, openRejection })}
+                            columns={BookingVerificationColumn({ role: userRole.KepalaLabTerpadu, openApproval: openKepalaLabApproval, openRejection })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -140,12 +103,12 @@ const KepalaLabBookingApproval = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} 
-                            handleRefresh={refresh}/>
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
-                <RejectionDialog open={openRejectionDialog} onOpenChange={setOpenRejectionDialog} handleRejection={handleRejection} />
-                <ApproveWithLaboranSelectDialog open={openApprovalDialog} onOpenChange={setOpenApprovalDialog} handleSave={handleApproval}/>
+                <RejectionDialog open={dialogs.rejection} onOpenChange={closeRejection} handleRejection={handleRejection} />
+                <ApproveWithLaboranSelectDialog open={dialogs.KepalaLabApproval} onOpenChange={closeKepalaLabApproval} handleSave={handleKepalaLabApproval} />
             </div>
         </>
     )

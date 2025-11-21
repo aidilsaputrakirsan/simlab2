@@ -10,7 +10,7 @@ import { ScrollArea } from '@/presentation/components/ui/scroll-area'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select'
 import { Textarea } from '@/presentation/components/ui/textarea'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
-import { ApiResponse } from '@/shared/Types'
+import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
 
 interface LaboratoryEquipmentFormDialogProps {

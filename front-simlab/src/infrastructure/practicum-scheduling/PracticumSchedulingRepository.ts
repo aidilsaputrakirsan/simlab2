@@ -1,7 +1,7 @@
 
 import { IPracticumSchedulingRepository } from "@/domain/practicum-scheduling/IPracticumSchedulingRepository";
 import { PracticumSchedulingAPI, toDomain } from "./PracticumSchedulingAPI";
-import { ApiResponse, PaginatedResponse } from "@/shared/Types";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumScheduling } from "@/domain/practicum-scheduling/PracticumScheduling";
 import { fetchApi } from "../ApiClient";
 import { PracticumStepper } from "@/domain/practicum-scheduling/PracticumStepper";
