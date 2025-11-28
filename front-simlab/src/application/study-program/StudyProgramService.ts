@@ -8,11 +8,11 @@ export class StudyProgramService {
     private studyProgramRepository = new StudyProgramRepository()
 
     async getStudyProgramData(params: StudyProgramTableParam): Promise<PaginatedResponse<StudyProgramView>> {
-        const studyProgram = await this.studyProgramRepository.getAll(params)
+        const studyPrograms = await this.studyProgramRepository.getAll(params)
         
         return {
-            ...studyProgram,
-            data: studyProgram.data.map(StudyProgramView.fromDomain) || []
+            ...studyPrograms,
+            data: studyPrograms.data.map(StudyProgramView.fromDomain) || []
         }
     }
 

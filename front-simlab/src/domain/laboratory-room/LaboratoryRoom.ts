@@ -9,8 +9,6 @@ export class LaboratoryRoom {
         readonly studentPrice: number,
         readonly lecturerPrice: number,
         readonly externalPrice: number,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly user?: User
     ) {}
 }

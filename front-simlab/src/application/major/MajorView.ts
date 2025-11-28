@@ -6,8 +6,6 @@ export class MajorView {
         readonly id: number,
         readonly code: string,
         readonly name: string,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly faculty?: FacultyView
     ){}
 
@@ -16,8 +14,6 @@ export class MajorView {
             entity.id,
             entity.code,
             entity.name,
-            entity.createdAt,
-            entity.updatedAt,
             entity.faculty ? FacultyView.fromDomain(entity.faculty) : undefined
         )
     }

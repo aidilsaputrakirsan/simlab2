@@ -11,17 +11,15 @@ import { Label } from '@/presentation/components/ui/label'
 interface FacultyFormDialogProps {
     title: string,
     open: boolean,
-    data: FacultyView[],
-    dataId: number | null
     onOpenChange: (open: boolean) => void,
     handleSave: (data: FacultyInputDTO) => Promise<void>
+    faculty?: FacultyView
 }
 
 const FacultyFormDialog: React.FC<FacultyFormDialogProps> = ({
     title,
     open,
-    data,
-    dataId,
+    faculty,
     onOpenChange,
     handleSave
 }) => {
@@ -39,8 +37,7 @@ const FacultyFormDialog: React.FC<FacultyFormDialogProps> = ({
     }, [open])
 
     useEffect(() => {
-        if (dataId) {
-            const faculty = data.find((data: FacultyView) => data.id === dataId)
+        if (faculty) {
             setFormData({
                 code: faculty?.code ?? '',
                 name: faculty?.name ?? ''

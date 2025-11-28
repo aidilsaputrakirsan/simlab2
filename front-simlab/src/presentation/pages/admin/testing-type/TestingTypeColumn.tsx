@@ -9,6 +9,11 @@ interface ColumnProps {
 
 export const TestingTypeColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<TestingTypeView>[] => [
   {
+    header: 'Kategori',
+    accessorKey: 'testing_category',
+    cell: ({row}) => ( <div className="text-pretty">{row.original.testingCategory?.name}</div> )
+  },
+  {
     header: 'Jenis Pengujian',
     accessorKey: 'name',
     cell: ({row}) => ( <div className="text-pretty">{row.original.name}</div> )

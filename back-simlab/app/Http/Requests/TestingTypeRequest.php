@@ -21,6 +21,7 @@ class TestingTypeRequest extends ApiRequest
     {
         $maxInt = 2147483647; // batas maksimum integer signed 32-bit
         return [
+            'testing_category_id' => 'required|exists:testing_categories,id',
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:255',
             'student_price' => 'required|integer|min:0|max:' . $maxInt,
@@ -32,6 +33,8 @@ class TestingTypeRequest extends ApiRequest
     public function messages(): array
     {
         return [
+            'testing_category_id.required' => 'Kategori Pengujian wajib dipilih.',
+            'testing_category_id.exists' => 'Kategori Pengujian tidak valid.',
             'name.required' => 'Nama jenis pengujian wajib diisi',
             'name.string' => 'Nama jenis pengujian harus berupa teks',
             'name.max' => 'Nama jenis pengujian maksimal 255 karakter',

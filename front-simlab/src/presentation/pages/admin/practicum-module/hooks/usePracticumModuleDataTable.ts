@@ -45,7 +45,7 @@ export const usePracticumModuleDataTable = ({ filter_practicum }: usePracticumMo
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [debounceSearchTerm]);
+    }, [debounceSearchTerm, filter_practicum]);
 
     const refresh = useCallback(() => {
         getData()

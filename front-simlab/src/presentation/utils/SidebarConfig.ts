@@ -22,6 +22,7 @@ export const navItems: NavItem[] = [
       { title: "Prodi", url: "/panel/prodi", roles: [userRole.Admin] },
       { title: "Praktikum", url: "/panel/praktikum", roles: [userRole.Admin] },
       { title: "Modul Praktikum", url: "/panel/modul-praktikum", roles: [userRole.Admin] },
+      { title: "Kategori Pengujian", url: "/panel/kategori-pengujian", roles: [userRole.Admin] },
       { title: "Jenis Pengujian", url: "/panel/jenis-pengujian", roles: [userRole.Admin] },
       { title: "Ruangan Laboratorium", url: "/panel/ruangan-laboratorium", roles: [userRole.Admin, userRole.Laboran] },
       { title: "Alat Laboratorium", url: "/panel/alat-laboratorium", roles: [userRole.Admin, userRole.Laboran] },

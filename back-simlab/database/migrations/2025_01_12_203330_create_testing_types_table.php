@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('testing_types', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('testing_category_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('unit');
             $table->integer('student_price')->default(0);

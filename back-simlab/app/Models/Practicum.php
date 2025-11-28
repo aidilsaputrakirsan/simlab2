@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Practicum extends Model
+class Practicum extends BaseModel
 {
     use HasFactory;
     protected $fillable = ['code', 'name', 'study_program_id', 'sks'];

@@ -11,19 +11,17 @@ import { Input } from '@/presentation/components/ui/input'
 interface AcademicYearFormDialogProps {
     title: string,
     open: boolean,
-    data: AcademicYearView[]
-    dataId: number | null,
     onOpenChange: (open: boolean) => void,
     handleSave: (data: AcademicYearInputDTO) => Promise<void>
+    academicYear?: AcademicYearView
 }
 
 const AcademicYearFormDialog: React.FC<AcademicYearFormDialogProps> = ({
     title,
     open,
-    data,
-    dataId,
     onOpenChange,
-    handleSave
+    handleSave,
+    academicYear
 }) => {
     const defaultFormData = {
         name: ''
@@ -34,11 +32,8 @@ const AcademicYearFormDialog: React.FC<AcademicYearFormDialogProps> = ({
 
     useEffect(() => {
         setErrors({})
-    }, [open])
 
-    useEffect(() => {
-        if (dataId) {
-            const academicYear = data.find((data: AcademicYearView) => data.id == dataId)
+        if (academicYear) {
             setFormData({ name: academicYear?.name ?? '' })
         } else {
             setFormData(defaultFormData) // Add other required fields with default values here
@@ -53,8 +48,7 @@ const AcademicYearFormDialog: React.FC<AcademicYearFormDialogProps> = ({
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setIsSubmitting(true);
 
         try {

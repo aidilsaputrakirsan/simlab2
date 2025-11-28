@@ -54,7 +54,6 @@ const PracticumModulePage = () => {
         totalItems,
         totalPages,
         currentPage,
-        setCurrentPage
     } = usePracticumModuleDataTable({ filter_practicum: selectedPracticum })
 
     const [isOpen, setIsOpen] = useState(false)
@@ -122,10 +121,7 @@ const PracticumModulePage = () => {
                                 <Combobox
                                     options={practicums}
                                     value={selectedPracticum?.toString() || ''}
-                                    onChange={(val) => {
-                                        setSelectedPracticum(val ? Number(val) : 0)
-                                        setCurrentPage(1)
-                                    }}
+                                    onChange={(value: string) => setSelectedPracticum(Number(value))}
                                     placeholder="Pilih Praktikum"
                                     optionLabelKey='name'
                                     optionValueKey='id'

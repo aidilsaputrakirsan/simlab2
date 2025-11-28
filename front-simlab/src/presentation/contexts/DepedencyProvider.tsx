@@ -9,6 +9,7 @@ import { PracticumModuleService } from "@/application/practicum-module/Practicum
 import { PracticumSchedulingService } from "@/application/practicum-scheduling/PracticumSchedulingService"
 import { PracticumService } from "@/application/practicum/PracticumService"
 import { StudyProgramService } from "@/application/study-program/StudyProgramService"
+import { TestingCategoryService } from "@/application/testing-category/TestingCategoryService"
 import { TestingTypeService } from "@/application/testing-type/TestingTypeService"
 import { UserService } from "@/application/user/UserService"
 import { createContext } from "react"
@@ -26,7 +27,8 @@ type Services = {
     academicYearService: AcademicYearService
     studyProgramService: StudyProgramService
     practicumSchedulingService: PracticumSchedulingService,
-    bookingService: BookingService
+    bookingService: BookingService,
+    testingCategoryService: TestingCategoryService
 }
 
 const services: Services = {
@@ -42,7 +44,8 @@ const services: Services = {
     academicYearService: new AcademicYearService(),
     studyProgramService: new StudyProgramService(),
     practicumSchedulingService: new PracticumSchedulingService(),
-    bookingService: new BookingService()
+    bookingService: new BookingService(),
+    testingCategoryService: new TestingCategoryService()
 }
 
 export const DepedencyContext = createContext<Services>(services)

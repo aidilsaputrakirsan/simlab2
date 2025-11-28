@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react"
 import Table from "../../../components/Table";
@@ -16,6 +16,7 @@ import { Combobox } from "@/presentation/components/custom/combobox";
 import { useFacultySelect } from "../faculty/hooks/useFacultySelect";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useMajorDataTable } from "./hooks/useMajorDataTable";
+import { MajorView } from "@/application/major/MajorView";
 
 const MajorPage = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -38,6 +39,9 @@ const MajorPage = () => {
     }, [])
 
     const { faculties, selectedFaculty, setSelectedFaculty } = useFacultySelect()
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedFaculty])
 
     const { majorService } = useDepedencies()
     const {
@@ -58,24 +62,25 @@ const MajorPage = () => {
     } = useMajorDataTable({ filter_faculty: selectedFaculty })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
     const [type, setType] = useState<ModalType>('Add')
+    const [selectedMajor, setSelectedMajor] = useState<MajorView | undefined>(undefined)
+
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
+    const openModal = (modalType: ModalType, major?: MajorView) => {
         setType(modalType)
-        setId(id)
+        setSelectedMajor(major ?? undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openConfirm = (major: MajorView) => {
+        setSelectedMajor(major)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: MajorInputDTO): Promise<void> => {
-        if (id) {
-            const res = await majorService.updateData(id, formData)
+        if (selectedMajor) {
+            const res = await majorService.updateData(selectedMajor.id, formData)
             toast.success(res.message)
         } else {
             const res = await majorService.createData(formData)
@@ -86,8 +91,8 @@ const MajorPage = () => {
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await majorService.deleteData(id)
+        if (!selectedMajor) return
+        const res = await majorService.deleteData(selectedMajor.id)
         toast.success(res.message)
 
         refresh()
@@ -111,19 +116,16 @@ const MajorPage = () => {
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
                             <div className="relative">
-                                <Combobox
-                                    options={faculties}
-                                    value={selectedFaculty?.toString() || ''}
-                                    onChange={(val) => {
-                                        setSelectedFaculty(val ? Number(val) : 0)
-                                        setCurrentPage(1)
-                                    }}
-                                    placeholder="Pilih Fakultas"
-                                    optionLabelKey='name'
-                                    optionValueKey='id'
-                                    isFilter
-                                />
-                            </div>
+                                    <Combobox
+                                        options={faculties}
+                                        value={selectedFaculty?.toString() || ''}
+                                        onChange={(value) => setSelectedFaculty(Number(value))}
+                                        placeholder="Pilih Fakultas"
+                                        optionLabelKey='name'
+                                        optionValueKey='id'
+                                        isFilter
+                                    />
+                                </div>
                         </div>
                         <Table
                             data={majors}
@@ -144,8 +146,7 @@ const MajorPage = () => {
             <MajorFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={majors}
-                dataId={id}
+                major={selectedMajor}
                 faculties={faculties}
                 handleSave={handleSave}
                 title={type == 'Add' ? 'Tambah Jurusan' : 'Edit Jurusan'}

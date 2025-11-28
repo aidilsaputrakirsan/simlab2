@@ -17,8 +17,6 @@ export class LaboratoryMaterialView {
         readonly studentPrice: MoneyView,
         readonly lecturerPrice: MoneyView,
         readonly externalPrice: MoneyView,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly laboratoryRoom?: LaboratoryRoomView
     ) { }
 
@@ -37,8 +35,6 @@ export class LaboratoryMaterialView {
             MoneyView.toViewModel(entity.studentPrice),
             MoneyView.toViewModel(entity.lecturerPrice),
             MoneyView.toViewModel(entity.externalPrice),
-            entity.createdAt,
-            entity.updatedAt,
             entity.laboratoryRoom ? LaboratoryRoomView.fromDomain(entity.laboratoryRoom) : undefined
         )
     }

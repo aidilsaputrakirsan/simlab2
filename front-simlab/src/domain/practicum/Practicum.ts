@@ -7,8 +7,6 @@ export class Practicum {
         readonly name: string,
         readonly studyProgramId: number,
         readonly sks: number,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly studyProgram?: StudyProgram
     ){}
 }

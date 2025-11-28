@@ -7,19 +7,25 @@ export type TestingTypeApi = {
     student_price: number;
     lecturer_price: number;
     external_price: number;
-    created_at: Date | null;
-    updated_at: Date | null;
+    testing_category: {
+        id: number,
+        name: string
+    }
 }
 
 export function toDomain(api: TestingTypeApi): TestingType {
-    return new TestingType(
+    const testingType = new TestingType(
         api.id,
         api.name,
         api.unit,
         api.student_price,
         api.lecturer_price,
         api.external_price,
-        api.created_at,
-        api.updated_at
     )
+
+    if (api.testing_category) {
+        testingType.setTestingCategory(api.testing_category)
+    }
+
+    return testingType
 }

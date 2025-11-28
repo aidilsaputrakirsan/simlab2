@@ -5,8 +5,6 @@ export type MajorAPI= {
     id: number;
     code: string;
     name: string;
-    created_at: Date | null;
-    updated_at: Date | null;
     faculty?: FacultyAPI
 }
 
@@ -15,8 +13,6 @@ export function toDomain(api: MajorAPI): Major {
         api.id,
         api.code,
         api.name,
-        api.created_at,
-        api.updated_at,
         api.faculty ? toFaculty(api.faculty) : undefined
     )
 }

@@ -31,17 +31,22 @@ import PracticumSchedulingCreatePage from "./presentation/pages/admin/practicum-
 import PracticumSchedulingDetailPage from "./presentation/pages/admin/practicum-scheduling/PracticumSchedulingDetailPage";
 import PracticumSchedulingManagePage from "./presentation/pages/admin/practicum-scheduling/PracticumSchedulingManagePage";
 import PracticumSchedulingVerification from "./presentation/pages/admin/practicum-scheduling/PracticumSchedulingVerification";
-import MainPage from "./presentation/pages/landing/MainPage";
-import NewsContent from "./presentation/pages/landing/news/NewsContent";
 import FacultyPage from "./presentation/pages/admin/faculty/FacultyPage";
 import PracticumPage from "./presentation/pages/admin/practicum/PracticumPage";
 import PracticumModulePage from "./presentation/pages/admin/practicum-module/PracticumModulePage";
-import NewsPage from "./presentation/pages/landing/news/NewsPage";
 import { userRole } from "./domain/User/UserRole";
 import KepalaLabJurusanPage from "./presentation/pages/admin/user/kepala-lab-jurusan/KepalaLabJurusanPage";
 import { PracticumSchedulingProvider } from "./presentation/pages/admin/practicum-scheduling/context/PracticumSchedulingContext";
 import { DepedencyProvider } from "./presentation/contexts/DepedencyProvider";
 import { BookingProvider } from "./presentation/pages/admin/booking/context/BookingContext";
+import TestingCategoryPage from "./presentation/pages/admin/testing-category/TestingCategoryPage";
+import { lazy } from "react";
+// import MainPage from "./presentation/pages/landing/MainPage";
+// import NewsPage from "./presentation/pages/landing/news/NewsPage";
+// import NewsContent from "./presentation/pages/landing/news/NewsContent";
+const MainPage = lazy(() => import('./presentation/pages/landing/MainPage'))
+const NewsContent = lazy(() => import('./presentation/pages/landing/news/NewsContent'))
+const NewsPage = lazy(() => import('./presentation/pages/landing/news/NewsPage'))
 
 export const router = createBrowserRouter([
     {
@@ -93,6 +98,14 @@ export const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute allowedRoles={[userRole.Admin]}>
                         <AcademicYearPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'kategori-pengujian',
+                element: (
+                    <ProtectedRoute allowedRoles={[userRole.Admin]}>
+                        <TestingCategoryPage />
                     </ProtectedRoute>
                 )
             },
@@ -169,7 +182,7 @@ export const router = createBrowserRouter([
                 )
             },
             {
-                path: userRole.Admin,
+                path: 'admin',
                 element: (
                     <ProtectedRoute allowedRoles={[userRole.Admin]}>
                         <AdminPage />

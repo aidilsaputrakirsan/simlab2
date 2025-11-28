@@ -1,4 +1,10 @@
 export class TestingType {
+
+    private testingCategory?: {
+        id: number,
+        name: string
+    };
+
     constructor(
         readonly id: number,
         readonly name: string,
@@ -6,7 +12,13 @@ export class TestingType {
         readonly studentPrice: number,
         readonly lecturerPrice: number,
         readonly externalPrice: number,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null
     ){}
+
+    setTestingCategory(testingCategoryData: {id: number, name: string}) {
+        this.testingCategory = testingCategoryData
+    }
+
+    getTestingCategory() {
+        return this.testingCategory
+    }
 }

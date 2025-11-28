@@ -4,7 +4,13 @@ import { useDepedencies } from "@/presentation/contexts/useDepedencies"
 import { useDebounce } from "@/presentation/hooks/useDebounce"
 import { useCallback, useEffect, useState } from "react"
 
-export const useTestingTypeDataTable = () => {
+interface useTestingTypeDataTable {
+    filter_testing_category: number
+}
+
+export const useTestingTypeDataTable = ({
+    filter_testing_category
+}: useTestingTypeDataTable) => {
     const { testingTypeService } = useDepedencies()
 
     const table = useTable()
@@ -28,12 +34,13 @@ export const useTestingTypeDataTable = () => {
             page: currentPage,
             per_page: perPage,
             search: searchTerm,
+            filter_testing_category: filter_testing_category
         })
         setTestingTypes(response.data ?? [])
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, debounceSearchTerm])
+    }, [currentPage, perPage, debounceSearchTerm, filter_testing_category])
 
     useEffect(() => {
         getData();

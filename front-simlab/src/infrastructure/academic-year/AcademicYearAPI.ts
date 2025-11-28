@@ -4,8 +4,6 @@ export type AcademicYearAPI = {
     id: number;
     name: string;
     status: 'Active' | 'Deactive';
-    created_at: Date | null;
-    updated_at: Date | null;
 }
 
 export function toDomain(api: AcademicYearAPI): AcademicYear  {
@@ -13,7 +11,5 @@ export function toDomain(api: AcademicYearAPI): AcademicYear  {
         api.id,
         api.name,
         api.status,
-        api.created_at,
-        api.updated_at
     )
 }

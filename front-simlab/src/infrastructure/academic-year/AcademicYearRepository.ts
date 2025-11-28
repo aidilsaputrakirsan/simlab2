@@ -77,11 +77,7 @@ export class AcademicYearRepository implements IAdacemicYearRepository {
 
         const json = await response.json() as ApiResponse
         if (response.ok) {
-            const data = json.data as AcademicYearAPI
-            return {
-                ...json,
-                data: toDomain(data)
-            }
+            return json
         }
 
         throw json

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PracticumSchedulingController;
 use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\TestingTypeController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\TestingCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,15 +46,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->only(['index']);
     Route::resource('practicums', PracticumController::class)->only(['index']);
 
-    Route::middleware(['role:admin|laboran|kepala_lab_terpadu'])->group(function () {
-        Route::resource('users', UserController::class)->only(['index']);
-    });
-    Route::middleware(['role:admin|laboran|kepala_lab_terpadu|kepala_lab_jurusan|dosen|mahasiswa'])->group(function () {
-        Route::get('/practicums/select', [PracticumController::class, 'getDataForSelect']);
-        Route::get('/laboratory-rooms/select', [LaboratoryRoomController::class, 'getDataForSelect']);
-        Route::get('/users/select', [UserController::class, 'getDataForSelect']);
-    });
-    Route::middleware(['role:admin|laboran'])->group(function () {
+    // Spesific select API
+    Route::get('/practicums/select', [PracticumController::class, 'getDataForSelect']);
+    Route::get('/laboratory-rooms/select', [LaboratoryRoomController::class, 'getDataForSelect']);
+    Route::get('/users/select', [UserController::class, 'getDataForSelect']);
+
+    // Admin only API
+    Route::middleware(['role:admin'])->group(function () {
         // Academic Year Route
         Route::put('/academic-years/{id}/toggle-status', [AcademicYearController::class, 'toggleStatus']);
         Route::resource('academic-years', AcademicYearController::class);
@@ -80,14 +79,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/practicum-modules/{id}/toggle-status', [PracticumModuleController::class, 'toggleStatus']);
         Route::resource('practicum-modules', PracticumModuleController::class);
 
-        Route::resource('laboratory-rooms', LaboratoryRoomController::class)->except(['index']);
-
-        Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->except(['index']);
-        Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
-
         // User: admin, kepala_lab_terpadu, Koorpro, Kepala Lab Unit, laboran, Dosen, Mahasiswa, External
         Route::put('/users/{user}/restore-dosen', [UserController::class, 'restoreToDosen']);
-        Route::resource('users', UserController::class)->except(['index']);
+        Route::resource('users', UserController::class);
+
+        Route::get('/testing-categories/select', [TestingCategoryController::class, 'getDataForSelect']);
+        Route::resource('testing-categories', TestingCategoryController::class);
+    });
+
+    Route::middleware(['role:admin|laboran'])->group(function () {
+        Route::resource('laboratory-rooms', LaboratoryRoomController::class)->except(['index']);
+        Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->except(['index']);
+        Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
 
@@ -113,7 +116,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/verify-return', [BookingController::class, 'bookingReturnVerification']);
         });
 
-        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar'], function() {
+        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar'], function () {
             Route::post('/{id}/confirm-return', [BookingController::class, 'bookingReturnConfirmation']);
         });
     });
@@ -153,6 +156,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('/test', function() {
+    dd(now());
+});

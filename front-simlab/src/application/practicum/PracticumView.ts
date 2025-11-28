@@ -8,8 +8,6 @@ export class PracticumView {
         readonly name: string,
         readonly studyProgramId: number,
         readonly sks: number,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly studyProgram?: StudyProgramView
     ) {}
 
@@ -20,8 +18,6 @@ export class PracticumView {
             entity.name,
             entity.studyProgramId,
             entity.sks,
-            entity.createdAt,
-            entity.updatedAt,
             entity.studyProgram ? StudyProgramView.fromDomain(entity.studyProgram) : undefined
         )
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\TestingTypeRequest;
+use App\Http\Resources\TestingTypeResource;
 use App\Models\TestingType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -14,6 +15,14 @@ class TestingTypeController extends BaseController
         try {
             // Start with a base query
             $query = TestingType::query();
+
+            $query->with([
+                'testingCategory'
+            ]);
+
+            if ($request->filter_testing_category) {
+                $query->where('testing_category_id', $request->filter_testing_category);
+            }
 
             // Add search functionality
             if ($request->has('search')) {
@@ -29,7 +38,15 @@ class TestingTypeController extends BaseController
             // Execute pagination
             $testing_types = $query->paginate($perPage, ['*'], 'page', $page);
 
-            return $this->sendResponse($testing_types, 'Data jenis pengujian berhasil diambil');
+            $response = [
+                'current_page' => $testing_types->currentPage(),
+                'last_page' => $testing_types->lastPage(),
+                'per_page' => $testing_types->perPage(),
+                'total' => $testing_types->total(),
+                'data' => TestingTypeResource::collection($testing_types)
+            ];
+
+            return $this->sendResponse($response, 'Data jenis pengujian berhasil diambil');
         } catch (\Exception $e) {
             return $this->sendError('Gagal mengambil data jenis pengujian', [$e->getMessage()], 500);
         }

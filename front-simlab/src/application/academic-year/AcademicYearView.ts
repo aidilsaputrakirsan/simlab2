@@ -5,8 +5,6 @@ export class AcademicYearView {
         readonly id: number,
         readonly name: string,
         readonly status: 'Active' | 'Deactive',
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null
     ){}
 
     static fromDomain(entity: AcademicYear) {
@@ -14,8 +12,6 @@ export class AcademicYearView {
             entity.id,
             entity.name,
             entity.status,
-            entity.createdAt,
-            entity.updatedAt
         )
     }
 }

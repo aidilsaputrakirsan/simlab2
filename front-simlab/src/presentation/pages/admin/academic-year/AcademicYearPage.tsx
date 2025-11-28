@@ -54,47 +54,48 @@ const AcademicYearPage = () => {
     } = useAcademicYearDataTable()
 
     const [isOpen, setIsOpen] = useState(false)
-    const [id, setId] = useState<number | null>(null)
     const [type, setType] = useState<ModalType>('Add')
+    const [selectedAcademicYear, setSelectedAcademicYear] = useState<AcademicYearView | undefined>(undefined)
 
     const [confirmOpen, setConfirmOpen] = useState(false)
     const [confirmType, setConfirmType] = useState<"delete" | "status" | null>(null)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
+    const openModal = (modalType: ModalType, academicYear?: AcademicYearView) => {
         setType(modalType)
-        setId(id)
+        setSelectedAcademicYear(academicYear ?? undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (type: "delete" | "status", id: number) => {
+    const openConfirm = (type: "delete" | "status", academicYear: AcademicYearView) => {
         setConfirmType(type)
-        setId(id)
+        setSelectedAcademicYear(academicYear)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: AcademicYearInputDTO): Promise<void> => {
-        if (id) {
-            const res = await academicYearService.updateData(id, formData)
+        if (selectedAcademicYear) {
+            const res = await academicYearService.updateData(selectedAcademicYear.id, formData)
             toast.success(res.message)
         } else {
             const res = await academicYearService.createData(formData)
             toast.success(res.message)
         }
         refresh()
-        setId(null)
+        setSelectedAcademicYear(undefined)
         setIsOpen(false)
     }
 
     const handleConfirm = async () => {
-        if (!id) return
+        if (!selectedAcademicYear) return
         if (confirmType == 'delete') {
-            const res = await academicYearService.deleteData(id)
+            const res = await academicYearService.deleteData(selectedAcademicYear.id)
             toast.success(res.message)
         } else {
-            const res = await academicYearService.toggleStatus(id)
+            const res = await academicYearService.toggleStatus(selectedAcademicYear.id)
             toast.success(res.message)
         }
         refresh()
+        setSelectedAcademicYear(undefined)
         setConfirmOpen(false)
     }
 
@@ -133,8 +134,7 @@ const AcademicYearPage = () => {
             <AcademicYearFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={academicYears}
-                dataId={id}
+                academicYear={selectedAcademicYear}
                 handleSave={handleSave}
                 title={type == 'Add' ? 'Tambah Tahun Akademik' : 'Edit Tahun Akademik'}
             />

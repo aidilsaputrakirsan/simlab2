@@ -6,6 +6,7 @@ export interface ITestingTypeRepository {
         page: number,
         per_page: number,
         search: string,
+        filter_testing_category?: number
     }): Promise<PaginatedResponse<TestingType>>
     createData(data: {
         name: string,

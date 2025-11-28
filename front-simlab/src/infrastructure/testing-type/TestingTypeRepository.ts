@@ -10,6 +10,7 @@ export class TestingTypeRepository implements ITestingTypeRepository {
         page: number,
         per_page: number,
         search: string,
+        filter_testing_category?: number
     }): Promise<PaginatedResponse<TestingType>> {
         const queryString = generateQueryStringFromObject(params)
 

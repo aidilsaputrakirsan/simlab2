@@ -14,6 +14,8 @@ import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDia
 import TestingTypeFormDialog from "./components/TestingTypeFormDialog";
 import { useTestingTypeDataTable } from "./hooks/useTestingTypeDataTable";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
+import { useTestingCategorySelect } from "../testing-category/hooks/useTestingCategorySelect";
+import { Combobox } from "@/presentation/components/custom/combobox";
 
 const TestingTypePage = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -35,6 +37,8 @@ const TestingTypePage = () => {
         )
     }, [])
 
+    const { testingCategories, selectedTestingCategory, setSelectedTestingCategory } = useTestingCategorySelect()
+
     const { testingTypeService } = useDepedencies()
     const {
         testingTypes,
@@ -50,7 +54,8 @@ const TestingTypePage = () => {
         totalItems,
         totalPages,
         currentPage,
-    } = useTestingTypeDataTable()
+        setCurrentPage
+    } = useTestingTypeDataTable({ filter_testing_category: selectedTestingCategory })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [id, setId] = useState<number | null>(null)
@@ -104,6 +109,22 @@ const TestingTypePage = () => {
                         </CardAction>
                     </CardHeader>
                     <CardContent>
+                        <div className="w-full mb-3 md:w-1/3">
+                            <div className="relative">
+                                <Combobox
+                                    options={testingCategories}
+                                    value={selectedTestingCategory?.toString() || ''}
+                                    onChange={(val) => {
+                                        setSelectedTestingCategory(val ? Number(val) : 0)
+                                        setCurrentPage(1)
+                                    }}
+                                    placeholder="Pilih Kategori Pengujian"
+                                    optionLabelKey='name'
+                                    optionValueKey='id'
+                                    isFilter
+                                />
+                            </div>
+                        </div>
                         <Table
                             data={testingTypes}
                             columns={TestingTypeColumn({ openModal, openConfirm })}
@@ -115,13 +136,15 @@ const TestingTypePage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
             </div>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <TestingTypeFormDialog
                 open={isOpen}
+                testingCategories={testingCategories}
                 onOpenChange={setIsOpen}
                 data={testingTypes}
                 dataId={id}

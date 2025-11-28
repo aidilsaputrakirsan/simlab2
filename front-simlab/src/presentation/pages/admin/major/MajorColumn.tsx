@@ -3,8 +3,8 @@ import { Button } from "@/presentation/components/ui/button";
 import { MajorView } from "@/application/major/MajorView";
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', id?: number) => void;
-    openConfirm: (id: number) => void
+    openModal: (type: 'Add' | 'Edit', major?: MajorView) => void;
+    openConfirm: (major: MajorView) => void
 }
 
 export const MajorColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<MajorView>[] => [
@@ -16,10 +16,10 @@ export const MajorColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<
         accessorKey: 'id',
         cell: ({ row }) => (
             <div className="flex gap-2">
-                <Button size={'sm'} variant={'warning'} onClick={() => openModal('Edit',row.original.id)}>
+                <Button size={'sm'} variant={'warning'} onClick={() => openModal('Edit',row.original)}>
                     Edit
                 </Button>
-                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original.id)}>
+                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original)}>
                     Delete
                 </Button>
             </div>

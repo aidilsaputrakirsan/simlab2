@@ -1,5 +1,7 @@
+import { TestingCategoryView } from '@/application/testing-category/TestingCategoryView';
 import { TestingTypeInputDTO } from '@/application/testing-type/dtos/TestingTypeDTO';
 import { TestingTypeView } from '@/application/testing-type/TestingTypeView';
+import { Combobox } from '@/presentation/components/custom/combobox';
 import { Button } from '@/presentation/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog';
 import { Input } from '@/presentation/components/ui/input';
@@ -12,15 +14,17 @@ import React, { useEffect, useState } from 'react'
 interface TestingTypeFormDialogProps {
     title: string,
     open: boolean,
+    testingCategories: TestingCategoryView[]
     data: TestingTypeView[]
     dataId: number | null,
     onOpenChange: (open: boolean) => void,
-    handleSave: (data: any) => Promise<void>
+    handleSave: (data: TestingTypeInputDTO) => Promise<void>
 }
 
 const TestingTypeFormDialog: React.FC<TestingTypeFormDialogProps> = ({
     title,
     open,
+    testingCategories,
     data,
     dataId,
     onOpenChange,
@@ -31,7 +35,8 @@ const TestingTypeFormDialog: React.FC<TestingTypeFormDialogProps> = ({
         unit: '',
         student_price: null,
         lecturer_price: null,
-        external_price: null
+        external_price: null,
+        testing_category_id: null
     }
 
     const [formData, setFormData] = useState<TestingTypeInputDTO>(defaultFormData);
@@ -47,7 +52,8 @@ const TestingTypeFormDialog: React.FC<TestingTypeFormDialogProps> = ({
                 unit: testingType?.unit ?? '',
                 student_price: testingType?.studentPrice.amount ?? null,
                 lecturer_price: testingType?.lecturerPrice.amount ?? null,
-                external_price: testingType?.externalPrice.amount ?? null
+                external_price: testingType?.externalPrice.amount ?? null,
+                testing_category_id: testingType?.testingCategory?.id ?? null
             })
         } else {
             setFormData(defaultFormData)
@@ -127,6 +133,29 @@ const TestingTypeFormDialog: React.FC<TestingTypeFormDialogProps> = ({
                                     />
                                     {errors['unit'] && (
                                         <p className="mt-1 text-xs italic text-red-500">{errors['unit']}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor='testing_type'>
+                                    Kategori Pengujian <span className="text-red-500">*</span>
+                                </Label>
+                                <div>
+                                    <Combobox
+                                        options={testingCategories}
+                                        value={formData.testing_category_id?.toString() || ''}
+                                        onChange={(val) => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                testing_category_id: val ? Number(val) : 0
+                                            }))
+                                        }}
+                                        placeholder="Pilih Kategori"
+                                        optionLabelKey='name'
+                                        optionValueKey='id'
+                                    />
+                                    {errors['testing_category_id'] && (
+                                        <p className="mt-1 text-xs italic text-red-500">{errors['testing_category_id']}</p>
                                     )}
                                 </div>
                             </div>

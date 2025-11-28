@@ -17,8 +17,6 @@ export type LaboratoryEquipmentAPI = {
     student_price: number;
     lecturer_price: number;
     external_price: number;
-    created_at: Date | null;
-    updated_at: Date | null;
     laboratory_room?: LaboratoryRoomAPI
 }
 
@@ -39,8 +37,6 @@ export function toDomain(api: LaboratoryEquipmentAPI): LaboratoryEquipment {
         api.student_price,
         api.lecturer_price,
         api.external_price,
-        api.created_at,
-        api.updated_at,
         api.laboratory_room ? toLaboratoryRoom(api.laboratory_room) : undefined
     );
 }

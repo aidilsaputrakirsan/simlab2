@@ -13,21 +13,19 @@ import { FacultySelectView } from '@/application/faculty/FacultySelectView';
 interface MajorFormDialogProps {
     title: string,
     open: boolean,
-    data: MajorView[],
     faculties: FacultySelectView[]
-    dataId: number | null,
     onOpenChange: (open: boolean) => void,
     handleSave: (data: MajorInputDTO) => Promise<void>
+    major?: MajorView,
 }
 
 const MajorFormDialog: React.FC<MajorFormDialogProps> = ({
     title,
     open,
-    data,
-    dataId,
     faculties,
     onOpenChange,
-    handleSave
+    handleSave,
+    major
 }) => {
     const defaultFormData: MajorInputDTO = {
         faculty_id: null,
@@ -40,15 +38,13 @@ const MajorFormDialog: React.FC<MajorFormDialogProps> = ({
 
     useEffect(() => {
         setErrors({})
-        if (dataId) {
-            const selectedMajor = data.find((data: MajorView) => data.id == dataId)
-            if (selectedMajor) {
-                setFormData({
-                    faculty_id: selectedMajor.faculty?.id ?? null,
-                    code: selectedMajor.code,
-                    name: selectedMajor.name,
-                })
-            }
+        
+        if (major) {
+            setFormData({
+                faculty_id: major.faculty?.id ?? null,
+                code: major.code,
+                name: major.name,
+            })
         } else {
             setFormData(defaultFormData)
         }

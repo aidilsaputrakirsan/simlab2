@@ -9,8 +9,10 @@ export class TestingTypeView {
         readonly studentPrice: MoneyView,
         readonly lecturerPrice: MoneyView,
         readonly externalPrice: MoneyView,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null
+        readonly testingCategory?: {
+            id: number
+            name: string
+        }
     ){}
 
     static fromDomain(entity: TestingType) {
@@ -21,8 +23,7 @@ export class TestingTypeView {
             MoneyView.toViewModel(entity.studentPrice),
             MoneyView.toViewModel(entity.lecturerPrice),
             MoneyView.toViewModel(entity.externalPrice),
-            entity.createdAt,
-            entity.updatedAt
+            entity.getTestingCategory()
         )
     }
 }

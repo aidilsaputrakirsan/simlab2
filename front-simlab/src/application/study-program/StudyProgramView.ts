@@ -6,8 +6,6 @@ export class StudyProgramView {
         readonly id: number,
         readonly majorId: number,
         readonly name: string,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
         readonly major?: MajorView
     ) {}
 
@@ -16,8 +14,6 @@ export class StudyProgramView {
             entity.id,
             entity.majorId,
             entity.name,
-            entity.createdAt,
-            entity.updatedAt,
             entity.major ? MajorView.fromDomain(entity.major) : undefined
         )
     }

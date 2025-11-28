@@ -14,6 +14,7 @@ import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDia
 import FacultyFormDialog from './components/FacultyFormDialog';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useFacultyDataTable } from './hooks/useFacultyDataTable';
+import { FacultyView } from '@/application/faculty/FacultyView';
 
 const FacultyPage = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -53,24 +54,24 @@ const FacultyPage = () => {
     } = useFacultyDataTable()
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
+    const [selectedFaculty, setSelectedFaculty] = useState<FacultyView | undefined>(undefined)
     const [type, setType] = useState<ModalType>('Add')
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
+    const openModal = (modalType: ModalType, faculty?: FacultyView) => {
         setType(modalType)
-        setId(id)
+        setSelectedFaculty(faculty ?? undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openConfirm = (faculty: FacultyView) => {
+        setSelectedFaculty(faculty)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: FacultyInputDTO): Promise<void> => {
-        if (id) {
-            const res = await facultyService.updateData(id, formData)
+        if (selectedFaculty) {
+            const res = await facultyService.updateData(selectedFaculty.id, formData)
             toast.success(res.message)
         } else {
             const res = await facultyService.createData(formData)
@@ -82,8 +83,8 @@ const FacultyPage = () => {
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await facultyService.deleteData(id)
+        if (!selectedFaculty) return
+        const res = await facultyService.deleteData(selectedFaculty.id)
         toast.success(res.message)
 
         refresh()
@@ -124,8 +125,7 @@ const FacultyPage = () => {
             <FacultyFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={faculties}
-                dataId={id}
+                faculty={selectedFaculty}
                 handleSave={handleSave}
                 title={type == 'Add' ? 'Tambah Fakultas' : 'Edit Fakultas'}
             />
