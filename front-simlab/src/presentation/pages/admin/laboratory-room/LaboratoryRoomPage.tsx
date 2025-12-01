@@ -1,9 +1,6 @@
-import { useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useState } from "react"
 import Table from "../../../components/Table";
 import { LaboratoryRoomColumn } from "./LaboratoryRoomColumn";
-import { ModalType } from "@/presentation/shared/Types";
 import { LaboratoryRoomInputDTO } from "@/application/laboratory-room/LaboratoryRoomDTO";
 import { toast } from "sonner";
 import Header from "@/presentation/components/Header";
@@ -16,27 +13,10 @@ import { useLaboratoryRoomDataTable } from "./hooks/useLaboratoryRoomDataTable";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useUserSelect } from "../user/hooks/useUserSelect";
 import { userRole } from "@/domain/User/UserRole";
+import MainContent from "@/presentation/components/MainContent";
+import { LaboratoryRoomView } from "@/application/laboratory-room/LaboratoryRoomView";
 
 const LaboratoryRoomPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { laboratoryRoomService } =  useDepedencies()
 
     const {
@@ -58,38 +38,39 @@ const LaboratoryRoomPage = () => {
     const { users } = useUserSelect({ role: userRole.Laboran })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
-
+    const [selectedLaboratoryRoom, setSelectedLaboratoryRoom] = useState<LaboratoryRoomView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedLaboratoryRoom
+
+    const openAdd = () => {
+        setSelectedLaboratoryRoom(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (laboratoryRoom: LaboratoryRoomView) => {
+        setSelectedLaboratoryRoom(laboratoryRoom)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (laboratoryRoom: LaboratoryRoomView) => {
+        setSelectedLaboratoryRoom(laboratoryRoom)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: LaboratoryRoomInputDTO): Promise<void> => {
-        if (id) {
-            const res = await laboratoryRoomService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await laboratoryRoomService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedLaboratoryRoom
+            ? await laboratoryRoomService.updateData(selectedLaboratoryRoom.id, formData)
+            : await laboratoryRoomService.createData(formData)
+
+        toast.success(res.message)
         refresh()
-        setId(null)
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await laboratoryRoomService.deleteData(id)
+        if (!selectedLaboratoryRoom) return
+        const res = await laboratoryRoomService.deleteData(selectedLaboratoryRoom.id)
         toast.success(res.message)
 
         refresh()
@@ -99,12 +80,12 @@ const LaboratoryRoomPage = () => {
     return (
         <>
             <Header title="Menu Ruangan Laboratorium" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Ruangan Laboratorium</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -113,7 +94,7 @@ const LaboratoryRoomPage = () => {
                     <CardContent>
                         <Table
                             data={laboratoryRooms}
-                            columns={LaboratoryRoomColumn({ openModal, openConfirm })}
+                            columns={LaboratoryRoomColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -122,19 +103,19 @@ const LaboratoryRoomPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange} 
+                            handleRefresh={refresh}/>
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <LaboratoryRoomFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={laboratoryRooms}
-                laboran={users}
-                dataId={id}
+                laborans={users}
+                laboratoryRoom={selectedLaboratoryRoom}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah Ruangan Laboratorium' : 'Edit Ruangan Laboratorium'}
+                title={!isEdit ? 'Tambah Ruangan Laboratorium' : 'Edit Ruangan Laboratorium'}
             />
         </>
     )

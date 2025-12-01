@@ -1,13 +1,10 @@
-import { useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useState } from "react"
 import Table from "../../../components/Table";
 import { LaboratoryEquipmentColumn } from "./LaboratoryEquipmentColumn";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
 import { Plus } from "lucide-react";
-import { ModalType } from "@/presentation/shared/Types";
 import { LaboratoryEquipmentInputDTO } from "@/application/laboratory-equipment/LaboratoryEquipmentDTO";
 import { toast } from "sonner";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
@@ -17,29 +14,11 @@ import LaboratoryEquipmentDetailDialog from "./components/LaboratoryEquipmentDet
 import { useLaboratoryRoomSelect } from "../laboratory-room/hooks/useLaboratoryRoomSelect";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useLaboratoryEquipmentDataTable } from "./hooks/useLaboratoryEquipmentDataTable";
+import MainContent from "@/presentation/components/MainContent";
+import { LaboratoryEquipmentView } from "@/application/laboratory-equipment/LaboratoryEquipmentView";
 
 const LaboratoryEquipmentPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { laboratoryRooms, selectedLaboratoryRoom, setSelectedLaboratoryRoom } = useLaboratoryRoomSelect()
-
     const { laboratoryEquipmentService } = useDepedencies()
     const {
         laboratoryEquipments,
@@ -60,42 +39,44 @@ const LaboratoryEquipmentPage = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedLaboratoryEquipment, setSelectedEquipment] = useState<LaboratoryEquipmentView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedLaboratoryEquipment
+
+    const openAdd = () => {
+        setSelectedEquipment(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (laboratoryEquipment: LaboratoryEquipmentView) => {
+        setSelectedEquipment(laboratoryEquipment)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (laboratoryEquipment: LaboratoryEquipmentView) => {
+        setSelectedEquipment(laboratoryEquipment)
         setConfirmOpen(true)
     }
 
-    const openModalDetail = (id: number) => {
-        setId(id)
+    const openModalDetail = (laboratoryEquipment: LaboratoryEquipmentView) => {
+        setSelectedEquipment(laboratoryEquipment)
         setIsModalDetailOpen(true)
     }
 
     const handleSave = async (formData: LaboratoryEquipmentInputDTO): Promise<void> => {
-        if (id) {
-            const res = await laboratoryEquipmentService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await laboratoryEquipmentService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedLaboratoryEquipment
+            ? await laboratoryEquipmentService.updateData(selectedLaboratoryEquipment.id, formData)
+            : await laboratoryEquipmentService.createData(formData)
+        
+        toast.success(res.message)
         refresh()
-        setId(null)
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await laboratoryEquipmentService.deleteData(id)
+        if (!selectedLaboratoryEquipment) return
+        const res = await laboratoryEquipmentService.deleteData(selectedLaboratoryEquipment.id)
         toast.success(res.message)
 
         refresh()
@@ -105,12 +86,12 @@ const LaboratoryEquipmentPage = () => {
     return (
         <>
             <Header title="Menu Alat Laboratorium" />
-            <div className="flex flex-1 w-full flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Alat Laboratorium</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -135,7 +116,7 @@ const LaboratoryEquipmentPage = () => {
                         </div>
                         <Table
                             data={laboratoryEquipments}
-                            columns={LaboratoryEquipmentColumn({ openModal, openConfirm, openModalDetail })}
+                            columns={LaboratoryEquipmentColumn({ openModal: openEdit, openConfirm, openModalDetail })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -144,21 +125,24 @@ const LaboratoryEquipmentPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange} 
+                            handleRefresh={refresh}/>
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <LaboratoryEquipmentFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={laboratoryEquipments}
                 laboratoryRooms={laboratoryRooms}
-                dataId={id}
+                laboratoryEquipment={selectedLaboratoryEquipment}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah Alat Laboratorium' : 'Edit Alat Laboratorium'}
+                title={!isEdit ? 'Tambah Alat Laboratorium' : 'Edit Alat Laboratorium'}
             />
-            <LaboratoryEquipmentDetailDialog laboratoryEquipments={laboratoryEquipments} laboratoryEquipmentId={id} open={isModalDetailOpen} onOpenChange={setIsModalDetailOpen} />
+            <LaboratoryEquipmentDetailDialog 
+                laboratoryEquipment={selectedLaboratoryEquipment}
+                open={isModalDetailOpen} 
+                onOpenChange={setIsModalDetailOpen} />
         </>
     )
 }

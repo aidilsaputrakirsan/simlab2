@@ -1,9 +1,7 @@
 import { UserInputDTO } from '@/application/user/UserDTO'
 import Header from '@/presentation/components/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import Table from '@/presentation/components/Table'
@@ -13,28 +11,10 @@ import { userRole } from '@/domain/User/UserRole'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import { useUserDataTable } from '../hooks/useUserDataTable'
 import { useStudyProgramSelect } from '../../study-program/hooks/useStudyProgramSelect'
+import MainContent from '@/presentation/components/MainContent'
 
 const KepalaLabPage = () => {
-    const sectionRef = useRef(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
-    const { userService } =  useDepedencies()
+    const { userService } = useDepedencies()
     const { studyPrograms } = useStudyProgramSelect()
     const {
         users,
@@ -87,7 +67,7 @@ const KepalaLabPage = () => {
     return (
         <>
             <Header title='Menu Kepala Lab. Unit' />
-            <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Kepala Laboratorium</CardTitle>
@@ -104,7 +84,8 @@ const KepalaLabPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange} 
+                            handleRefresh={refresh}/>
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleRestoreDosen} />
@@ -117,7 +98,7 @@ const KepalaLabPage = () => {
                     handleSave={handleSave}
                     title={'Edit Kepala Lab Terpadu'}
                 />
-            </div>
+            </MainContent>
         </>
     )
 }

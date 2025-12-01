@@ -6,30 +6,20 @@ import { ScrollArea } from '@/presentation/components/ui/scroll-area'
 import React, { useEffect, useState } from 'react'
 
 interface LaboratoryEquipmentDetailDialogProps {
-    laboratoryEquipments: LaboratoryEquipmentView[],
-    laboratoryEquipmentId: number | null
+    laboratoryEquipment?: LaboratoryEquipmentView
     open: boolean,
     onOpenChange: (open: boolean) => void,
 }
 
 const LaboratoryEquipmentDetailDialog: React.FC<LaboratoryEquipmentDetailDialogProps> = ({
-    laboratoryEquipments,
-    laboratoryEquipmentId,
+    laboratoryEquipment,
     open,
     onOpenChange
 }) => {
-    const [laboratoryEquipment, setLaboratoryEqupment] = useState<LaboratoryEquipmentView>();
     const [imageError, setImageError] = useState<boolean>(false);
 
     useEffect(() => {
-        if (laboratoryEquipmentId) {
-            const selectedLaboratoryEquipment = laboratoryEquipments.find((laboratoryEquipment) => laboratoryEquipment.id == laboratoryEquipmentId)
-            setLaboratoryEqupment(selectedLaboratoryEquipment)
-            setImageError(false)
-        } else {
-            setLaboratoryEqupment(undefined)
-            setImageError(false);
-        }
+        setImageError(false)
     }, [open])
 
     const handleImageError = () => {

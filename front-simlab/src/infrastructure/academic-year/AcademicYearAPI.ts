@@ -3,13 +3,13 @@ import { AcademicYear } from "../../domain/academic-year/AcademicYear";
 export type AcademicYearAPI = {
     id: number;
     name: string;
-    status: 'Active' | 'Deactive';
+    status: string;
 }
 
 export function toDomain(api: AcademicYearAPI): AcademicYear  {
     return new AcademicYear(
         api.id,
         api.name,
-        api.status,
+        api.status as 'Active' | 'Deactive',
     )
 }

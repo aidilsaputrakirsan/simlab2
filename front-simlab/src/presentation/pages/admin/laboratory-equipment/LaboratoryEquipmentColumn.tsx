@@ -3,9 +3,9 @@ import { Button } from "@/presentation/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', id?: number) => void;
-    openConfirm: (id: number) => void;
-    openModalDetail: (id: number) => void;
+    openModal: (laboratoryEquipment: LaboratoryEquipmentView) => void;
+    openConfirm: (laboratoryEquipment: LaboratoryEquipmentView) => void;
+    openModalDetail: (laboratoryEquipment: LaboratoryEquipmentView) => void;
 }
 
 export const LaboratoryEquipmentColumn = ({ openModal, openConfirm, openModalDetail }: ColumnProps): ColumnDef<LaboratoryEquipmentView>[] => [
@@ -20,13 +20,13 @@ export const LaboratoryEquipmentColumn = ({ openModal, openConfirm, openModalDet
         accessorKey: 'id' as keyof LaboratoryEquipmentView,
         cell: ({ row }) => (
             <div className="flex gap-2">
-                <Button size={'sm'} variant={'outline'} onClick={() => openModalDetail(row.original.id)}>
+                <Button size={'sm'} variant={'outline'} onClick={() => openModalDetail(row.original)}>
                     Detail
                 </Button>
-                <Button size={'sm'} onClick={() => openModal('Edit', row.original.id)}>
+                <Button size={'sm'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
-                <Button size={"sm"} variant={'destructive'} onClick={() => openConfirm(row.original.id)}>
+                <Button size={"sm"} variant={'destructive'} onClick={() => openConfirm(row.original)}>
                     Delete
                 </Button>
             </div>

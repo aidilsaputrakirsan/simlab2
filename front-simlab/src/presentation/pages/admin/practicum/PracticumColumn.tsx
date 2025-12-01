@@ -3,8 +3,8 @@ import { Button } from "@/presentation/components/ui/button";
 import { PracticumView } from "@/application/practicum/PracticumView";
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', id?: number) => void;
-    openConfirm: (id: number) => void;
+    openModal: (practicum: PracticumView) => void;
+    openConfirm: (id: PracticumView) => void;
 }
 
 export const PracticumColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<PracticumView>[] => [
@@ -17,10 +17,10 @@ export const PracticumColumn = ({ openModal, openConfirm }: ColumnProps): Column
         accessorKey: 'id' as keyof PracticumView,
         cell: ({ row }) => (
             <div className="flex gap-2">
-                <Button size={"sm"} variant={'warning'} onClick={() => openModal('Edit', row.original.id)}>
+                <Button size={"sm"} variant={'warning'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
-                <Button size={"sm"} variant={"destructive"} onClick={() => openConfirm(row.original.id)}>
+                <Button size={"sm"} variant={"destructive"} onClick={() => openConfirm(row.original)}>
                     Delete
                 </Button>
             </div>

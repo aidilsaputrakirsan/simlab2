@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { LoginCredentials } from "../../domain/Auth/Auth";
 import { useAuth } from "../../application/hooks/useAuth";
 import { ApiResponse } from "../shared/Types";
 import { Button } from "../components/ui/button";
@@ -9,12 +8,13 @@ import { Label } from "../components/ui/label";
 import { useValidationErrors } from "../hooks/useValidationError";
 import { toast, Toaster } from "sonner";
 import ItkLogo from '../assets/itk_logo.png'
+import { LoginDTO } from "@/application/auth/AuthDTO";
 
 export const Login: React.FC = () => {
     // hooks
     const { user, login } = useAuth();
     const { errors, setErrors, processErrors } = useValidationErrors()
-    const [formData, setFormData] = useState<LoginCredentials>({ email: '', password: '' });
+    const [formData, setFormData] = useState<LoginDTO>({ email: '', password: '' });
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();

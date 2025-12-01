@@ -1,9 +1,6 @@
-import { useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useState } from "react"
 import Table from "../../../components/Table";
 import { StudyProgramColumn } from "./StudyProgramColumn";
-import { ModalType } from "../../../shared/Types";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
@@ -16,29 +13,11 @@ import { Combobox } from "@/presentation/components/custom/combobox";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useStudyProgramDataTable } from "./hooks/useStudyProgramDataTable";
 import { useMajorSelect } from "../major/hooks/useMajorSelect";
+import MainContent from "@/presentation/components/MainContent";
+import { StudyProgramView } from "@/application/study-program/StudyProgramView";
 
 const StudyProgramPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
-    const { majors, selectedMajor,  setSelectedMajor}  = useMajorSelect()
-
+    const { majors, selectedMajor, setSelectedMajor } = useMajorSelect()
     const { studyProgramService } = useDepedencies()
     const {
         studyPrograms,
@@ -58,37 +37,39 @@ const StudyProgramPage = () => {
     } = useStudyProgramDataTable({ filter_major: selectedMajor })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedStudyProgram, setSelectedStudyProgram] = useState<StudyProgramView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedStudyProgram
+
+    const openAdd = () => {
+        setSelectedStudyProgram(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (studyProgram: StudyProgramView) => {
+        setSelectedStudyProgram(studyProgram)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (studyProgram: StudyProgramView) => {
+        setSelectedStudyProgram(studyProgram)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: StudyProgramInputDTO): Promise<void> => {
-        if (id) {
-            const res = await studyProgramService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await studyProgramService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedStudyProgram
+            ? await studyProgramService.updateData(selectedStudyProgram.id, formData)
+            : await studyProgramService.createData(formData)
+
+        toast.success(res.message)
         refresh()
-        setId(null)
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await studyProgramService.deleteData(id)
+        if (!selectedStudyProgram) return
+        const res = await studyProgramService.deleteData(selectedStudyProgram.id)
         toast.success(res.message)
 
         refresh()
@@ -98,12 +79,12 @@ const StudyProgramPage = () => {
     return (
         <>
             <Header title="Menu Program Studi" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Program Studi</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -128,7 +109,7 @@ const StudyProgramPage = () => {
                         </div>
                         <Table
                             data={studyPrograms}
-                            columns={StudyProgramColumn({ openModal, openConfirm })}
+                            columns={StudyProgramColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -140,16 +121,15 @@ const StudyProgramPage = () => {
                             handlePageChange={handlePageChange} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <StudyProgramFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={studyPrograms}
+                studyProgram={selectedStudyProgram}
                 majors={majors}
-                dataId={id}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah program studi' : 'Edit program studi'}
+                title={!isEdit ? 'Tambah program studi' : 'Edit program studi'}
             />
         </>
     )

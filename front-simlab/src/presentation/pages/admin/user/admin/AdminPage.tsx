@@ -1,6 +1,4 @@
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import Table from '../../../../components/Table'
 import { AdminColumn } from './AdminColumn'
 import Header from '@/presentation/components/Header'
@@ -11,27 +9,9 @@ import { toast } from 'sonner'
 import { userRole } from '@/domain/User/UserRole'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import { useUserDataTable } from '../hooks/useUserDataTable'
+import MainContent from '@/presentation/components/MainContent'
 
 const AdminPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const {
         users,
         isLoading,
@@ -46,7 +26,7 @@ const AdminPage = () => {
         totalItems,
         totalPages,
         currentPage
-     } = useUserDataTable({filter_study_program: 0, role: userRole.Admin})
+    } = useUserDataTable({ filter_study_program: 0, role: userRole.Admin })
 
     const { userService } = useDepedencies()
 
@@ -60,7 +40,7 @@ const AdminPage = () => {
 
     const handleSave = async (formData: UserInputDTO): Promise<void> => {
         if (!id) return;
-        
+
         const res = await userService.updateData(id, formData)
         toast.success(res.message)
         refresh()
@@ -70,7 +50,7 @@ const AdminPage = () => {
     return (
         <>
             <Header title='Menu Admin' />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Admin</CardTitle>
@@ -87,19 +67,20 @@ const AdminPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
-            </div>
+                <AdminFormDialog
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    data={users}
+                    dataId={id}
+                    handleSave={handleSave}
+                    title={'Edit Data Admin'}
+                />
+            </MainContent>
 
-            <AdminFormDialog
-                open={isOpen}
-                onOpenChange={setIsOpen}
-                data={users}
-                dataId={id}
-                handleSave={handleSave}
-                title={'Edit Data Admin'}
-            />
         </>
     )
 }

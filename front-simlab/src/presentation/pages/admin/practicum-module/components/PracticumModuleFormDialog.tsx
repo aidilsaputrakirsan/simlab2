@@ -5,29 +5,27 @@ import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
 import { Input } from '@/presentation/components/ui/input'
-import { Label } from '@/presentation/components/ui/label'
 import { Button } from '@/presentation/components/ui/button'
 import { Combobox } from '@/presentation/components/custom/combobox'
 import { PracticumSelectView } from '@/application/practicum/PracticumSelectView'
+import FormGroup from '@/presentation/components/custom/FormGroup'
 
 interface PracticumModuleFormDialogProps {
     title: string,
     open: boolean,
-    data: PracticumModuleView[],
     practicums: PracticumSelectView[]
-    dataId: number | null,
     onOpenChange: (open: boolean) => void,
-    handleSave: (data: PracticumModuleInputDTO) => Promise<void>
+    handleSave: (data: PracticumModuleInputDTO) => Promise<void>,
+    practicumModule?: PracticumModuleView
 }
 
 const PracticumModuleFormDialog: React.FC<PracticumModuleFormDialogProps> = ({
     title,
     open,
-    data,
     practicums,
-    dataId,
     onOpenChange,
     handleSave,
+    practicumModule
 }) => {
     const defaultFormData: PracticumModuleInputDTO = {
         practicum_id: null,
@@ -41,11 +39,10 @@ const PracticumModuleFormDialog: React.FC<PracticumModuleFormDialogProps> = ({
     useEffect(() => {
         setErrors({})
 
-        if (dataId) {
-            const practicumModule = data.find((data: PracticumModuleView) => data.id == dataId)
+        if (practicumModule) {
             setFormData({
-                practicum_id: practicumModule?.practicum?.id ?? null,
-                name: practicumModule?.name ?? '',
+                practicum_id: practicumModule.practicum?.id ?? null,
+                name: practicumModule.name ?? '',
             })
         } else {
             setFormData(defaultFormData)
@@ -84,47 +81,39 @@ const PracticumModuleFormDialog: React.FC<PracticumModuleFormDialogProps> = ({
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5' encType='multipart/form-data'>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='faculty_id'>
-                            Praktikum <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Combobox
-                                options={practicums}
-                                value={formData.practicum_id?.toString() || ''}
-                                onChange={(val) => {
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        practicum_id: val ? Number(val) : null
-                                    }))
-                                }}
-                                placeholder="Pilih Praktkum"
-                                optionLabelKey='name'
-                                optionValueKey='id'
-                            />
-                            {errors['practicum_id'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['practicum_id']}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='name'>
-                            Nama Modul<span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='text'
-                                id='name'
-                                name='name'
-                                value={formData['name'] || ''}
-                                onChange={handleChange}
-                                placeholder='Nama Modul'
-                            />
-                            {errors['name'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                            )}
-                        </div>
-                    </div>
+                    <FormGroup
+                        id='faculty_id'
+                        label='Practicum'
+                        error={errors['practicum_id']}
+                        required>
+                        <Combobox
+                            options={practicums}
+                            value={formData.practicum_id?.toString() || ''}
+                            onChange={(val) => {
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    practicum_id: val ? Number(val) : null
+                                }))
+                            }}
+                            placeholder="Pilih Praktkum"
+                            optionLabelKey='name'
+                            optionValueKey='id'
+                        />
+                    </FormGroup>
+                    <FormGroup
+                        id='name'
+                        label='Nama Modul'
+                        error={errors['name']}
+                        required>
+                        <Input
+                            type='text'
+                            id='name'
+                            name='name'
+                            value={formData['name'] || ''}
+                            onChange={handleChange}
+                            placeholder='Nama Modul'
+                        />
+                    </FormGroup>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="secondary">

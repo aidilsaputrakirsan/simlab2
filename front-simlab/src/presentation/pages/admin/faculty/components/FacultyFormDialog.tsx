@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
-import { Label } from '@/presentation/components/ui/label'
+import FormGroup from '@/presentation/components/custom/FormGroup'
 
 interface FacultyFormDialogProps {
     title: string,
@@ -80,12 +80,11 @@ const FacultyFormDialog: React.FC<FacultyFormDialogProps> = ({
                         <DialogDescription></DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className='flex flex-col gap-5' encType='multipart/form-data'>
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor='code'>
-                                Kode Fakultas
-                            </Label>
-                            <div>
-                                <Input
+                        <FormGroup
+                            id='code'
+                            label='Kode Fakultas'
+                            error={errors['code']}>
+                            <Input
                                     type='text'
                                     id='code'
                                     name='code'
@@ -93,16 +92,12 @@ const FacultyFormDialog: React.FC<FacultyFormDialogProps> = ({
                                     onChange={handleChange}
                                     placeholder='Kode Fakultas'
                                 />
-                                {errors['code'] && (
-                                    <p className="mt-1 text-xs italic text-red-500">{errors['code']}</p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor='name'>
-                                Nama Fakultas <span className="text-red-500">*</span>
-                            </Label>
-                            <div>
+                        </FormGroup>
+                        <FormGroup
+                            id='name'
+                            label='Nama Fakultas'
+                            error={errors['name']} 
+                            required>
                                 <Input
                                     type='text'
                                     id='name'
@@ -111,11 +106,7 @@ const FacultyFormDialog: React.FC<FacultyFormDialogProps> = ({
                                     onChange={handleChange}
                                     placeholder='Nama Fakultas'
                                 />
-                                {errors['name'] && (
-                                    <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                                )}
-                            </div>
-                        </div>
+                        </FormGroup>
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button type="button" variant="secondary">

@@ -5,8 +5,8 @@ import { ApiResponse } from '@/presentation/shared/Types'
 import { Button } from '@/presentation/components/ui/button'
 import { AcademicYearView } from '@/application/academic-year/AcademicYearView'
 import { AcademicYearInputDTO } from '@/application/academic-year/AcademicYearDTO'
-import { Label } from '@/presentation/components/ui/label'
 import { Input } from '@/presentation/components/ui/input'
+import FormGroup from '@/presentation/components/custom/FormGroup'
 
 interface AcademicYearFormDialogProps {
     title: string,
@@ -70,24 +70,20 @@ const AcademicYearFormDialog: React.FC<AcademicYearFormDialogProps> = ({
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5' encType='multipart/form-data'>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='name'>
-                            Tahun Akademik <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='text'
-                                id='name'
-                                name='name'
-                                value={formData['name'] || ''}
-                                onChange={handleChange}
-                                placeholder='Tahun Akademik'
-                            />
-                            {errors['name'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                            )}
-                        </div>
-                    </div>
+                    <FormGroup
+                        id='name'
+                        label='Tahun Akademik'
+                        error={errors['name']}
+                        required>
+                        <Input
+                            type='text'
+                            id='name'
+                            name='name'
+                            value={formData['name'] || ''}
+                            onChange={handleChange}
+                            placeholder='Tahun Akademik'
+                        />
+                    </FormGroup>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="secondary">

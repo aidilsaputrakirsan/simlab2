@@ -11,7 +11,7 @@ import { NavUser } from "../components/nav-user"
 import { NavMain } from "../components/nav-main"
 import { Toaster } from "../components/ui/sonner"
 import { useAuth } from "@/application/hooks/useAuth"
-import { ThemeProvider } from "@/application/context/ThemeContext"
+import { ThemeProvider } from "@/presentation/contexts/ThemeContext"
 import { filterNavByRole, navItems } from "../utils/SidebarConfig"
 
 export default function AdminLayout() {
@@ -24,7 +24,7 @@ export default function AdminLayout() {
   const navMain = filterNavByRole(navItems, user.role);
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="theme-setting">
+    <ThemeProvider defaultTheme="dark" storageKey="theme-setting">
       <SidebarProvider>
         <Sidebar collapsible="icon" variant="inset">
           <SidebarHeader>

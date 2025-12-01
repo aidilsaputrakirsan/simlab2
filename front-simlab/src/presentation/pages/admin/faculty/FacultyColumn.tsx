@@ -3,7 +3,7 @@ import { Button } from '@/presentation/components/ui/button';
 import { FacultyView } from '@/application/faculty/FacultyView';
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', faculty?: FacultyView) => void;
+    openModal: (faculty: FacultyView) => void;
     openConfirm: (id: FacultyView) => void
 }
 
@@ -15,7 +15,7 @@ export const FacultyColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDe
       accessorKey: 'id' as keyof FacultyView,
       cell: ({row}) => (
         <div className='flex gap-2'>
-          <Button size={'sm'} variant={'warning'} onClick={() => openModal('Edit' ,row.original)}>
+          <Button size={'sm'} variant={'warning'} onClick={() => openModal(row.original)}>
             Edit
           </Button>
           <Button variant={'destructive'} size={'sm'} onClick={() => openConfirm(row.original)}>

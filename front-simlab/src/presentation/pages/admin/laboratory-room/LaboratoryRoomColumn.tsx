@@ -3,8 +3,8 @@ import { LaboratoryRoomView } from '@/application/laboratory-room/LaboratoryRoom
 import { Button } from '@/presentation/components/ui/button';
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', id?: number) => void;
-    openConfirm: (id: number) => void;
+    openModal: (laboratoryRoom: LaboratoryRoomView) => void;
+    openConfirm: (laboratoryRoom: LaboratoryRoomView) => void;
 }
 
 export const LaboratoryRoomColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<LaboratoryRoomView>[] => [
@@ -31,10 +31,10 @@ export const LaboratoryRoomColumn = ({ openModal, openConfirm }: ColumnProps): C
         accessorKey: 'id' as keyof LaboratoryRoomView,
         cell: ({ row }) => (
             <div className='flex gap-2'>
-                <Button size={'sm'} onClick={() => openModal('Edit', row.original.id)}>
+                <Button size={'sm'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
-                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original.id)}>
+                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original)}>
                     Delete
                 </Button>
             </div>

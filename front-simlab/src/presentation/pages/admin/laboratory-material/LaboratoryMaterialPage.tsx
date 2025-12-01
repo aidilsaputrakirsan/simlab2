@@ -1,9 +1,6 @@
-import { useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useState } from "react"
 import Table from "../../../components/Table";
 import { LaboratoryMaterialColumn } from "./LaboratoryMaterialColumn";
-import { ModalType } from "@/presentation/shared/Types";
 import { toast } from "sonner";
 import { LaboratoryMaterialInputDTO } from "@/application/laboratory-material/LaboratoryMaterialDTO";
 import Header from "@/presentation/components/Header";
@@ -17,27 +14,10 @@ import LaboratoryMaterialDetailDialog from "./components/LaboratoryMaterialDetai
 import { useLaboratoryRoomSelect } from "../laboratory-room/hooks/useLaboratoryRoomSelect";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useLaboratoryMaterialDataTable } from "./hooks/useLaboratoryMaterialDataTable";
+import MainContent from "@/presentation/components/MainContent";
+import { LaboratoryMaterialView } from "@/application/laboratory-material/LaboratoryMaterialView";
 
 const LaboratoryMaterialPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { laboratoryRooms, selectedLaboratoryRoom, setSelectedLaboratoryRoom } = useLaboratoryRoomSelect()
 
     const { laboratoryMaterialService } = useDepedencies()
@@ -60,42 +40,44 @@ const LaboratoryMaterialPage = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedLaboratoryMaterial, setSelectedLaboratoryMaterial] = useState<LaboratoryMaterialView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedLaboratoryMaterial
+
+    const openAdd = () => {
+        setSelectedLaboratoryMaterial(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (laboratoryMaterial: LaboratoryMaterialView) => {
+        setSelectedLaboratoryMaterial(laboratoryMaterial)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (laboratoryMaterial: LaboratoryMaterialView) => {
+        setSelectedLaboratoryMaterial(laboratoryMaterial)
         setConfirmOpen(true)
     }
 
-    const openModalDetail = (id: number) => {
-        setId(id)
+    const openModalDetail = (laboratoryMaterial: LaboratoryMaterialView) => {
+        setSelectedLaboratoryMaterial(laboratoryMaterial)
         setIsDetailOpen(true)
     }
 
     const handleSave = async (formData: LaboratoryMaterialInputDTO): Promise<void> => {
-        if (id) {
-            const res = await laboratoryMaterialService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await laboratoryMaterialService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedLaboratoryMaterial
+            ? await laboratoryMaterialService.updateData(selectedLaboratoryMaterial.id, formData)
+            : await laboratoryMaterialService.createData(formData)
+
+        toast.success(res.message)
         refresh()
-        setId(null)
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await laboratoryMaterialService.deleteData(id)
+        if (!selectedLaboratoryMaterial) return
+        const res = await laboratoryMaterialService.deleteData(selectedLaboratoryMaterial.id)
         toast.success(res.message)
 
         refresh()
@@ -105,12 +87,12 @@ const LaboratoryMaterialPage = () => {
     return (
         <>
             <Header title="Menu Ruangan Laboratorium" />
-            <div className="flex flex-1 w-full flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Bahan Laboratorium</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -135,7 +117,7 @@ const LaboratoryMaterialPage = () => {
                         </div>
                         <Table
                             data={laboratoryMaterials}
-                            columns={LaboratoryMaterialColumn({ openModal, openConfirm, openModalDetail })}
+                            columns={LaboratoryMaterialColumn({ openModal: openEdit, openConfirm, openModalDetail })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -144,23 +126,22 @@ const LaboratoryMaterialPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <LaboratoryMaterialFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={laboratoryMaterials}
                 laboratoryRooms={laboratoryRooms}
-                dataId={id}
+                laboratoryMaterial={selectedLaboratoryMaterial}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah Bahan Laboratorium' : 'Edit Bahan Laboratorium'}
+                title={!isEdit ? 'Tambah Bahan Laboratorium' : 'Edit Bahan Laboratorium'}
             />
             <LaboratoryMaterialDetailDialog
-                laboratoryMaterials={laboratoryMaterials}
-                laboratoryMaterialId={id}
+                laboratoryMaterial={selectedLaboratoryMaterial}
                 open={isDetailOpen}
                 onOpenChange={setIsDetailOpen} />
         </>

@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthRepository } from "../../infrastructure/auth/AuthRepository";
 import { LoginCredentials, RegisterCredentials } from "../../domain/Auth/Auth";
 import { StorageManager } from "../../infrastructure/StorageManager";
 import LoadingPage from "@/presentation/components/LoadingPage";
-import { UserView } from "../user/UserView";
+import { UserView } from "../../application/user/UserView";
+import { AuthService } from "../../application/auth/AuthService";
+import { LoginDTO, RegisterDTO } from "../../application/auth/AuthDTO";
 
 interface AuthContextType {
     user: UserView | null,
@@ -19,7 +20,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 type AuthProps = {
     children: React.ReactNode
 }
-const authRepository: AuthRepository = new AuthRepository();
+const authService = new AuthService();
 
 export const AuthProvider = ({ children }: AuthProps) => {
     const [user, setUser] = useState<UserView | null>(null)
@@ -31,8 +32,8 @@ export const AuthProvider = ({ children }: AuthProps) => {
     useEffect(() => {
         const initialAuth = async () => {
             try {
-                const user = await authRepository.getCurrentUser(token || '')
-                setUser(UserView.fromDomain(user))
+                const user = await authService.getCurrentUser(token || '')
+                setUser(user)
             } catch (error: any) {
                 if (error.code === 401 && !location.pathname.startsWith('/login')) {
                     navigate('/login')
@@ -45,17 +46,17 @@ export const AuthProvider = ({ children }: AuthProps) => {
         initialAuth();
     }, [])
 
-    const login = async (credentials: LoginCredentials) => {
-        const response = await authRepository.login(credentials);
+    const login = async (credentials: LoginDTO) => {
+        const response = await authService.login(credentials);
         setUser(response)
     }
 
-    const register = async (credentials: RegisterCredentials): Promise<void> => {
-        await authRepository.register(credentials)
+    const register = async (credentials: RegisterDTO): Promise<void> => {
+        await authService.register(credentials)
     }
 
     const logout = async () => {
-        const logout = await authRepository.logout();
+        const logout = await authService.logout();
         if (logout) {
             setToken(null)
             setUser(null)

@@ -13,19 +13,17 @@ import { toast } from 'sonner'
 interface LaboranFormDialogProps {
     title: string,
     open: boolean,
-    data: UserView[],
-    dataId: number | null,
     onOpenChange: (open: boolean) => void,
-    handleSave: (data: any) => Promise<void>
+    handleSave: (data: any) => Promise<void>,
+    laboran?: UserView
 }
 
 const LaboranFormDialog: React.FC<LaboranFormDialogProps> = ({
     title,
     open,
-    data,
-    dataId,
     onOpenChange,
-    handleSave
+    handleSave,
+    laboran
 }) => {
     const defaultFormData: UserInputDTO = {
         name: null,
@@ -41,18 +39,15 @@ const LaboranFormDialog: React.FC<LaboranFormDialogProps> = ({
 
     useEffect(() => {
         setErrors({})
-        if (dataId) {
-            const selectedLaboran = data.find((laboran) => laboran.id == dataId);
-            if (selectedLaboran) {
-                setFormData({
-                    name: selectedLaboran.name,
-                    email: selectedLaboran.email,
-                    role: 'laboran',
-                    study_program_id: selectedLaboran.studyProgram?.id ?? null,
-                    identity_num: selectedLaboran.identityNum,
-                    password: ''
-                })
-            }
+        if (laboran) {
+            setFormData({
+                name: laboran.name,
+                email: laboran.email,
+                role: 'laboran',
+                study_program_id: laboran.studyProgram?.id ?? null,
+                identity_num: laboran.identityNum,
+                password: ''
+            })
         } else {
             setFormData(defaultFormData)
         }
@@ -102,9 +97,9 @@ const LaboranFormDialog: React.FC<LaboranFormDialogProps> = ({
                                         id='email'
                                         name='email'
                                         value={formData['email'] || ''}
-                                        onChange={dataId ? undefined : handleChange}
+                                        onChange={laboran ? undefined : handleChange}
                                         placeholder='Email'
-                                        disabled={dataId ? true : false}
+                                        disabled={laboran ? true : false}
                                     />
                                     {errors['email'] && (
                                         <p className="mt-1 text-xs italic text-red-500">{errors['email']}</p>

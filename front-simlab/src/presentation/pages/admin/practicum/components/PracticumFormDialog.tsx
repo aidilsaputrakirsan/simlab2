@@ -2,10 +2,10 @@ import { PracticumInputDTO } from '@/application/practicum/PracticumDTO'
 import { PracticumView } from '@/application/practicum/PracticumView'
 import { StudyProgramSelectView } from '@/application/study-program/StudyProgramSelectView'
 import { Combobox } from '@/presentation/components/custom/combobox'
+import FormGroup from '@/presentation/components/custom/FormGroup'
 import { Button } from '@/presentation/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { Input } from '@/presentation/components/ui/input'
-import { Label } from '@/presentation/components/ui/label'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
@@ -13,21 +13,19 @@ import React, { useEffect, useState } from 'react'
 interface PracticumFormDialogProps {
     title: string,
     open: boolean,
-    data: PracticumView[],
     studyProgram: StudyProgramSelectView[]
-    dataId: number | null,
     onOpenChange: (open: boolean) => void,
     handleSave: (data: any) => Promise<void>
+    practicum?: PracticumView
 }
 
 const PracticumFormDialog: React.FC<PracticumFormDialogProps> = ({
     title,
     open,
-    data,
     studyProgram,
-    dataId,
     onOpenChange,
-    handleSave
+    handleSave,
+    practicum
 }) => {
     const defaultFormData: PracticumInputDTO = {
         code: '',
@@ -44,20 +42,16 @@ const PracticumFormDialog: React.FC<PracticumFormDialogProps> = ({
     }, [open])
 
     useEffect(() => {
-        if (dataId) {
-            const selectedPracticum = data.find((practicum) => practicum.id == dataId)
-            if (selectedPracticum) {
-                setFormData({
-                    code: selectedPracticum.code,
-                    name: selectedPracticum.name ?? '',
-                    study_program_id: selectedPracticum.studyProgram?.id ?? null,
-                    sks: selectedPracticum.sks ?? 0
-                })
-            }
+        if (practicum) {
+            setFormData({
+                code: practicum.code,
+                name: practicum.name ?? '',
+                study_program_id: practicum.studyProgram?.id ?? null,
+                sks: practicum.sks ?? 0
+            })
         } else {
             setFormData(defaultFormData)
         }
-
     }, [open])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -91,85 +85,67 @@ const PracticumFormDialog: React.FC<PracticumFormDialogProps> = ({
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='code'>
-                            Kode Mata Kuliah <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='text'
-                                id='code'
-                                name='code'
-                                value={formData['code'] || ''}
-                                onChange={handleChange}
-                                placeholder='Kode Mata Kuliah'
-                            />
-                            {errors['code'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['code']}</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='name'>
-                            Nama Praktikum <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='text'
-                                id='name'
-                                name='name'
-                                value={formData['name'] || ''}
-                                onChange={handleChange}
-                                placeholder='Nama Praktikum'
-                            />
-                            {errors['name'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='study_program_id'>
-                            Nama Prodi <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Combobox
-                                options={studyProgram}
-                                value={formData.study_program_id?.toString() || ''}
-                                onChange={(val) => {
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        study_program_id: val ? Number(val) : null
-                                    }))
-                                }}
-                                placeholder="Pilih Prodi"
-                                optionLabelKey='name'
-                                optionValueKey='id'
-                            />
-                            {errors['study_program_id'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['study_program_id']}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='sks'>
-                            SKS <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='number'
-                                id='sks'
-                                name='sks'
-                                value={formData['sks'] || ''}
-                                onChange={handleChange}
-                                placeholder='0'
-                            />
-                            {errors['sks'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['sks']}</p>
-                            )}
-                        </div>
-                    </div>
+                    <FormGroup
+                        id='code'
+                        label='Kode Mata Kuliah'
+                        error={errors['code']}
+                        required>
+                        <Input
+                            type='text'
+                            id='code'
+                            name='code'
+                            value={formData['code'] || ''}
+                            onChange={handleChange}
+                            placeholder='Kode Mata Kuliah'
+                        />
+                    </FormGroup>
+                    <FormGroup
+                        id='name'
+                        label='Nama Praktikum'
+                        error={errors['name']}
+                        required>
+                        <Input
+                            type='text'
+                            id='name'
+                            name='name'
+                            value={formData['name'] || ''}
+                            onChange={handleChange}
+                            placeholder='Nama Praktikum'
+                        />
+                    </FormGroup>
+                    <FormGroup
+                        id='study_program_id'
+                        label='Nama Prodi'
+                        error={errors['study_program_id']}
+                        required>
+                        <Combobox
+                            options={studyProgram}
+                            value={formData.study_program_id?.toString() || ''}
+                            onChange={(val) => {
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    study_program_id: val ? Number(val) : null
+                                }))
+                            }}
+                            placeholder="Pilih Prodi"
+                            optionLabelKey='name'
+                            optionValueKey='id'
+                        />
+                    </FormGroup>
+                    <FormGroup
+                        id='sks'
+                        label='SKS'
+                        error={errors['sks']}
+                        required>
+                        <Input
+                            type='number'
+                            id='sks'
+                            name='sks'
+                            value={formData['sks'] || ''}
+                            onChange={handleChange}
+                            placeholder='0'
+                        />
+                    </FormGroup>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="secondary">

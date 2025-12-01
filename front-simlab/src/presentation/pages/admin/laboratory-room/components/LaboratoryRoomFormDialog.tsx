@@ -2,10 +2,10 @@ import { LaboratoryRoomInputDTO } from '@/application/laboratory-room/Laboratory
 import { LaboratoryRoomView } from '@/application/laboratory-room/LaboratoryRoomView';
 import { UserSelectView } from '@/application/user/UserSelectView';
 import { Combobox } from '@/presentation/components/custom/combobox';
+import FormGroup from '@/presentation/components/custom/FormGroup';
 import { Button } from '@/presentation/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog';
 import { Input } from '@/presentation/components/ui/input';
-import { Label } from '@/presentation/components/ui/label';
 import { ScrollArea } from '@/presentation/components/ui/scroll-area';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
@@ -15,21 +15,19 @@ import React, { useEffect, useState } from 'react'
 interface LaboratoryRoomFormDialogProps {
     title: string,
     open: boolean,
-    laboran: UserSelectView[]
-    data: LaboratoryRoomView[],
-    dataId: number | null,
+    laborans: UserSelectView[]
     onOpenChange: (open: boolean) => void,
     handleSave: (data: any) => Promise<void>
+    laboratoryRoom?: LaboratoryRoomView
 }
 
 const LaboratoryRoomFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
     title,
     open,
-    laboran,
-    data,
-    dataId,
+    laborans,
     onOpenChange,
-    handleSave
+    handleSave,
+    laboratoryRoom
 }) => {
     const defaultFormData: LaboratoryRoomInputDTO = {
         name: '',
@@ -45,18 +43,15 @@ const LaboratoryRoomFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
 
     useEffect(() => {
         setErrors({})
-        if (dataId) {
-            const selectedLaboratoryRoom = data.find((laboratoryRoom) => laboratoryRoom.id == dataId)
-            if (selectedLaboratoryRoom) {
-                setFormData({
-                    name: selectedLaboratoryRoom.name,
-                    floor: selectedLaboratoryRoom.floor,
-                    user_id: selectedLaboratoryRoom.user?.id ?? null,
-                    student_price: selectedLaboratoryRoom.studentPrice.amount,
-                    lecturer_price: selectedLaboratoryRoom.lecturerPrice.amount,
-                    external_price: selectedLaboratoryRoom.externalPrice.amount,
-                })
-            }
+        if (laboratoryRoom) {
+            setFormData({
+                name: laboratoryRoom.name,
+                floor: laboratoryRoom.floor,
+                user_id: laboratoryRoom.user?.id ?? null,
+                student_price: laboratoryRoom.studentPrice.amount,
+                lecturer_price: laboratoryRoom.lecturerPrice.amount,
+                external_price: laboratoryRoom.externalPrice.amount,
+            })
         } else {
             setFormData(defaultFormData)
         }
@@ -103,132 +98,109 @@ const LaboratoryRoomFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
                     <ScrollArea className='h-full max-h-[70vh]'>
                         <div className='grid md:grid-cols-2 gap-x-2 gap-y-5 p-1'>
-                            <div className='flex flex-col gap-2 md:col-span-2'>
-                                <Label htmlFor='name'>
-                                    Nama Ruangan <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Input
-                                        type='text'
-                                        id='name'
-                                        name='name'
-                                        value={formData['name'] || ''}
-                                        onChange={handleChange}
-                                        placeholder='Nama Ruangan'
-                                    />
-                                    {errors['name'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                                    )}
-                                </div>
-                            </div>
+                            <FormGroup
+                                className='md:col-span-2'
+                                id='name'
+                                label='Nama Ruangan'
+                                error={errors['name']}
+                                required>
+                                <Input
+                                    type='text'
+                                    id='name'
+                                    name='name'
+                                    value={formData['name'] || ''}
+                                    onChange={handleChange}
+                                    placeholder='Nama Ruangan'
+                                />
+                            </FormGroup>
+                            <FormGroup
+                                id='floor'
+                                label='Ruangan'
+                                error={errors['floor']}
+                                required>
+                                <Select name='floor' value={formData['floor']} onValueChange={(value) =>
+                                    handleChange({
+                                        target: {
+                                            name: 'floor',
+                                            value: value
+                                        }
+                                    } as React.ChangeEvent<HTMLInputElement>)}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Pilih Lantai" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Lantai</SelectLabel>
+                                            <SelectItem value="Lantai 1">Lantai 1</SelectItem>
+                                            <SelectItem value="Lantai 2">Lantai 2</SelectItem>
+                                            <SelectItem value="Lantai 3">Lantai 3</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </FormGroup>
+                            <FormGroup
+                                id='user_id'
+                                label='Petugas Laboran'
+                                error={errors['user_id']}
+                                required>
+                                <Combobox
+                                    options={laborans}
+                                    value={formData.user_id?.toString() || ''}
+                                    onChange={(val) => {
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            user_id: val ? Number(val) : null
+                                        }))
+                                    }}
+                                    placeholder="Pilih Laboran"
+                                    optionLabelKey='name'
+                                    optionValueKey='id'
+                                />
+                            </FormGroup>
 
-                            <div className='flex flex-col gap-2'>
-                                <Label htmlFor='floor'>
-                                    Ruangan <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Select name='floor' value={formData['floor']} onValueChange={(value) =>
-                                        handleChange({
-                                            target: {
-                                                name: 'floor',
-                                                value: value
-                                            }
-                                        } as React.ChangeEvent<HTMLInputElement>)}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Pilih Lantai" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Lantai</SelectLabel>
-                                                <SelectItem value="Lantai 1">Lantai 1</SelectItem>
-                                                <SelectItem value="Lantai 2">Lantai 2</SelectItem>
-                                                <SelectItem value="Lantai 3">Lantai 3</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    {errors['floor'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['floor']}</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className='flex flex-col gap-2'>
-                                <Label htmlFor='user'>
-                                    Petugas Laboran <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Combobox
-                                        options={laboran}
-                                        value={formData.user_id?.toString() || ''}
-                                        onChange={(val) => {
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                user_id: val ? Number(val) : null
-                                            }))
-                                        }}
-                                        placeholder="Pilih Laboran"
-                                        optionLabelKey='name'
-                                        optionValueKey='id'
-                                    />
-                                    {errors['user_id'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['user_id']}</p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-2 md:col-span-2">
-                                <Label htmlFor='student_price'>
-                                    Harga Mahasiswa <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Input
-                                        type='number'
-                                        id='student_price'
-                                        name='student_price'
-                                        value={formData['student_price'] ?? ''}
-                                        onChange={handleChange}
-                                        placeholder='Harga mahasiswa'
-                                    />
-                                    {errors['student_price'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['student_price']}</p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor='lecturer_price'>
-                                    Harga Dosen <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Input
-                                        type='number'
-                                        id='lecturer_price'
-                                        name='lecturer_price'
-                                        value={formData['lecturer_price'] ?? ''}
-                                        onChange={handleChange}
-                                        placeholder='Harga Dosen'
-                                    />
-                                    {errors['lecturer_price'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['lecturer_price']}</p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor='external_price'>
-                                    Harga Pihak External <span className="text-red-500">*</span>
-                                </Label>
-                                <div>
-                                    <Input
-                                        type='number'
-                                        id='external_price'
-                                        name='external_price'
-                                        value={formData['external_price'] ?? ''}
-                                        onChange={handleChange}
-                                        placeholder='Harga Pihak External'
-                                    />
-                                    {errors['external_price'] && (
-                                        <p className="mt-1 text-xs italic text-red-500">{errors['external_price']}</p>
-                                    )}
-                                </div>
-                            </div>
+                            <FormGroup
+                                id='student_price'
+                                label='Harga Mahasiswa'
+                                error={errors['student_price']}
+                                required>
+                                <Input
+                                    type='number'
+                                    id='student_price'
+                                    name='student_price'
+                                    value={formData['student_price'] ?? ''}
+                                    onChange={handleChange}
+                                    placeholder='Harga mahasiswa'
+                                />
+                            </FormGroup>
+                            <FormGroup
+                                id='lecturer_price'
+                                label='Harga Dosen'
+                                error={errors['lecturer_price']}
+                                required>
+                                <Input
+                                    type='number'
+                                    id='lecturer_price'
+                                    name='lecturer_price'
+                                    value={formData['lecturer_price'] ?? ''}
+                                    onChange={handleChange}
+                                    placeholder='Harga Dosen'
+                                />
+                            </FormGroup>
+                            <FormGroup
+                                className='md:col-span-2'
+                                id='external_price'
+                                label='Harga Pihak External'
+                                error={errors['external_price']}
+                                required>
+                                <Input
+                                    type='number'
+                                    id='external_price'
+                                    name='external_price'
+                                    value={formData['external_price'] ?? ''}
+                                    onChange={handleChange}
+                                    placeholder='Harga Pihak External'
+                                />
+                            </FormGroup>
                         </div>
                     </ScrollArea>
                     <DialogFooter>

@@ -1,12 +1,9 @@
-import { useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useState } from "react"
 import Table from "../../../components/Table";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
 import { Plus } from "lucide-react";
-import { ModalType } from "@/presentation/shared/Types";
 import { toast } from "sonner";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
 import { PracticumInputDTO } from "@/application/practicum/PracticumDTO";
@@ -16,27 +13,10 @@ import PracticumFormDialog from "./components/PracticumFormDialog";
 import { useStudyProgramSelect } from "../study-program/hooks/useStudyProgramSelect";
 import { usePracticumDataTable } from "./hooks/usePracticumDataTable";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
+import MainContent from "@/presentation/components/MainContent";
+import { PracticumView } from "@/application/practicum/PracticumView";
 
 const PracticumPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { studyPrograms, selectedStudyProgram, setSelectedStudyProgram } = useStudyProgramSelect()
 
     const { practicumService } = useDepedencies()
@@ -58,37 +38,39 @@ const PracticumPage = () => {
     } = usePracticumDataTable({ filter_study_program: selectedStudyProgram })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedPracticum, setSelectedPracticum] = useState<PracticumView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedPracticum
+
+    const openAdd = () => {
+        setSelectedPracticum(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (practicum: PracticumView) => {
+        setSelectedPracticum(practicum)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (practicum: PracticumView) => {
+        setSelectedPracticum(practicum)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: PracticumInputDTO): Promise<void> => {
-        if (id) {
-            const res = await practicumService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await practicumService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedPracticum
+            ? await practicumService.updateData(selectedPracticum.id, formData)
+            : await practicumService.createData(formData)
+
+        toast.success(res.message)
         refresh()
-        setId(null)
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await practicumService.deleteData(id)
+        if (!selectedPracticum) return
+        const res = await practicumService.deleteData(selectedPracticum.id)
         toast.success(res.message)
 
         refresh()
@@ -98,12 +80,12 @@ const PracticumPage = () => {
     return (
         <>
             <Header title="Menu Data Praktikum" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Data Praktikum</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -111,24 +93,22 @@ const PracticumPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
-                            <div className="relative">
-                                <Combobox
-                                    options={studyPrograms}
-                                    value={selectedStudyProgram?.toString() || ''}
-                                    onChange={(val) => {
-                                        setSelectedStudyProgram(val ? Number(val) : 0)
-                                        setCurrentPage(1)
-                                    }}
-                                    placeholder="Pilih Prodi"
-                                    optionLabelKey='name'
-                                    optionValueKey='id'
-                                    isFilter
-                                />
-                            </div>
+                            <Combobox
+                                options={studyPrograms}
+                                value={selectedStudyProgram?.toString() || ''}
+                                onChange={(val) => {
+                                    setSelectedStudyProgram(val ? Number(val) : 0)
+                                    setCurrentPage(1)
+                                }}
+                                placeholder="Pilih Prodi"
+                                optionLabelKey='name'
+                                optionValueKey='id'
+                                isFilter
+                            />
                         </div>
                         <Table
                             data={practicums}
-                            columns={PracticumColumn({ openModal, openConfirm })}
+                            columns={PracticumColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -140,16 +120,15 @@ const PracticumPage = () => {
                             handlePageChange={handlePageChange} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <PracticumFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={practicums}
+                practicum={selectedPracticum}
                 studyProgram={studyPrograms}
-                dataId={id}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah data praktikum' : 'Edit data praktikum'}
+                title={!isEdit ? 'Tambah data praktikum' : 'Edit data praktikum'}
             />
         </>
     )

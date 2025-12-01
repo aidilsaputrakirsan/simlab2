@@ -1,10 +1,7 @@
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import Table from '../../../../components/Table'
 import { LaboranColumn } from './LaboranColumn'
 import { toast } from 'sonner'
-import { ModalType } from '@/presentation/shared/Types'
 import { UserInputDTO } from '@/application/user/UserDTO'
 import Header from '@/presentation/components/Header'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
@@ -15,27 +12,10 @@ import LaboranFormDialog from './components/LaboranFormDialog'
 import { userRole } from '@/domain/User/UserRole'
 import { useUserDataTable } from '../hooks/useUserDataTable'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
+import MainContent from '@/presentation/components/MainContent'
+import { UserView } from '@/application/user/UserView'
 
 const LaboranPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { userService } = useDepedencies()
     const {
         users,
@@ -54,38 +34,45 @@ const LaboranPage = () => {
     } = useUserDataTable({ filter_study_program: 0, role: userRole.Laboran })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedLaboran, setSelectedlaboran] = useState<UserView>()
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
+    const [confirmType, setConfirmType] = useState<"delete" | "status">('delete')
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedLaboran
+
+    const openAdd = () => {
+        setSelectedlaboran(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (user: UserView) => {
+        setSelectedlaboran(user)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (type: 'delete' | 'status', user: UserView) => {
+        setSelectedlaboran(user)
+        setConfirmType(type)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: UserInputDTO): Promise<void> => {
-        if (id) {
-            const res = await userService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await userService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedLaboran
+            ? await userService.updateData(selectedLaboran.id, formData)
+            : await userService.createData(formData)
+
+        toast.success(res.message)
         refresh()
         setIsOpen(false)
     }
 
-    const handleDelete = async () => {
-        if (!id) return
-        const res = await userService.deleteData(id)
-        toast.success(res.message)
+    const handleConfirm = async () => {
+        if (!selectedLaboran) return
+        const res = confirmType === 'delete'
+            ? await userService.deleteData(selectedLaboran.id)
+            : await userService.toggleManager(selectedLaboran.id)
 
+        toast.success(res.message)
         refresh()
         setConfirmOpen(false)
     }
@@ -93,12 +80,12 @@ const LaboranPage = () => {
     return (
         <>
             <Header title='Menu Laboran' />
-            <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Laboran</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -107,7 +94,7 @@ const LaboranPage = () => {
                     <CardContent>
                         <Table
                             data={users}
-                            columns={LaboranColumn({ openModal, openConfirm })}
+                            columns={LaboranColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -116,19 +103,19 @@ const LaboranPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
-                <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
+                <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleConfirm} />
                 <LaboranFormDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    data={users}
-                    dataId={id}
+                    laboran={selectedLaboran}
                     handleSave={handleSave}
-                    title={type == 'Add' ? 'Tambah Laboran' : 'Edit Laboran'}
+                    title={!isEdit ? 'Tambah Laboran' : 'Edit Laboran'}
                 />
-            </div>
+            </MainContent>
         </>
     )
 }

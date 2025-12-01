@@ -110,4 +110,21 @@ export class UserRepository implements IUserRepository {
         }
         throw json
     }
+
+    async toggleManager(id: number): Promise<ApiResponse<User>> {
+        const response = await fetchApi(`/users/${id}/toggle-manager`, {
+            method: 'PUT',
+        });
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            const data = json.data as UserApi
+            return {
+                ...json,
+                data: toDomain(data)
+            }
+        }
+
+        throw json
+    }
 }

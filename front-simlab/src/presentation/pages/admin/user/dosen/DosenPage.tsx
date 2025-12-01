@@ -1,9 +1,7 @@
-import { gsap } from 'gsap';
 import Header from '@/presentation/components/Header'
 import Table from '@/presentation/components/Table'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import { useGSAP } from '@gsap/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { DosenColumn } from './DosenColumn'
 import { ModalType } from '@/presentation/shared/Types'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
@@ -17,27 +15,9 @@ import { userRole } from '@/domain/User/UserRole';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useStudyProgramSelect } from '../../study-program/hooks/useStudyProgramSelect';
 import { useUserDataTable } from '../hooks/useUserDataTable';
+import MainContent from '@/presentation/components/MainContent';
 
 const DosenPage = () => {
-    const sectionRef = useRef(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { userService } = useDepedencies()
     const { studyPrograms, selectedStudyProgram, setSelectedStudyProgram } = useStudyProgramSelect()
     const {
@@ -97,7 +77,7 @@ const DosenPage = () => {
     return (
         <>
             <Header title='Menu Dosen' />
-            <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Dosen</CardTitle>
@@ -110,20 +90,18 @@ const DosenPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
-                            <div className="relative">
-                                <Combobox
-                                    options={studyPrograms}
-                                    value={selectedStudyProgram?.toString() || ''}
-                                    onChange={(val) => {
-                                        setSelectedStudyProgram(val ? Number(val) : 0)
-                                        setCurrentPage(1)
-                                    }}
-                                    placeholder="Pilih Prodi"
-                                    optionLabelKey='name'
-                                    optionValueKey='id'
-                                    isFilter
-                                />
-                            </div>
+                            <Combobox
+                                options={studyPrograms}
+                                value={selectedStudyProgram?.toString() || ''}
+                                onChange={(val) => {
+                                    setSelectedStudyProgram(val ? Number(val) : 0)
+                                    setCurrentPage(1)
+                                }}
+                                placeholder="Pilih Prodi"
+                                optionLabelKey='name'
+                                optionValueKey='id'
+                                isFilter
+                            />
                         </div>
                         <Table
                             data={users}
@@ -136,7 +114,8 @@ const DosenPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
@@ -149,7 +128,7 @@ const DosenPage = () => {
                     handleSave={handleSave}
                     title={type == 'Add' ? 'Tambah Dosen' : 'Edit Dosen'}
                 />
-            </div>
+            </MainContent>
         </>
     )
 }

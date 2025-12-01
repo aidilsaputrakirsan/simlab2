@@ -3,7 +3,7 @@ import { Button } from "@/presentation/components/ui/button";
 import { TestingCategoryView } from "@/application/testing-category/TestingCategoryView";
 
 interface ColumnProps {
-  openModal: (type: 'Add' | 'Edit', testingCategory?: TestingCategoryView) => void;
+  openModal: (testingCategory: TestingCategoryView) => void;
   openConfirm: (testingCategory: TestingCategoryView) => void
 }
 
@@ -20,7 +20,7 @@ export const TestingCategoryColumn = ({ openModal, openConfirm }: ColumnProps): 
       <div className="flex gap-2">
         <Button
           size={'sm'}
-          onClick={() => openModal('Edit', row.original)}
+          onClick={() => openModal(row.original)}
         >
           Edit
         </Button>

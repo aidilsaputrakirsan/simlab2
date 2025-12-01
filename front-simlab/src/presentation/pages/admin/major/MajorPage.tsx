@@ -1,9 +1,6 @@
-import { useEffect, useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useEffect, useState } from "react"
 import Table from "../../../components/Table";
 import { MajorColumn } from "./MajorColumn";
-import { ModalType } from "../../../shared/Types";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
@@ -17,28 +14,11 @@ import { useFacultySelect } from "../faculty/hooks/useFacultySelect";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useMajorDataTable } from "./hooks/useMajorDataTable";
 import { MajorView } from "@/application/major/MajorView";
+import MainContent from "@/presentation/components/MainContent";
 
 const MajorPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { faculties, selectedFaculty, setSelectedFaculty } = useFacultySelect()
+
     useEffect(() => {
         setCurrentPage(1)
     }, [selectedFaculty])
@@ -62,14 +42,18 @@ const MajorPage = () => {
     } = useMajorDataTable({ filter_faculty: selectedFaculty })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [type, setType] = useState<ModalType>('Add')
     const [selectedMajor, setSelectedMajor] = useState<MajorView | undefined>(undefined)
-
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, major?: MajorView) => {
-        setType(modalType)
-        setSelectedMajor(major ?? undefined)
+    const isEdit = !!selectedMajor
+
+    const openAdd = () => {
+        setSelectedMajor(undefined)
+        setIsOpen(true)
+    }
+
+    const openEdit = (major: MajorView) => {
+        setSelectedMajor(major)
         setIsOpen(true)
     }
 
@@ -79,13 +63,11 @@ const MajorPage = () => {
     }
 
     const handleSave = async (formData: MajorInputDTO): Promise<void> => {
-        if (selectedMajor) {
-            const res = await majorService.updateData(selectedMajor.id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await majorService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedMajor
+            ? await majorService.updateData(selectedMajor.id, formData)
+            : await majorService.createData(formData)
+
+        toast.success(res.message)
         refresh()
         setIsOpen(false)
     }
@@ -102,12 +84,12 @@ const MajorPage = () => {
     return (
         <>
             <Header title="Menu Jurusan" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Jurusan</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -115,21 +97,19 @@ const MajorPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
-                            <div className="relative">
-                                    <Combobox
-                                        options={faculties}
-                                        value={selectedFaculty?.toString() || ''}
-                                        onChange={(value) => setSelectedFaculty(Number(value))}
-                                        placeholder="Pilih Fakultas"
-                                        optionLabelKey='name'
-                                        optionValueKey='id'
-                                        isFilter
-                                    />
-                                </div>
+                            <Combobox
+                                options={faculties}
+                                value={selectedFaculty?.toString() || ''}
+                                onChange={(value) => setSelectedFaculty(Number(value))}
+                                placeholder="Pilih Fakultas"
+                                optionLabelKey='name'
+                                optionValueKey='id'
+                                isFilter
+                            />
                         </div>
                         <Table
                             data={majors}
-                            columns={MajorColumn({ openModal, openConfirm })}
+                            columns={MajorColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -141,7 +121,7 @@ const MajorPage = () => {
                             handlePageChange={handlePageChange} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <MajorFormDialog
                 open={isOpen}
@@ -149,7 +129,7 @@ const MajorPage = () => {
                 major={selectedMajor}
                 faculties={faculties}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah Jurusan' : 'Edit Jurusan'}
+                title={!isEdit ? 'Tambah Jurusan' : 'Edit Jurusan'}
             />
         </>
     )

@@ -1,30 +1,21 @@
 import { LaboratoryMaterialView } from '@/application/laboratory-material/LaboratoryMaterialView'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { ScrollArea } from '@/presentation/components/ui/scroll-area'
 import Item from '@/presentation/components/Item'
 
 
 interface LaboratoryMaterialDetailDialogProps {
-    laboratoryMaterials: LaboratoryMaterialView[]
-    laboratoryMaterialId: number | null
+    laboratoryMaterial?: LaboratoryMaterialView
     open: boolean,
     onOpenChange: (open: boolean) => void
 }
 
 const LaboratoryMaterialDetailDialog: React.FC<LaboratoryMaterialDetailDialogProps> = ({
-    laboratoryMaterials,
-    laboratoryMaterialId,
+    laboratoryMaterial,
     open,
     onOpenChange
 }) => {
-    const [laboratoryMaterial, setLaboratoryMaterials] = useState<LaboratoryMaterialView>()
-
-    useEffect(() => {
-        const selectedLaboratoryMaterial = laboratoryMaterials.find((laboratoryMaterial) => laboratoryMaterial.id == laboratoryMaterialId)
-        setLaboratoryMaterials(selectedLaboratoryMaterial)
-    }, [open])
-
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>

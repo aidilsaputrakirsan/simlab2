@@ -1,9 +1,9 @@
 import { TestingCategoryInputDTO } from '@/application/testing-category/TestingCategoryDTO'
 import { TestingCategoryView } from '@/application/testing-category/TestingCategoryView'
+import FormGroup from '@/presentation/components/custom/FormGroup'
 import { Button } from '@/presentation/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/components/ui/dialog'
 import { Input } from '@/presentation/components/ui/input'
-import { Label } from '@/presentation/components/ui/label'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { ApiResponse } from '@/presentation/shared/Types'
 import React, { useEffect, useState } from 'react'
@@ -72,24 +72,20 @@ const TestingCategoryFormDialog: React.FC<TestingCategoryFormDialogProps> = ({
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5' encType='multipart/form-data'>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor='name'>
-                            Kategori Pengujian <span className="text-red-500">*</span>
-                        </Label>
-                        <div>
-                            <Input
-                                type='text'
-                                id='name'
-                                name='name'
-                                value={formData['name'] || ''}
-                                onChange={handleChange}
-                                placeholder='Kategori Pengujian'
-                            />
-                            {errors['name'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                            )}
-                        </div>
-                    </div>
+                    <FormGroup
+                        id='name'
+                        label='Kategori Pengujian'
+                        error={errors['name']}
+                        required>
+                        <Input
+                            type='text'
+                            id='name'
+                            name='name'
+                            value={formData['name'] || ''}
+                            onChange={handleChange}
+                            placeholder='Kategori Pengujian'
+                        />
+                    </FormGroup>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="secondary">

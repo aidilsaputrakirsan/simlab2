@@ -1,13 +1,10 @@
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Header from '@/presentation/components/Header';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from '@/presentation/components/ui/button';
 import { Plus } from 'lucide-react';
 import Table from '@/presentation/components/Table';
 import { FacultyColumn } from './FacultyColumn';
-import { ModalType } from '@/presentation/shared/Types';
 import { FacultyInputDTO } from '@/application/faculty/FacultyDTO';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
@@ -15,27 +12,9 @@ import FacultyFormDialog from './components/FacultyFormDialog';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useFacultyDataTable } from './hooks/useFacultyDataTable';
 import { FacultyView } from '@/application/faculty/FacultyView';
+import MainContent from '@/presentation/components/MainContent';
 
 const FacultyPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { facultyService } = useDepedencies()
     const {
         faculties,
@@ -55,12 +34,17 @@ const FacultyPage = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [selectedFaculty, setSelectedFaculty] = useState<FacultyView | undefined>(undefined)
-    const [type, setType] = useState<ModalType>('Add')
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, faculty?: FacultyView) => {
-        setType(modalType)
-        setSelectedFaculty(faculty ?? undefined)
+    const isEdit = !!selectedFaculty
+
+    const openAdd = () => {
+        setSelectedFaculty(undefined)
+        setIsOpen(true)
+    }
+
+    const openEdit = (faculty: FacultyView) => {
+        setSelectedFaculty(faculty)
         setIsOpen(true)
     }
 
@@ -70,14 +54,11 @@ const FacultyPage = () => {
     }
 
     const handleSave = async (formData: FacultyInputDTO): Promise<void> => {
-        if (selectedFaculty) {
-            const res = await facultyService.updateData(selectedFaculty.id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await facultyService.createData(formData)
-            toast.success(res.message)
-        }
-
+        const res = selectedFaculty
+            ? await facultyService.updateData(selectedFaculty.id, formData)
+            : await facultyService.createData(formData)
+        
+        toast.success(res.message)
         refresh()
         setIsOpen(false)
     }
@@ -94,12 +75,12 @@ const FacultyPage = () => {
     return (
         <>
             <Header title='Menu Fakultas' />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Fakultas</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -108,7 +89,7 @@ const FacultyPage = () => {
                     <CardContent>
                         <Table
                             data={faculties}
-                            columns={FacultyColumn({ openModal, openConfirm })}
+                            columns={FacultyColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -120,14 +101,14 @@ const FacultyPage = () => {
                             handlePageChange={handlePageChange} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <FacultyFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
                 faculty={selectedFaculty}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah Fakultas' : 'Edit Fakultas'}
+                title={!isEdit ? 'Tambah Fakultas' : 'Edit Fakultas'}
             />
         </>
     )

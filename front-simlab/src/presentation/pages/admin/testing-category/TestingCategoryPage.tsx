@@ -1,10 +1,7 @@
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap';
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useTestingCategoryDataTable } from './hooks/useTestingCategoryDataTable';
 import { TestingCategoryView } from '@/application/testing-category/TestingCategoryView';
-import { ModalType } from '@/presentation/shared/Types';
 import Header from '@/presentation/components/Header';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { Button } from '@/presentation/components/ui/button';
@@ -15,29 +12,10 @@ import { toast } from 'sonner';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 import TestingCategoryFormDialog from './components/TestingCategoryFormDialog';
 import { TestingCategoryInputDTO } from '@/application/testing-category/TestingCategoryDTO';
+import MainContent from '@/presentation/components/MainContent';
 
 const TestingCategoryPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
     const { testingCategoryService } = useDepedencies()
-
     const {
         testingCategories,
         isLoading,
@@ -56,11 +34,16 @@ const TestingCategoryPage = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [selectedTestingCategory, setSelectedTestingCategory] = useState<TestingCategoryView | undefined>(undefined)
-    const [type, setType] = useState<ModalType>('Add')
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, testingCategory?: TestingCategoryView) => {
-        setType(modalType)
+    const isEdit = !!selectedTestingCategory
+
+    const openAdd = () => {
+        setSelectedTestingCategory(undefined)
+        setIsOpen(true)
+    }
+
+    const openEdit = (testingCategory: TestingCategoryView) => {
         setSelectedTestingCategory(testingCategory)
         setIsOpen(true)
     }
@@ -71,16 +54,14 @@ const TestingCategoryPage = () => {
     }
 
     const handleSave = async (formData: TestingCategoryInputDTO): Promise<void> => {
-            if (selectedTestingCategory) {
-                const res = await testingCategoryService.updateData(selectedTestingCategory.id, formData)
-                toast.success(res.message)
-            } else {
-                const res = await testingCategoryService.createData(formData)
-                toast.success(res.message)
-            }
-            refresh()
-            setIsOpen(false)
-        }
+        const res = selectedTestingCategory
+            ? await testingCategoryService.updateData(selectedTestingCategory.id, formData)
+            : await testingCategoryService.createData(formData)
+
+        toast.success(res.message)
+        refresh()
+        setIsOpen(false)
+    }
 
     const handleDelete = async () => {
         if (!selectedTestingCategory) return
@@ -94,12 +75,12 @@ const TestingCategoryPage = () => {
     return (
         <>
             <Header title='Menu Kategori Pengujian' />
-            <div className='flex flex-col p-4 pt-0' ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Kategori Pengujian</CardTitle>
                         <CardAction>
-                            <Button onClick={() => openModal('Add')}>
+                            <Button onClick={() => openAdd()}>
                                 Tambah <PlusIcon />
                             </Button>
                         </CardAction>
@@ -107,7 +88,7 @@ const TestingCategoryPage = () => {
                     <CardContent>
                         <Table
                             data={testingCategories}
-                            columns={TestingCategoryColumn({ openModal, openConfirm })}
+                            columns={TestingCategoryColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -121,14 +102,14 @@ const TestingCategoryPage = () => {
                         />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <TestingCategoryFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
                 testingCategory={selectedTestingCategory}
                 handleSave={handleSave}
-                title={type === 'Add' ? 'Tambah Kategori Pengujian' : 'Edit Kategori Pengujian'}
+                title={!isEdit ? 'Tambah Kategori Pengujian' : 'Edit Kategori Pengujian'}
             />
         </>
     )

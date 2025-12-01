@@ -3,8 +3,8 @@ import { Button } from "@/presentation/components/ui/button";
 import { TestingTypeView } from "@/application/testing-type/TestingTypeView";
 
 interface ColumnProps {
-  openModal: (type: 'Add' | 'Edit', id?: number) => void;
-  openConfirm: (id: number) => void
+  openModal: (testingType: TestingTypeView) => void;
+  openConfirm: (testingType: TestingTypeView) => void
 }
 
 export const TestingTypeColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<TestingTypeView>[] => [
@@ -44,14 +44,14 @@ export const TestingTypeColumn = ({ openModal, openConfirm }: ColumnProps): Colu
       <div className="flex gap-2">
         <Button
           size={'sm'}
-          onClick={() => openModal('Edit', row.original.id)}
+          onClick={() => openModal(row.original)}
         >
           Edit
         </Button>
         <Button
           size={'sm'}
           variant={"destructive"}
-          onClick={() => openConfirm(row.original.id)}
+          onClick={() => openConfirm(row.original)}
         >
           Delete
         </Button>

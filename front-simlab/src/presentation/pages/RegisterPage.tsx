@@ -11,13 +11,13 @@ import { Button } from "../components/ui/button";
 import { toast, Toaster } from "sonner";
 import { Combobox } from "../components/custom/combobox";
 import { ApiResponse } from "@/presentation/shared/Types";
-import { RegisterCredentials } from "@/domain/Auth/Auth";
 import ItkLogo from '../assets/itk_logo.png'
+import { RegisterDTO } from "@/application/auth/AuthDTO";
 
 const studyProgramRepository = new StudyProgramRepository()
 
 export const RegisterPage: React.FC = () => {
-    const [formData, setFormData] = useState<RegisterCredentials>({
+    const [formData, setFormData] = useState<RegisterDTO>({
         name: '',
         identity_num: '',
         role: '',
@@ -45,7 +45,7 @@ export const RegisterPage: React.FC = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
-        setFormData((prev: RegisterCredentials) => ({
+        setFormData((prev) => ({
             ...prev,
             [name]: value
         }));

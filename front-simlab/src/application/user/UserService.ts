@@ -36,9 +36,18 @@ export class UserService {
     async getDataForSelect(role: userRole): Promise<ApiResponse<UserSelectView[]>> {
         const users = await this.userRepository.getDataForSelect(role)
 
-        return  {
+        return {
             ...users,
             data: users.data ? users.data.map(UserSelectView.fromDomain) : undefined
+        }
+    }
+
+    async toggleManager(id: number): Promise<ApiResponse<UserView>> {
+        const user = await this.userRepository.toggleManager(id);
+
+        return {
+            ...user,
+            data: user.data ? UserView.fromDomain(user.data) : undefined
         }
     }
 }
