@@ -20,12 +20,12 @@ class BookingRequest extends ApiRequest
     public function rules(): array
     {
         $rules = [
-            'phone_number' => 'required|max:15',
+            'phone_number' => 'required|max:14',
             'purpose' => 'required|max:225',
             'supporting_file' => 'mimes:doc,docx,pdf|max:5046',
             'activity_name' => 'required|max:225',
-            'supervisor' => 'max:225|required',
-            'supervisor_email' => 'required|max:225|email',
+            'supervisor' => 'max:225',
+            'supervisor_email' => 'max:225',
             'start_time' => 'required',
             'end_time' => 'required|after_or_equal:start_time',
             'booking_type' => 'required',
@@ -39,13 +39,13 @@ class BookingRequest extends ApiRequest
             $rules['laboratory_room_id'] = 'required';
         }
 
-        // // If supervisor is filled, supervisor_email is required, and vice versa
-        // if ($this->filled('supervisor') && !$this->filled('supervisor_email')) {
-        //     $rules['supervisor_email'] .= '|required';
-        // }
-        // if ($this->filled('supervisor_email') && !$this->filled('supervisor')) {
-        //     $rules['supervisor'] .= '|required';
-        // }
+        // If supervisor is filled, supervisor_email is required, and vice versa
+        if ($this->filled('supervisor') && !$this->filled('supervisor_email')) {
+            $rules['supervisor_email'] .= '|required|email';
+        }
+        if ($this->filled('supervisor_email') && !$this->filled('supervisor')) {
+            $rules['supervisor'] .= '|required';
+        }
 
         return $rules;
     }

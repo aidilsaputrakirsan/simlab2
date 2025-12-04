@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('testing_request_approvals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('testing_request_id');
+            $table->foreignId('testing_request_id')->constrained()->onDelete('cascade');
             $table->enum('action',['request_testing', 'verified_by_head', 'verified_by_laboran']);
             $table->foreignId('approver_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_approved');

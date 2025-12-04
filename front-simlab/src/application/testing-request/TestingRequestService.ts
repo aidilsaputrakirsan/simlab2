@@ -1,5 +1,5 @@
-import { PaginatedResponse } from "@/presentation/shared/Types";
-import { TestingRequestTableParam } from "./TestingRequestDTO";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
+import { TestingRequestInputDTO, TestingRequestTableParam, TestingRequestVerifyDTO } from "./TestingRequestDTO";
 import { TestingRequestView } from "./TestingRequestView";
 import { TestingRequestRepository } from "@/infrastructure/testing-request/TestingRequestRepository";
 
@@ -12,6 +12,37 @@ export class TestingRequestService {
         return {
             ...testingRequests,
             data: testingRequests.data.map(TestingRequestView.fromDomain) || []
+        }
+    }
+
+    async getTestingRequestForVerification(params: TestingRequestTableParam): Promise<PaginatedResponse<TestingRequestView>> {
+        const testingRequests = await this.testingRequestRepository.getTestingRequestForVerification(params)
+
+        return {
+            ...testingRequests,
+            data: testingRequests.data.map(TestingRequestView.fromDomain) || []
+        }
+    }
+
+    async createData(data: TestingRequestInputDTO): Promise<ApiResponse<TestingRequestView>> {
+        const testingRequest = await this.testingRequestRepository.createData(data)
+
+        return {
+            ...testingRequest,
+            data: testingRequest.data ? TestingRequestView.fromDomain(testingRequest.data) : undefined
+        }
+    }
+
+    async verifyTestingRequest(booking_id: number, data: TestingRequestVerifyDTO): Promise<ApiResponse> {
+        return await this.testingRequestRepository.verifyTestingRequest(booking_id, data);
+    }
+
+    async getTestingRequestDetail(id: number): Promise<ApiResponse<TestingRequestView>> {
+        const testingRequest = await this.testingRequestRepository.getTestingRequestData(id)
+
+        return {
+            ...testingRequest,
+            data: testingRequest.data ? TestingRequestView.fromDomain(testingRequest.data) : undefined
         }
     }
 }

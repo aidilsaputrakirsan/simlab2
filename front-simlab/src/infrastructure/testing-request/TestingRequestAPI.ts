@@ -1,8 +1,9 @@
 import { Laboran } from "@/domain/shared/value-object/Laboran"
 import { Requestor } from "@/domain/shared/value-object/Requestor"
-import { TestRequest } from "@/domain/testing-request/TestingRequest"
+import { TestingRequest } from "@/domain/testing-request/TestingRequest"
 import { TestingRequestStatus } from "@/domain/testing-request/TestingRequestStatus"
 import { Time } from "@/domain/time/Time"
+import { TestingRequestItemAPI, toDomain as toTestingRequestItem } from "./TestingRequestItemAPI"
 
 export type TestingRequestApi = {
     id: number,
@@ -24,11 +25,13 @@ export type TestingRequestApi = {
     information: string | null,
     result_file: string | null,
     created_at: string | null,
-    updated_at: string | null
+    updated_at: string | null,
+    canVerif: number,
+    testing_request_items: TestingRequestItemAPI[]
 }
 
-export function toDomain(api: TestingRequestApi): TestRequest {
-    const testRequest = new TestRequest(
+export function toDomain(api: TestingRequestApi): TestingRequest {
+    const testRequest = new TestingRequest(
         api.id,
         api.academic_year,
         api.phone_number,
@@ -51,6 +54,17 @@ export function toDomain(api: TestingRequestApi): TestRequest {
     if (api.laboran) {
         const laboran = new Laboran(api.laboran.name, api.laboran.email)
         testRequest.setLaboran(laboran)
+    }
+
+    if (api.canVerif !== undefined) {
+        testRequest.setCanVerif(api.canVerif)
+    }
+    
+    if (api.testing_request_items) {
+        const items = api.testing_request_items.map(
+            (item) => toTestingRequestItem(item)
+        )
+        testRequest.setTestingRequestItems(items)
     }
 
     return testRequest

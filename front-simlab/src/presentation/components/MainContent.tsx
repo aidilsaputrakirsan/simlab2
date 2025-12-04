@@ -3,10 +3,11 @@ import { gsap } from 'gsap'
 import React, { useRef } from 'react'
 
 interface MainContentProps {
-    children: React.ReactNode
+    children: React.ReactNode,
+    className?: string
 }
 
-const MainContent: React.FC<MainContentProps> = ({ children }) => {
+const MainContent: React.FC<MainContentProps> = ({ children, className }) => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
 
     useGSAP(() => {
@@ -26,7 +27,7 @@ const MainContent: React.FC<MainContentProps> = ({ children }) => {
         )
     }, [])
     return (
-        <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+        <div className={`flex flex-col gap-4 p-4 pt-0 ${className}`} ref={sectionRef}>
             { children }
         </div>
     )

@@ -3,12 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TestingRequestInputRequest;
+use App\Http\Requests\TestingRequestVerifyRequest;
 use App\Http\Resources\TestingRequest\TestingRequestResource;
+use App\Models\AcademicYear;
 use App\Models\TestingRequest;
+use App\Models\TestingRequestApproval;
+use App\Models\TestingRequestItem;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestingRequestController extends BaseController
 {
+    private $activeAcademicYear;
+    public function __construct()
+    {
+        $this->activeAcademicYear = AcademicYear::where('status', 'Active')->first();
+    }
+
     public function index(Request $request)
     {
         try {
@@ -49,6 +62,180 @@ class TestingRequestController extends BaseController
             return $this->sendResponse($response, 'Berhasil mengambil data pengujian');
         } catch (\Exception $e) {
             return $this->sendError('Terjadi kesalahan dalam mengambil data pengujian', [$e->getMessage()]);
+        }
+    }
+
+    public function getTestingRequestForVerification(Request $request)
+    {
+        $query = TestingRequest::query();
+        $query->with([
+            'academicYear',
+        ]);
+
+        $query->where('academic_year_id', $this->activeAcademicYear->id);
+        $query->where('status', '<>', 'draft');
+
+        // Jika Laboran, filter hanya booking yang laboran_id = user id
+        $user = auth()->user();
+        if ($user->role === 'laboran') {
+            $query->where('laboran_id', $user->id);
+        }
+
+        if ($request->filter_status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('search') && strlen($request->search) > 0) {
+            $searchTerm = $request->search;
+            $query->where('activity_name', 'LIKE', "%{$searchTerm}%");
+            // Add more searchable fields as needed
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $query->orderBy('created_at', 'desc');
+
+        $testRequests = $query->paginate($perPage, ['*'], 'page', $page);
+
+        $response = [
+            'current_page' => $testRequests->currentPage(),
+            'last_page' => $testRequests->lastPage(),
+            'per_page' => $testRequests->perPage(),
+            'total' => $testRequests->total(),
+            'data' => TestingRequestResource::collectionWithApproval($testRequests)
+        ];
+
+        return $this->sendResponse($response, 'Berhasil mengambil data pengujian');
+    }
+
+    public function store(TestingRequestInputRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
+            $user = auth()->user();
+            $data['requestor_id'] = $user->id;
+            $data['academic_year_id'] = $this->activeAcademicYear->id;
+            $data['status'] = 'pending';
+
+            $testingRequest = TestingRequest::create($data);
+            $testingRequestId = $testingRequest->id;
+
+            // Store testing items
+            $this->storeTestingItems($testingRequestId, $data['testing_items']);
+
+            // recort the requestor approval
+            $this->recordApproval($testingRequestId, 'request_testing', $user->id, 1);
+
+            DB::commit();
+            return $this->sendResponse($testingRequest, 'Pengajuan pengujian berhasil');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Terjadi kesalahan dalam pengajuan pengujian', [$e->getMessage()], 500);
+        }
+    }
+
+    public function verify(TestingRequestVerifyRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $user = auth()->user();
+            $testingRequest = TestingRequest::findOrFail($id);
+            if ($testingRequest->status !== 'pending') {
+                return $this->sendError('Pengajuan pengujian ini telah dilakukan verifikasi sebelumnya', [], 400);
+            }
+
+            if ($user->role === 'laboran') {
+                if ($testingRequest->laboran_id !== $user->id) {
+                    return $this->sendError('Hanya Laboran yang bertanggung jawab yang bisa melakukan verifikasi ini', [], 400);
+                }
+            }
+
+            if ($testingRequest->canVerif($user) !== 1) {
+                return $this->sendError('Anda tidak diizinkan untuk melakukan verifikasi', [], 400);
+            }
+
+            $isApprove = $request->action === 'approve' ? 1 : ($request->action === 'revision' ? 2 : 0);
+            $this->assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove);
+
+            $approvalAction = $user->role === 'laboran' ? 'verified_by_laboran' : 'verified_by_head';
+            $this->recordApproval($testingRequest->id, $approvalAction, $user->id, $isApprove, $request->information);
+
+            DB::commit();
+            return $this->sendResponse([], 'Berhasil melakukan verifikasi pengajuan pengujian');
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return $this->sendError('Data pengujian tidak ditemukan', [], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Terjadi kesalahan dalam verifikasi pengujian', [$e->getMessage()], 500);
+        }
+    }
+
+    public function getTestingRequestData($id)
+    {
+        try {
+            $testingRequest = TestingRequest::with(['requestor', 'laboran', 'academicYear', 'testRequestItems.testingType'])->findOrFail($id);
+
+            return $this->sendResponse(new TestingRequestResource($testingRequest), 'Berhasil mengambil data pengujian');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError("Booking Not Found", [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to retrieve booking', [$e->getMessage()], 500);
+        }
+    }
+
+    private function assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove)
+    {
+        // Booking is REJECTED
+        if (! $isApprove) {
+            $testingRequest->update(['status' => 'rejected']);
+
+            // Notify applicant about rejection
+
+            return;
+        }
+
+        // Booking is APPROVED
+        switch ($user->role) {
+            case 'kepala_lab_terpadu':
+                // Assign laboran to the booking
+                $testingRequest->update(['laboran_id' => $request->laboran_id]);
+
+                // Notify the assigned laboran
+                break;
+
+            case 'laboran':
+
+                // Final approval (laboran confirms everything)
+                $testingRequest->update(['status' => 'approved']);
+
+                // Notify applicant
+                break;
+        }
+    }
+
+    // Helper
+    private function recordApproval($testingRequestId, $action, $approverId, $status, $information = null)
+    {
+        TestingRequestApproval::create([
+            'testing_request_id' => $testingRequestId,
+            'action' => $action,
+            'approver_id' => $approverId,
+            'is_approved' => $status,
+            'information' => $information
+        ]);
+    }
+
+    private function storeTestingItems($testingRequestId, array $testingRequestItems)
+    {
+        foreach ($testingRequestItems as $item) {
+            TestingRequestItem::create([
+                'testing_request_id' => $testingRequestId,
+                'testing_type_id' => $item['testing_type_id'],
+                'quantity' => $item['quantity']
+            ]);
         }
     }
 }

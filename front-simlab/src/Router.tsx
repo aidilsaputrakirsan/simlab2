@@ -45,6 +45,8 @@ import { BookingProvider } from "./presentation/pages/admin/booking/context/Book
 import TestingCategoryPage from "./presentation/pages/admin/testing-category/TestingCategoryPage";
 import TestingRequestPage from "./presentation/pages/admin/testing-request/TestingRequestPage";
 import TestingRequestCreatePage from "./presentation/pages/admin/testing-request/TestingRequestCreatePage";
+import TestingRequestVerification from "./presentation/pages/admin/testing-request/TestingRequestVerification";
+import TestingRequestDetailPage from "./presentation/pages/admin/testing-request/TestingRequestDetailPage";
 
 export const router = createBrowserRouter([
     {
@@ -358,12 +360,27 @@ export const router = createBrowserRouter([
                             </ProtectedRoute>
                         )
                     },
-
                     {
                         path: 'create',
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.Mahasiswa, userRole.Dosen]}>
                                 <TestingRequestCreatePage/>
+                            </ProtectedRoute>
+                        )
+                    },
+                    {
+                        path: ':id/detail',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Mahasiswa, userRole.Dosen]}>
+                                <TestingRequestDetailPage />
+                            </ProtectedRoute>
+                        )
+                    },
+                    {
+                        path: 'verif',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran]}>
+                                <TestingRequestVerification/>
                             </ProtectedRoute>
                         )
                     },

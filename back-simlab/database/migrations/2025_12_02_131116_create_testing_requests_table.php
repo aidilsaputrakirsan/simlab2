@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('supervisor_email')->nullable();
             $table->dateTime('testing_time');
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'revision']);
-            $table->text('information');
-            $table->string('result_file');
+            $table->text('information')->nullable();
+            $table->string('result_file')->nullable();
             $table->timestamps();
         });
     }

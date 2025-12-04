@@ -17,3 +17,9 @@ export interface TestingRequestInputDTO {
         quantity: number | null
     }[]
 }
+
+export interface TestingRequestVerifyDTO {
+    action: 'approve' | 'reject' | 'revision',
+    laboran_id?: number,
+    information?: string,
+}

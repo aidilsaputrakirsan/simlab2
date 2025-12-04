@@ -96,15 +96,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
+        Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
             Route::get('/', [TestingRequestController::class, 'index']);
-            // Route::post('/', [BookingController::class, 'store']);
+            Route::post('/', [TestingRequestController::class, 'store']);
             // Route::get('/have-draft', [BookingController::class, 'isStillHaveDraftBooking']);
             // Route::post('/{id}/equipment-material', [BookingController::class, 'storeBookingEquipmentMaterial']);
             // Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
-    });
 
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu'], function () {
+            Route::get('/verification', [TestingRequestController::class, 'getTestingRequestForVerification']);
+            Route::post('/{id}/verify', [TestingRequestController::class, 'verify']);
+        });
+    });
 
     // booking (peminjaman)
     Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {

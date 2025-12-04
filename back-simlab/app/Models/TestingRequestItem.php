@@ -11,11 +11,11 @@ class TestingRequestItem extends Model
 
     protected $fillable = [
         'testing_type_id',
-        'test_request_id',
+        'testing_request_id',
         'quantity'
     ];
 
-    public function testRequest()
+    public function testingRequest()
     {
         return $this->belongsTo(TestingRequest::class, 'testing_request_id');
     }

@@ -62,12 +62,12 @@ export default function SingleDatetimePicker({
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     {date? (
-                        <Button variant="outline" className="justify-between font-normal">
+                        <Button variant="outline" className="text-base md:text-sm justify-between font-normal">
                             {`${date.toLocaleDateString()} ${time.slice(0, 5)}`}
                             <ChevronDownIcon className="ml-2 h-4 w-4" />
                         </Button>
                     ) : (
-                        <Button variant="outline" className="justify-between font-normal text-muted-foreground">
+                        <Button variant="outline" className="text-base md:text-sm justify-between font-normal text-muted-foreground">
                             Pilih Tanggal & Waktu
                             <ChevronDownIcon className="ml-2 h-4 w-4" />
                         </Button>

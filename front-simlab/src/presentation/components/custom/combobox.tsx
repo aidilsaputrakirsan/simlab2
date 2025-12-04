@@ -49,7 +49,7 @@ export function Combobox<T extends Record<string, any>>({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between font-normal ${selectedLabel ? '' : 'text-muted-foreground'}`}
+          className={`w-full text-base md:text-sm justify-between font-normal ${selectedLabel ? '' : 'text-muted-foreground'}`}
         >
           {selectedLabel || placeholder}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

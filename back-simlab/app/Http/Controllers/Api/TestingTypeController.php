@@ -106,7 +106,7 @@ class TestingTypeController extends BaseController
     public function getDataForSelect()
     {
         try {
-            $testing_types = TestingType::select('id', 'name')->get();
+            $testing_types = TestingType::select('id', 'name', 'unit')->get();
             return $this->sendResponse($testing_types, 'Data pengujian berhasil diambil');
         } catch (\Exception $e) {
             return $this->sendError('Gagal mengambil data pengujian', [$e->getMessage()], 500);

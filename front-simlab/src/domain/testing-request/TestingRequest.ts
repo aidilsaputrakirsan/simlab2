@@ -1,11 +1,14 @@
 import { Laboran } from "../shared/value-object/Laboran";
 import { Requestor } from "../shared/value-object/Requestor";
 import { Time } from "../time/Time";
+import { TestingRequestItem } from "./TestingRequestItem";
 import { TestingRequestStatus } from "./TestingRequestStatus";
 
-export class TestRequest {
+export class TestingRequest {
     private laboran?: Laboran;
     private requestor?: Requestor
+    private canVerif?: number
+    private testingRequestItems: TestingRequestItem[] = []
 
     constructor(
         readonly id: number,
@@ -30,11 +33,27 @@ export class TestRequest {
         this.requestor = requestor
     }
 
+    setCanVerif(value: number) {
+        this.canVerif = value
+    }
+
+    setTestingRequestItems(items: TestingRequestItem[]) {
+        this.testingRequestItems = items
+    }
+
     getLaboran(): Laboran | undefined {
         return this.laboran
     }
 
     getRequestor(): Requestor | undefined {
         return this.requestor
+    }
+
+    getCanVerif(): number | undefined {
+        return this.canVerif
+    }
+
+    getTestingRequestItems(): TestingRequestItem[] {
+        return this.testingRequestItems
     }
 }

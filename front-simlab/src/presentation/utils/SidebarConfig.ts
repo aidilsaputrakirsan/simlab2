@@ -83,6 +83,16 @@ export const navItems: NavItem[] = [
       { title: "Verifikasi Penjadwalan Praktikum", url: "/panel/penjadwalan-praktikum/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Kooprodi]},
     ],
   },
+  {
+    title: "Manajemen Pengujian",
+    url: "#",
+    icon: CalendarPlus,
+    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan],
+    items: [
+      // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
+      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran]},
+    ],
+  },
 ]
 
 interface NavSubItem {
