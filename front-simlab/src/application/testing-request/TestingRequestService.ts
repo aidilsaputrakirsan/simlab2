@@ -2,6 +2,7 @@ import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { TestingRequestInputDTO, TestingRequestTableParam, TestingRequestVerifyDTO } from "./TestingRequestDTO";
 import { TestingRequestView } from "./TestingRequestView";
 import { TestingRequestRepository } from "@/infrastructure/testing-request/TestingRequestRepository";
+import { TestingRequestApprovalView } from "./TestingRequestApprovalView";
 
 export class TestingRequestService {
     private readonly testingRequestRepository = new TestingRequestRepository()
@@ -44,5 +45,13 @@ export class TestingRequestService {
             ...testingRequest,
             data: testingRequest.data ? TestingRequestView.fromDomain(testingRequest.data) : undefined
         }
+    }
+
+    async getTestingRequestApprovals(id: number): Promise<ApiResponse<TestingRequestApprovalView[]>> {
+        const testingRequestApprovals = await this.testingRequestRepository.getTestingRequestApprovals(id);
+        return {
+            ...testingRequestApprovals,
+            data: testingRequestApprovals.data ? testingRequestApprovals.data.map(TestingRequestApprovalView.fromDomain) : []
+        };
     }
 }

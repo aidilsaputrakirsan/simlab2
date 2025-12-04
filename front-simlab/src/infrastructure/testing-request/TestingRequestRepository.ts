@@ -4,6 +4,8 @@ import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { generateQueryStringFromObject } from "../Helper";
 import { fetchApi } from "../ApiClient";
 import { TestingRequestApi, toDomain } from "./TestingRequestAPI";
+import { TestingRequestApproval } from "@/domain/testing-request/TestingRequestApproval";
+import { TestingRequestApprovalAPI, toDomain as toTestingRequestApproval } from "./TestingRequestApprovalAPI";
 
 export class TestingRequestRepository implements ITestingRequestRepository {
     async getAll(params: { page: number; per_page: number; search: string; filter_status?: string; }): Promise<PaginatedResponse<TestingRequest>> {
@@ -81,5 +83,18 @@ export class TestingRequestRepository implements ITestingRequestRepository {
             }
         }
         throw json
+    }
+
+    async getTestingRequestApprovals(id: number): Promise<ApiResponse<TestingRequestApproval[]>> {
+        const response = await fetchApi(`/testing-requests/${id}/approvals`, { method: 'GET' });
+        const json = await response.json();
+        if (response.ok) {
+            const list = json['data'] as TestingRequestApprovalAPI[];
+            return {
+                ...json,
+                data: list?.map(toTestingRequestApproval) || []
+            }
+        }
+        throw json;
     }
 }

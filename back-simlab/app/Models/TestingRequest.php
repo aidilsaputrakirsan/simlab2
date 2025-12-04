@@ -91,4 +91,55 @@ class TestingRequest extends BaseModel
         // Default fallback
         return 2;
     }
+
+    public function getApprovalStepsAttribute()
+    {
+        $approvals = [];
+        $allApproved = true;
+        $hasBeenRejected = false;
+
+        $approvalFlows = TestingRequestApproval::getFlow();
+        foreach ($approvalFlows as $flow) {
+            $approval = $this->testRequestApprovals
+                ->where('action', $flow['action'])
+                ->sortByDesc('created_at')
+                ->first();
+
+            if ($approval) {
+                if (!$approval->is_approved) {
+                    $hasBeenRejected = true;
+                }
+                $status = $approval->approval_status_label;
+            } else {
+                $status = $hasBeenRejected ? 'rejected' : 'pending';
+            }
+
+            $approvals[] = [
+                'action' => $flow['action'],
+                'description' => $flow['description'],
+                'role' => $flow['role'],
+                'status' => $status,
+                'information' => $approval?->information,
+                'approved_at' => $approval?->convertToISO('created_at'),
+                'approver' => $approval?->approver?->name,
+            ];
+
+            if ($status !== 'approved') {
+                $allApproved = false;
+            }
+        }
+
+        // Add finish step
+        $approvals[] = [
+            'action' => 'finish',
+            'description' => '',
+            'role' => 'selesai',
+            'status' => $allApproved ? 'approved' : ($hasBeenRejected ? 'rejected' : 'pending'),
+            'information' => null,
+            'approved_at' => null,
+            'approver' => null,
+        ];
+
+        return $approvals;
+    }
 }

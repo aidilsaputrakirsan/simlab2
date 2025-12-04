@@ -14,6 +14,7 @@ import Item from '@/presentation/components/Item'
 import { Badge } from '@/presentation/components/ui/badge'
 import TestingRequestBadgeStatus from './components/TestingRequestBadgeStatus'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/components/ui/table';
+import TestingRequestStepperDialog from './components/TestingRequestStepperDialog'
 
 const TestingRequestDetailPage = () => {
     const { user } = useAuth()
@@ -74,15 +75,15 @@ const TestingRequestDetailPage = () => {
             <Header title='Detail Pengajuan Pengujian' />
             <MainContent>
                 <div className="flex items-center justify-between flex-col-reverse sm:flex-row mb-2 gap-2">
-                    {/* <BookingStepperDialog bookingId={bookingId} /> */}
+                    <TestingRequestStepperDialog testingRequestId={testingRequestId} />
                     <div></div>
                     <Button className="gap-2 w-full sm:w-fit" onClick={() => navigate(backTo)}>
                         <ArrowLeft className="w-4 h-4" />
                         Kembali
                     </Button>
                 </div>
-                <div className='grid grid-cols-3 gap-4'>
-                    <Card className='md:col-span-2'>
+                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                    <Card className='lg:col-span-2'>
                         <CardHeader>
                             <CardTitle>Informasi Umum</CardTitle>
                         </CardHeader>

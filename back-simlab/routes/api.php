@@ -97,6 +97,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
         Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
+        Route::get('/{id}/approvals', [TestingRequestController::class, 'getTestingRequestApproval']);
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
             Route::get('/', [TestingRequestController::class, 'index']);
             Route::post('/', [TestingRequestController::class, 'store']);

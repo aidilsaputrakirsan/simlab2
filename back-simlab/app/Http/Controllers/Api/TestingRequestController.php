@@ -67,46 +67,50 @@ class TestingRequestController extends BaseController
 
     public function getTestingRequestForVerification(Request $request)
     {
-        $query = TestingRequest::query();
-        $query->with([
-            'academicYear',
-        ]);
+        try {
+            $query = TestingRequest::query();
+            $query->with([
+                'academicYear',
+            ]);
 
-        $query->where('academic_year_id', $this->activeAcademicYear->id);
-        $query->where('status', '<>', 'draft');
+            $query->where('academic_year_id', $this->activeAcademicYear->id);
+            $query->where('status', '<>', 'draft');
 
-        // Jika Laboran, filter hanya booking yang laboran_id = user id
-        $user = auth()->user();
-        if ($user->role === 'laboran') {
-            $query->where('laboran_id', $user->id);
+            // Jika Laboran, filter hanya booking yang laboran_id = user id
+            $user = auth()->user();
+            if ($user->role === 'laboran') {
+                $query->where('laboran_id', $user->id);
+            }
+
+            if ($request->filter_status) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->has('search') && strlen($request->search) > 0) {
+                $searchTerm = $request->search;
+                $query->where('activity_name', 'LIKE', "%{$searchTerm}%");
+                // Add more searchable fields as needed
+            }
+
+            $perPage = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
+
+            $query->orderBy('created_at', 'desc');
+
+            $testRequests = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $response = [
+                'current_page' => $testRequests->currentPage(),
+                'last_page' => $testRequests->lastPage(),
+                'per_page' => $testRequests->perPage(),
+                'total' => $testRequests->total(),
+                'data' => TestingRequestResource::collectionWithApproval($testRequests)
+            ];
+
+            return $this->sendResponse($response, 'Berhasil mengambil data pengujian');
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan dalam mengambil data pengujian', [$e->getMessage()]);
         }
-
-        if ($request->filter_status) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->has('search') && strlen($request->search) > 0) {
-            $searchTerm = $request->search;
-            $query->where('activity_name', 'LIKE', "%{$searchTerm}%");
-            // Add more searchable fields as needed
-        }
-
-        $perPage = $request->input('per_page', 10);
-        $page = $request->input('page', 1);
-
-        $query->orderBy('created_at', 'desc');
-
-        $testRequests = $query->paginate($perPage, ['*'], 'page', $page);
-
-        $response = [
-            'current_page' => $testRequests->currentPage(),
-            'last_page' => $testRequests->lastPage(),
-            'per_page' => $testRequests->perPage(),
-            'total' => $testRequests->total(),
-            'data' => TestingRequestResource::collectionWithApproval($testRequests)
-        ];
-
-        return $this->sendResponse($response, 'Berhasil mengambil data pengujian');
     }
 
     public function store(TestingRequestInputRequest $request)
@@ -180,15 +184,27 @@ class TestingRequestController extends BaseController
 
             return $this->sendResponse(new TestingRequestResource($testingRequest), 'Berhasil mengambil data pengujian');
         } catch (ModelNotFoundException $e) {
-            return $this->sendError("Booking Not Found", [], 404);
+            return $this->sendError("Data pengujian tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to retrieve booking', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan dalam mengambil data pengujian', [$e->getMessage()]);
+        }
+    }
+
+    public function getTestingRequestApproval($id)
+    {
+        try {
+            $testingRequest = TestingRequest::with(['testRequestApprovals.approver'])->findOrFail($id);
+            return $this->sendResponse($testingRequest->approval_steps, 'Berhasil mengambil data pengujian');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError("Data pengujian tidak ditemukan", [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan dalam mengambil data pengujian', [$e->getMessage()]);
         }
     }
 
     private function assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove)
     {
-        // Booking is REJECTED
+        // is REJECTED
         if (! $isApprove) {
             $testingRequest->update(['status' => 'rejected']);
 
@@ -197,10 +213,10 @@ class TestingRequestController extends BaseController
             return;
         }
 
-        // Booking is APPROVED
+        // is APPROVED
         switch ($user->role) {
             case 'kepala_lab_terpadu':
-                // Assign laboran to the booking
+                // Assign laboran
                 $testingRequest->update(['laboran_id' => $request->laboran_id]);
 
                 // Notify the assigned laboran
