@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class Booking extends BaseModel
 {
     use HasFactory;
     protected $fillable = ['academic_year_id', 'user_id', 'phone_number', 'purpose', 'supporting_file', 'activity_name', 'supervisor', 'supervisor_email', 'start_time', 'end_time', 'status', 'booking_type', 'total_participant', 'participant_list', 'laboratory_room_id', 'laboran_id', 'is_allowed_offsite'];
@@ -15,16 +13,6 @@ class Booking extends Model
         'start_time' => 'datetime',
         'end_time'   => 'datetime',
     ];
-
-    public function getStartTimeApiAttribute()
-    {
-        return $this->start_time ? $this->start_time->setTimezone(config('app.timezone'))->toIso8601String() : null;
-    }
-
-    public function getEndTimeApiAttribute()
-    {
-        return $this->end_time ? $this->end_time->setTimezone(config('app.timezone'))->toIso8601String() : null;
-    }
 
     public function setStartTimeAttribute($value)
     {

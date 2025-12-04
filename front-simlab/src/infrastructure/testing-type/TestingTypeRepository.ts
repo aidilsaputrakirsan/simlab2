@@ -1,9 +1,11 @@
+import { TestingTypeSelect } from "@/domain/testing-type/TestingTypeSelect";
 import { ITestingTypeRepository } from "../../domain/testing-type/ITestingTypeRepository";
 import { TestingType } from "../../domain/testing-type/TestingType";
 import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { generateQueryStringFromObject } from "../Helper";
 import { TestingTypeApi, toDomain } from "./TestingTypeApi";
+import { TestingTypeSelectAPI, toDomain as toTestingTypeSelect } from "./TestingTypeSelectAPI";
 
 export class TestingTypeRepository implements ITestingTypeRepository {
     async getAll(params: {
@@ -74,6 +76,20 @@ export class TestingTypeRepository implements ITestingTypeRepository {
             return json
         }
 
+        throw json
+    }
+
+    async getDataForSelect(): Promise<ApiResponse<TestingTypeSelect[]>> {
+        const response = await fetchApi(`/testing-types/select`, { method: 'GET' });
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            const data = json.data as TestingTypeSelectAPI[]
+            return {
+                ...json,
+                data: data.map(toTestingTypeSelect)
+            }
+        }
         throw json
     }
 

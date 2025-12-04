@@ -14,4 +14,9 @@ abstract class BaseModel extends Model
             ->setTimezone(config('app.timezone'))
             ->toIso8601String();
     }
+
+    public function convertToISO($column)
+    {
+        return $this->getAttribute($column) ? $this->getAttribute($column)->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
 }

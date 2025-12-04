@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\AcademicYearController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BahanLaboratoriumController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\FacultyController;
 use App\Http\Controllers\Api\LaboratoryEquipmentController;
@@ -13,9 +12,10 @@ use App\Http\Controllers\Api\PracticumController;
 use App\Http\Controllers\Api\PracticumModuleController;
 use App\Http\Controllers\Api\PracticumSchedulingController;
 use App\Http\Controllers\Api\StudyProgramController;
+use App\Http\Controllers\Api\TestingCategoryController;
+use App\Http\Controllers\Api\TestingRequestController;
 use App\Http\Controllers\Api\TestingTypeController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\TestingCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/practicums/select', [PracticumController::class, 'getDataForSelect']);
     Route::get('/laboratory-rooms/select', [LaboratoryRoomController::class, 'getDataForSelect']);
     Route::get('/users/select', [UserController::class, 'getDataForSelect']);
+    Route::get('/testing-types/select', [TestingTypeController::class, 'getDataForSelect']);
 
     // Admin only API
     Route::middleware(['role:admin'])->group(function () {
@@ -81,6 +82,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // User: admin, kepala_lab_terpadu, Koorpro, Kepala Lab Unit, laboran, Dosen, Mahasiswa, External
         Route::put('/users/{user}/restore-dosen', [UserController::class, 'restoreToDosen']);
+        Route::put('/users/{user}/toggle-manager', [UserController::class, 'toggleManager']);
         Route::resource('users', UserController::class);
 
         Route::get('/testing-categories/select', [TestingCategoryController::class, 'getDataForSelect']);
@@ -93,9 +95,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
+    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
+        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
+            Route::get('/', [TestingRequestController::class, 'index']);
+            // Route::post('/', [BookingController::class, 'store']);
+            // Route::get('/have-draft', [BookingController::class, 'isStillHaveDraftBooking']);
+            // Route::post('/{id}/equipment-material', [BookingController::class, 'storeBookingEquipmentMaterial']);
+            // Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
+        });
+    });
+
 
     // booking (peminjaman)
-    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
+    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
@@ -122,7 +134,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // Practical Schedule
-    Route::group(['prefix' => 'practicum-schedule', 'as' => 'practicum', 'middleware', 'role:dosen|kepala_lab_jurusan|laboran|kepala_lab_terpadu'], function () {
+    Route::group(['prefix' => 'practicum-schedule', 'as' => 'practicum', 'middleware' => 'role:dosen|kepala_lab_jurusan|laboran|kepala_lab_terpadu'], function () {
         Route::get('/{id}/detail', [PracticumSchedulingController::class, 'getPracticumSchedulingData']);
         Route::get('/{id}/steps', [PracticumSchedulingController::class, 'getPracticumSteps']);
 
@@ -156,6 +168,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::get('/test', function() {
+Route::get('/test', function () {
     dd(now());
 });

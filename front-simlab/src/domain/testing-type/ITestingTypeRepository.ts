@@ -1,5 +1,6 @@
 import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types"
 import { TestingType } from "./TestingType"
+import { TestingTypeSelect } from "./TestingTypeSelect"
 
 export interface ITestingTypeRepository {
     getAll(params: {
@@ -23,4 +24,5 @@ export interface ITestingTypeRepository {
         external_price: number | null
     }): Promise<ApiResponse>
     deleteData(id: number): Promise<ApiResponse>
+    getDataForSelect(): Promise<ApiResponse<TestingTypeSelect[]>>
 }

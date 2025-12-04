@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Booking;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -55,15 +55,15 @@ class BookingResource extends JsonResource
             'activity_name' => $this->activity_name,
             'supervisor' => $this->supervisor,
             'supervisor_email' => $this->supervisor_email,
-            'start_time' => $this->start_time_api,
-            'end_time' => $this->end_time_api,
+            'start_time' => $this->convertToISO('start_time'),
+            'end_time' => $this->convertToISO('end_time'),
             'status' => $this->status,
             'booking_type' => $this->booking_type,
             'total_participant' => $this->total_participant,
             'participant_list' => $this->participant_list,
             'is_allowed_offsite' => (bool) $this->is_allowed_offsite,
-            'created_at' => $this->created_at_api,
-            'updated_at' => $this->updated_at_api,
+            'created_at' => $this->convertToISO('created_at'),
+            'updated_at' => $this->convertToISO('updated_at'),
             $this->mergeWhen(static::$approvals, function () {
                 return ['approvals' => $this->approval_steps];
             }),

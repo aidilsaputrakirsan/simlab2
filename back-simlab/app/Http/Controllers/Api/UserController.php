@@ -145,6 +145,24 @@ class UserController extends BaseController
         }
     }
 
+    public function toggleManager($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if ($user->role !== 'laboran') {
+                return $this->sendError('Hanya laboran yang dapat melakukan aksi ini', [], 422);
+            }
+
+            $user->update(['is_manager' => !$user->is_manager]);
+
+            return $this->sendResponse($user, 'Berhasil mengubah data laboran');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError("Laboran tidak ditemukan", [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika menghapus data laboran', [$e->getMessage()], 500);
+        }
+    }
+
     public function getDataForSelect(Request $request)
     {
         try {

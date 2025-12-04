@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'admin_keuangan', 'kepala_lab_terpadu', 'dosen', 'koorprodi', 'kepala_lab_jurusan', 'laboran', 'mahasiswa', 'pihak_luar']);
             $table->foreignId('study_program_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('institution_id')->nullable()->constrained()->onDelete('cascade');
+            $table->boolean('is_manager')->default(0);
             $table->string('identity_num')->nullable();
             $table->enum('is_active', ['Active', 'Deactive']);
             $table->timestamps();

@@ -58,6 +58,12 @@ export const navItems: NavItem[] = [
     roles: [userRole.KepalaLabJurusan, userRole.Dosen],
   },
   {
+    title: "Pengujian",
+    url: "/panel/pengujian",
+    icon: CalendarPlus,
+    roles: [userRole.Dosen, userRole.Mahasiswa],
+  },
+  {
     title: "Manajemen Peminjaman",
     url: "#",
     icon: CalendarClock,

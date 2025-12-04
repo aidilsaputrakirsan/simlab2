@@ -26,7 +26,7 @@ class MajorRequest extends ApiRequest
         }
         return [
             'faculty_id' => 'required',
-            'code' => ["string", "max:255", "min:4", $uniqueRule],
+            'code' => ["nullable", "string", "max:255", "min:4", $uniqueRule],
             'name' => "required|string|max:255|min:4"
         ];
     }

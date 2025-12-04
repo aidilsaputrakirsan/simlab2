@@ -43,6 +43,8 @@ import { PracticumSchedulingProvider } from "./presentation/pages/admin/practicu
 import { DepedencyProvider } from "./presentation/contexts/DepedencyProvider";
 import { BookingProvider } from "./presentation/pages/admin/booking/context/BookingContext";
 import TestingCategoryPage from "./presentation/pages/admin/testing-category/TestingCategoryPage";
+import TestingRequestPage from "./presentation/pages/admin/testing-request/TestingRequestPage";
+import TestingRequestCreatePage from "./presentation/pages/admin/testing-request/TestingRequestCreatePage";
 
 export const router = createBrowserRouter([
     {
@@ -340,6 +342,28 @@ export const router = createBrowserRouter([
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran]}>
                                 <PracticumSchedulingVerification />
+                            </ProtectedRoute>
+                        )
+                    },
+                ],
+            },
+            {
+                path: 'pengujian',
+                children: [
+                    {
+                        path: '',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.Mahasiswa, userRole.Dosen]}>
+                                <TestingRequestPage/>
+                            </ProtectedRoute>
+                        )
+                    },
+
+                    {
+                        path: 'create',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.Mahasiswa, userRole.Dosen]}>
+                                <TestingRequestCreatePage/>
                             </ProtectedRoute>
                         )
                     },

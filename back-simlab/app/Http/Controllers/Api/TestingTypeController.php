@@ -102,4 +102,14 @@ class TestingTypeController extends BaseController
             return $this->sendError('Terjadi kesalahan dalam mengubah data jenis pengujian', [$e->getMessage()], 500);
         }
     }
+
+    public function getDataForSelect()
+    {
+        try {
+            $testing_types = TestingType::select('id', 'name')->get();
+            return $this->sendResponse($testing_types, 'Data pengujian berhasil diambil');
+        } catch (\Exception $e) {
+            return $this->sendError('Gagal mengambil data pengujian', [$e->getMessage()], 500);
+        }
+    }
 }
