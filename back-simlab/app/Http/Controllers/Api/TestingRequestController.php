@@ -7,6 +7,7 @@ use App\Http\Requests\TestingRequestInputRequest;
 use App\Http\Requests\TestingRequestVerifyRequest;
 use App\Http\Resources\TestingRequest\TestingRequestResource;
 use App\Models\AcademicYear;
+use App\Models\PaymentItem;
 use App\Models\TestingRequest;
 use App\Models\TestingRequestApproval;
 use App\Models\TestingRequestItem;
@@ -28,6 +29,7 @@ class TestingRequestController extends BaseController
             $query = TestingRequest::query();
             $query->with([
                 'academicYear',
+                'payment'
 
             ]);
             $user = auth()->user();
@@ -71,6 +73,7 @@ class TestingRequestController extends BaseController
             $query = TestingRequest::query();
             $query->with([
                 'academicYear',
+                'payment'
             ]);
 
             $query->where('academic_year_id', $this->activeAcademicYear->id);
@@ -78,6 +81,11 @@ class TestingRequestController extends BaseController
 
             // Jika Laboran, filter hanya booking yang laboran_id = user id
             $user = auth()->user();
+            if ($user->role === 'admin_keuangan') {
+                // Admin keuangan should only see testing requests that have payment records
+                $query->whereHas('payment');
+            }
+
             if ($user->role === 'laboran') {
                 $query->where('laboran_id', $user->id);
             }
@@ -129,6 +137,14 @@ class TestingRequestController extends BaseController
             // Store testing items
             $this->storeTestingItems($testingRequestId, $data['testing_items']);
 
+            $hasPaidItems = collect($data['testing_items'])
+                ->contains(fn($item) => $item['price'] > 0);
+
+            // make the draft payment
+            if ($hasPaidItems) {
+                $this->assignInitialPayment($testingRequest, $user, $data['testing_items']);
+            }
+
             // recort the requestor approval
             $this->recordApproval($testingRequestId, 'request_testing', $user->id, 1);
 
@@ -139,6 +155,35 @@ class TestingRequestController extends BaseController
             return $this->sendError('Terjadi kesalahan dalam pengajuan pengujian', [$e->getMessage()], 500);
         }
     }
+
+    // public function create(array $data)
+    // {
+    //     $testing = TestingRequest::create([
+    //         'phone_number'  => $data['phone_number'],
+    //         'activity_name' => $data['activity_name'],
+    //         'supervisor'    => $data['supervisor'],
+    //         'supervisor_email' => $data['supervisor_email'],
+    //         'testing_time'  => $data['testing_time'],
+    //         'information'   => $data['information'],
+    //     ]);
+
+    //     // simpan items
+    //     foreach ($data['testing_items'] as $item) {
+    //         $testing->items()->create($item);
+    //     }
+
+    //     // cek item berbayar
+    //     $hasPaidItems = collect($data['testing_items'])
+    //         ->contains(fn($item) => $item['price'] > 0);
+
+    //     if ($hasPaidItems) {
+    //         $testing->payment()->create([
+    //             'status' => 'draft'
+    //         ]);
+    //     }
+
+    //     return $testing;
+    // }
 
     public function verify(TestingRequestVerifyRequest $request, $id)
     {
@@ -202,6 +247,24 @@ class TestingRequestController extends BaseController
         }
     }
 
+    private function assignInitialPayment($testingRequest, $user, array $testingRequestItems)
+    {
+        $payment = $testingRequest->payment()->create([
+            'user_id' => $user->id,
+            'status' => 'draft'
+        ]);
+
+        foreach ($testingRequestItems as $item) {
+            PaymentItem::create([
+                'payment_id' => $payment->id,
+                'name' => $item['name'],
+                'quantity' => $item['quantity'],
+                'unit' => $item['unit'],
+                'price' => $item['price'],
+            ]);
+        }
+    }
+
     private function assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove)
     {
         // is REJECTED
@@ -250,7 +313,8 @@ class TestingRequestController extends BaseController
             TestingRequestItem::create([
                 'testing_request_id' => $testingRequestId,
                 'testing_type_id' => $item['testing_type_id'],
-                'quantity' => $item['quantity']
+                'quantity' => $item['quantity'],
+                'price' => $item['price']
             ]);
         }
     }

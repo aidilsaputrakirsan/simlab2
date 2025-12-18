@@ -1,17 +1,20 @@
 import { UserInputDTO } from '@/application/user/UserDTO'
 import Header from '@/presentation/components/Header'
-import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import Table from '@/presentation/components/Table'
 import { KepalaLabColumn } from './KepalaLabColumn'
-import KepalaLabFormDialog from './components/KepalaLabFormDialog'
 import { userRole } from '@/domain/User/UserRole'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import { useUserDataTable } from '../hooks/useUserDataTable'
 import { useStudyProgramSelect } from '../../study-program/hooks/useStudyProgramSelect'
 import MainContent from '@/presentation/components/MainContent'
+import UserFormDialog from '../components/UserFormDialog'
+import { UserView } from '@/application/user/UserView'
+import { Button } from '@/presentation/components/ui/button'
+import { Plus } from 'lucide-react'
 
 const KepalaLabPage = () => {
     const { userService } = useDepedencies()
@@ -33,31 +36,39 @@ const KepalaLabPage = () => {
     } = useUserDataTable({ filter_study_program: 0, role: userRole.KepalaLabTerpadu })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
+    const [selectedKepalaLab, setSelectedKepalaLab] = useState<UserView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (id: number | null = null) => {
-        setId(id)
+    const isEdit = !!selectedKepalaLab
+
+    const openAdd = () => {
+        setSelectedKepalaLab(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (kepalaLab: UserView) => {
+        setSelectedKepalaLab(kepalaLab)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (kepalaLab: UserView) => {
+        setSelectedKepalaLab(kepalaLab)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: UserInputDTO): Promise<void> => {
-        if (!id) return
-        const res = await userService.updateData(id, formData)
-        toast.success(res.message)
+        const res = selectedKepalaLab
+            ? await userService.updateData(selectedKepalaLab.id, formData)
+            : await userService.createData(formData)
 
+        toast.success(res.message)
         refresh()
         setIsOpen(false)
     }
 
     const handleRestoreDosen = async () => {
-        if (!id) return
-        const res = await userService.restoreToDosen(id)
+        if (!selectedKepalaLab) return
+        const res = await userService.restoreToDosen(selectedKepalaLab.id)
         toast.success(res.message)
 
         refresh()
@@ -71,11 +82,17 @@ const KepalaLabPage = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Kepala Laboratorium</CardTitle>
+                        <CardAction>
+                            <Button variant={"default"} onClick={() => openAdd()}>
+                                Tambah
+                                <Plus />
+                            </Button>
+                        </CardAction>
                     </CardHeader>
                     <CardContent>
                         <Table
                             data={users}
-                            columns={KepalaLabColumn({ openModal, openConfirm })}
+                            columns={KepalaLabColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -84,19 +101,19 @@ const KepalaLabPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} 
-                            handleRefresh={refresh}/>
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleRestoreDosen} />
-                <KepalaLabFormDialog
+                <UserFormDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    data={users}
                     studyPrograms={studyPrograms}
-                    dataId={id}
                     handleSave={handleSave}
-                    title={'Edit Kepala Lab Terpadu'}
+                    user={selectedKepalaLab}
+                    role={userRole.KepalaLabTerpadu}
+                    title={!isEdit ? 'Tambah Kepala Lab Terpadu' : 'Edit Kepala Lab Terpadu'}
                 />
             </MainContent>
         </>

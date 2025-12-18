@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('role', ['admin', 'admin_keuangan', 'kepala_lab_terpadu', 'dosen', 'koorprodi', 'kepala_lab_jurusan', 'laboran', 'mahasiswa', 'pihak_luar']);
+            $table->enum('role', ['admin', 'admin_pengujian', 'kepala_lab_terpadu', 'dosen', 'koorprodi', 'kepala_lab_jurusan', 'laboran', 'mahasiswa', 'pihak_luar']);
             $table->foreignId('study_program_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('institution_id')->nullable()->constrained()->onDelete('cascade');
             $table->boolean('is_manager')->default(0);

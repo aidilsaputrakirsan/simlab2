@@ -1,5 +1,5 @@
 import { userRole } from "@/domain/User/UserRole";
-import { CalendarClock, CalendarPlus, Key, LayoutDashboard, SquareTerminal } from "lucide-react"
+import { CalendarClock, CalendarPlus, CalendarRange, Key, LayoutDashboard, SquareTerminal } from "lucide-react"
 
 export const navItems: NavItem[] = [
   {
@@ -49,7 +49,7 @@ export const navItems: NavItem[] = [
     title: "Peminjaman",
     url: "/panel/peminjaman",
     icon: CalendarClock,
-    roles: [userRole.Kooprodi, userRole.KepalaLabJurusan, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
+    roles: [userRole.Kooprodi, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
   },
   {
     title: "Penjadwalan Praktikum",
@@ -86,11 +86,11 @@ export const navItems: NavItem[] = [
   {
     title: "Manajemen Pengujian",
     url: "#",
-    icon: CalendarPlus,
-    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan],
+    icon: CalendarRange,
+    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan, userRole.AdminKeuangan],
     items: [
       // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
-      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran]},
+      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminKeuangan]},
     ],
   },
 ]

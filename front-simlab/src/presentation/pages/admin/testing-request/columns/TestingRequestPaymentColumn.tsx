@@ -2,16 +2,11 @@ import { TestingRequestView } from "@/application/testing-request/TestingRequest
 import { Badge } from "@/presentation/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
-import TestingRequestVerificationAction from "../components/TestingRequestVerificationAction";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/presentation/components/ui/button";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
 
-interface ColumnProps {
-    openApproval: (id: number) => void;
-    openRejection: (id: number) => void;
-}
-
-export const TestingRequestVerificationColumn = ({ openApproval, openRejection }: ColumnProps): ColumnDef<TestingRequestView>[] => [
+export const TestingRequestPaymentColumn = (): ColumnDef<TestingRequestView>[] => [
     {
         header: 'Tahun Akademik',
         accessorKey: 'academicYear'
@@ -50,7 +45,15 @@ export const TestingRequestVerificationColumn = ({ openApproval, openRejection }
         header: "Action",
         accessorKey: 'id',
         cell: ({ row }) => {
-            return <TestingRequestVerificationAction testingRequest={row.original} openApproval={openApproval} openRejection={openRejection} />
+            if (row.original.hasPaidItems) {
+                switch (row.original.paymentStatus) {
+                    case PaymentStatus.Draft:
+                        return <Button>Terbitkan Pembayaran</Button>
+
+                    default:
+                        break;
+                }
+            }
         }
     }
     // {

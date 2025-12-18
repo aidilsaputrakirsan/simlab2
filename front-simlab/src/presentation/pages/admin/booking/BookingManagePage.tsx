@@ -70,10 +70,10 @@ const BookingManagePage = () => {
 
     switch (booking.bookingType) {
       case BookingType.RoomNEquipment:
-        if (booking.laboratoryRoom && booking.bookingEquipment && booking.bookingEquipment.length > 0) disallow();
+        if (booking.laboratoryRoomName && booking.bookingEquipments && booking.bookingEquipments.length > 0) disallow();
         break;
       case BookingType.Equipment:
-        if (booking.bookingEquipment && booking.bookingEquipment.length > 0) disallow();
+        if (booking.bookingEquipments && booking.bookingEquipments.length > 0) disallow();
         break;
       default:
         disallow();

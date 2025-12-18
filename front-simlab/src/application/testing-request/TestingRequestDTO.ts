@@ -1,3 +1,4 @@
+
 export interface TestingRequestTableParam {
     page: number,
     per_page: number,
@@ -14,7 +15,11 @@ export interface TestingRequestInputDTO {
     information: string,
     testing_items: {
         testing_type_id: number | null,
-        quantity: number | null
+        name: string | null,
+        quantity: number | null,
+        unit: string | null,
+        price: number | null,
+        total: number | null
     }[]
 }
 

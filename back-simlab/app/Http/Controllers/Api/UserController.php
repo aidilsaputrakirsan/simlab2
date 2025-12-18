@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AsignRoleRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -49,16 +51,16 @@ class UserController extends BaseController
     public function store(UserRequest $request)
     {
         try {
-            // Prevent duplicate Kepala Laboratorium Terpadu
-            if ($request->role === 'kepala_lab_terpadu') {
-                $existing = User::where('role', 'kepala_lab_terpadu')->first();
-                if ($existing) {
-                    return $this->sendError('Sudah ada user dengan role Kepala Laboratorium Terpadu.', [], 422);
-                }
-            }
+            $studyProgram = StudyProgram::find($request->study_program_id);
 
-            if ($this->checkIsSingleRoleExist($request->role, $request->study_program_id)) {
-                return $this->sendError('Sudah ada user dengan prodi ini di role tersebut.', [], 400);
+            // Validate role for new user
+            $validationError = $this->validateRoleAssignment(
+                role: $request->role,
+                studyProgramId: $studyProgram->id,
+                majorId: $studyProgram->major_id
+            );
+            if ($validationError) {
+                return $this->sendError($validationError['message'], [], $validationError['code'] ?? 422);
             }
 
             $user = User::create($request->validated());
@@ -80,16 +82,14 @@ class UserController extends BaseController
                 unset($data['password']);
             }
 
-            // Prevent duplicate Kepala Laboratorium Terpadu
-            if ($request->role === 'kepala_lab_terpadu') {
-                $existing = User::where('role', 'kepala_lab_terpadu')->where('id', '!=', $user->id)->first();
-                if ($existing) {
-                    return $this->sendError('Sudah ada user dengan role Kepala Laboratorium Terpadu.', [], 422);
-                }
-            }
-
-            if ($this->checkIsSingleRoleExist($request->role, $request->study_program_id, $user)) {
-                return $this->sendError('Sudah ada user dengan prodi ini di role tersebut.', [], 422);
+            $validationError = $this->validateRoleAssignment(
+                role: $user->role,
+                studyProgramId: $user->study_program_id,
+                majorId: $user->studyProgram?->major_id,
+                excludeUserId: $user->id
+            );
+            if ($validationError) {
+                return $this->sendError($validationError['message'], [], 422);
             }
 
             $user->update($data);
@@ -100,20 +100,6 @@ class UserController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError('Terjadi kesalahan ketika mengubah data pengguna', [$e->getMessage()], 500);
         }
-    }
-
-    // for checking person have koorprodi & kepala lab is exists
-    private function checkIsSingleRoleExist($role, $study_program_id, $selected_user = null)
-    {
-        if ($role == 'koorprodi' || $role == 'kepala_lab_jurusan') {
-            $user = User::where('role', $role)->where('study_program_id', $study_program_id)->first();
-            if ($selected_user && $user) {
-                return $user->id != $selected_user->id ? true : false;
-            }
-            return $user ? true : false;
-        }
-
-        return false;
     }
 
     public function restoreToDosen($id)
@@ -173,5 +159,44 @@ class UserController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError("Gagal mengambil data pengguna", [$e->getMessage()], 500);
         }
+    }
+
+    private function validateRoleAssignment($role, $studyProgramId, $majorId, $excludeUserId = null)
+    {
+        $query = User::where('role', $role);
+
+        if ($excludeUserId) {
+            $query->where('id', '!=', $excludeUserId);
+        }
+
+        switch ($role) {
+            case 'kepala_lab_terpadu':
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan role Kepala Laboratorium Terpadu.', 'code' => 422];
+                }
+                break;
+
+            case 'kepala_lab_jurusan':
+                $query->whereHas(
+                    'studyProgram',
+                    fn($q) =>
+                    $q->where('major_id', $majorId)
+                );
+
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan jurusan yang sama di role Kepala Lab Jurusan.', 'code' => 422];
+                }
+                break;
+
+            case 'koorprodi':
+                $query->where('study_program_id', $studyProgramId);
+
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan prodi ini di role Koorprodi.', 'code' => 422];
+                }
+                break;
+        }
+
+        return null;
     }
 }

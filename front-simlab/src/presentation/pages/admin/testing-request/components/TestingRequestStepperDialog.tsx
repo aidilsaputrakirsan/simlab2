@@ -116,7 +116,7 @@ const TestingRequestStepperDialog: React.FC<TestingRequestStepperDialogProps> = 
                                                     <span className="text-sm text-muted-foreground rounded-xl tracking-tight">
                                                         {step.approvedAt ? String(step.approvedAt.formatForInformation()) : ''}
                                                     </span>
-                                                    {step.action !== TestingRequestApprovalAction.RequestBooking && (
+                                                    {step.action !== TestingRequestApprovalAction.RequestTesting && (
                                                         <div className='flex flex-col mt-2'>
                                                             <span className='text-sm font-semibold'>
                                                                 {step.status === TestingRequestApprovalStatus.Rejected ? 'Alasan: ' : 'Catatan:'}

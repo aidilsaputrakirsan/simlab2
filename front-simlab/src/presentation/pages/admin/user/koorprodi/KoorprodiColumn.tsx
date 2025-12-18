@@ -3,10 +3,11 @@ import { UserView } from '@/application/user/UserView';
 import { Button } from '@/presentation/components/ui/button';
 
 interface ColumnProps {
-    openConfirm: (id: number) => void;
+    openModal: (koorprodi: UserView) => void;
+    openConfirm: (koorprodi: UserView) => void;
 }
 
-export const KoorprodiColumn = ({ openConfirm }: ColumnProps): ColumnDef<UserView>[] => [
+export const KoorprodiColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<UserView>[] => [
     { header: 'Email', accessorKey: 'email' as keyof UserView },
     { header: 'Nama', accessorKey: 'name' as keyof UserView },
     { header: 'NIM / NIP / NIPH / Lainnya', accessorKey: 'identityNum' as keyof UserView, cell: ({ row }) => row.original.identityNum ?? '-' },
@@ -15,8 +16,11 @@ export const KoorprodiColumn = ({ openConfirm }: ColumnProps): ColumnDef<UserVie
         header: 'Action',
         accessorKey: 'id' as keyof UserView,
         cell: ({ row }) => (
-            <div>
-                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original.id)}>
+            <div className='flex gap-2'>
+                <Button size={'sm'} onClick={() => openModal(row.original)}>
+                    Edit
+                </Button>
+                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original)}>
                     Change to Dosen
                 </Button>
             </div>

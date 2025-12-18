@@ -1,5 +1,6 @@
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types"
 import { TestingRequest } from "./TestingRequest"
+import { TestingRequestApproval } from "./TestingRequestApproval"
 
 export interface ITestingRequestRepository {
     getAll(params: {
@@ -25,7 +26,11 @@ export interface ITestingRequestRepository {
         information: string,
         testing_items: {
             testing_type_id: number | null,
-            quantity: number | null
+            name: string | null,
+            quantity: number | null,
+            unit: string | null,
+            price: number | null,
+            total: number | null
         }[]
     }): Promise<ApiResponse<TestingRequest>>
 
@@ -39,4 +44,5 @@ export interface ITestingRequestRepository {
     ): Promise<ApiResponse>;
 
     getTestingRequestData(id: number): Promise<ApiResponse<TestingRequest>>
+    getTestingRequestApprovals(id: number): Promise<ApiResponse<TestingRequestApproval[]>>
 }

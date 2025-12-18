@@ -77,7 +77,6 @@ export const useBooking = ({
     const getBookingDetail = async (id: number) => {
         return await service.getBookingDetail(id)
     }
-    const getBookingSteps = async (id: number) => service.getBookingSteps(id)
 
     const create = (dto: BookingInputDTO) => service.createData(dto)
     const isStillHaveDraftBooking = async () => {
@@ -100,7 +99,6 @@ export const useBooking = ({
         getBookingDetail,
         storeBookingRoomNEquipment,
         storeBookingEquipment,
-        getBookingSteps,
         getDataForVerification,
         getReportData,
         verifyBooking

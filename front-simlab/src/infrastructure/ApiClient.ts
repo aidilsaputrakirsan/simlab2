@@ -7,29 +7,6 @@ interface RequestOptions extends RequestInit {
     isFormData?: boolean
 }
 
-// export function toFormData(data: Record<string, any>, method: 'POST' | 'PUT' | 'DELETE' = 'POST') {
-//     const formData = new FormData();
-//     Object.entries(data as Record<string, any>).forEach(([key, value]) => {
-//         formData.append(key, value);
-//     });
-
-//     // Add _method override if PUT
-//     switch (method) {
-//         case 'PUT':
-//             formData.append('_method', 'PUT');
-//             break;
-
-//         case 'DELETE':
-//             formData.append('_method', 'DELETE');
-//             break;
-
-//         default:
-//             break;
-//     }
-
-//     return formData;
-// }
-
 export async function fetchApi(endpoint: string, options: RequestOptions = {}) {
     const headers = new Headers(options.headers);
 

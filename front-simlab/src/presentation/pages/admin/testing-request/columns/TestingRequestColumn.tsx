@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/presentation/components/ui/button";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
 
 export const TestingRequestColumn = (): ColumnDef<TestingRequestView>[] => [
     {
@@ -28,6 +29,22 @@ export const TestingRequestColumn = (): ColumnDef<TestingRequestView>[] => [
             return (
                 <TestingRequestBadgeStatus status={row.original.status} />
             )
+        }
+    },
+    {
+        header: "Status Pembayaran",
+        accessorKey: 'satus',
+        cell: ({ row }) => {
+            if (row.original.hasPaidItems) {
+                switch (row.original.paymentStatus) {
+                    case PaymentStatus.Draft:
+                        return <Badge variant={"outline"}>Menunggu Penerbitan Pembayaran</Badge>
+                
+                    default:
+                        break;
+                }
+            }
+            return <div>-</div>
         }
     },
     {

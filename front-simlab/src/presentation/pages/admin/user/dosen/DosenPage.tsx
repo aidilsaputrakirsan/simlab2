@@ -3,19 +3,19 @@ import Table from '@/presentation/components/Table'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import { useState } from 'react'
 import { DosenColumn } from './DosenColumn'
-import { ModalType } from '@/presentation/shared/Types'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import { toast } from 'sonner';
 import { UserInputDTO } from '@/application/user/UserDTO';
 import { Button } from '@/presentation/components/ui/button';
 import { Plus } from 'lucide-react';
-import DosenFormDialog from './components/DosenFormDialog';
 import { Combobox } from '@/presentation/components/custom/combobox';
 import { userRole } from '@/domain/User/UserRole';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useStudyProgramSelect } from '../../study-program/hooks/useStudyProgramSelect';
 import { useUserDataTable } from '../hooks/useUserDataTable';
 import MainContent from '@/presentation/components/MainContent';
+import { UserView } from '@/application/user/UserView'
+import UserFormDialog from '../components/UserFormDialog'
 
 const DosenPage = () => {
     const { userService } = useDepedencies()
@@ -38,36 +38,39 @@ const DosenPage = () => {
     } = useUserDataTable({ filter_study_program: selectedStudyProgram, role: userRole.Dosen })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedDosen, setSelectedDosen] = useState<UserView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setType(modalType)
-        setId(id)
+    const isEdit = !!selectedDosen
+
+    const openAdd = () => {
+        setSelectedDosen(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (dosen: UserView) => {
+        setSelectedDosen(dosen)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (dosen: UserView) => {
+        setSelectedDosen(dosen)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: UserInputDTO): Promise<void> => {
-        if (id) {
-            const res = await userService.updateData(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await userService.createData(formData)
-            toast.success(res.message)
-        }
+        const res = selectedDosen
+            ? await userService.updateData(selectedDosen.id, formData)
+            : await userService.createData(formData)
+
+        toast.success(res.message)
         refresh()
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await userService.deleteData(id)
+        if (!selectedDosen) return
+        const res = await userService.deleteData(selectedDosen.id)
         toast.success(res.message)
 
         refresh()
@@ -82,7 +85,7 @@ const DosenPage = () => {
                     <CardHeader>
                         <CardTitle>Menu Dosen</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -105,7 +108,7 @@ const DosenPage = () => {
                         </div>
                         <Table
                             data={users}
-                            columns={DosenColumn({ openModal, openConfirm })}
+                            columns={DosenColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -119,14 +122,14 @@ const DosenPage = () => {
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
-                <DosenFormDialog
+                <UserFormDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    data={users}
                     studyPrograms={studyPrograms}
-                    dataId={id}
                     handleSave={handleSave}
-                    title={type == 'Add' ? 'Tambah Dosen' : 'Edit Dosen'}
+                    user={selectedDosen}
+                    role={userRole.KepalaLabJurusan}
+                    title={!isEdit ? 'Tambah Dosen' : 'Edit Dosen'}
                 />
             </MainContent>
         </>

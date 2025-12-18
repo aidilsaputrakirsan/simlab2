@@ -31,6 +31,9 @@ class TestingRequestInputRequest extends ApiRequest
             'testing_items' => 'required|array|min:1',
             'testing_items.*.testing_type_id' => 'required|distinct|exists:testing_types,id',
             'testing_items.*.quantity' => 'required|integer|min:1',
+            'testing_items.*.price' => 'nullable|numeric|min:0',
+            'testing_items.*.name' => 'nullable|string|max:255',
+            'testing_items.*.unit' => 'nullable|string|max:255',
             'status' => 'nullable|in:draft'
         ];
 

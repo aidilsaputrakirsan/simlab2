@@ -2,6 +2,7 @@ import { TestingRequestStatus } from "@/domain/testing-request/TestingRequestSta
 import { TimeView } from "../time/TimeView"
 import { TestingRequest } from "@/domain/testing-request/TestingRequest"
 import { TestingRequestItemView } from "@/application/testing-request/TestingRequestItemView"
+import { PaymentStatus } from "@/domain/payment/PaymentStatus"
 
 export class TestingRequestView {
     constructor(
@@ -18,7 +19,9 @@ export class TestingRequestView {
         readonly createdAt: TimeView | null,
         readonly updatedAt: TimeView | null,
         readonly testingRequestItems: TestingRequestItemView[],
-
+        
+        readonly hasPaidItems: boolean,
+        readonly paymentStatus: PaymentStatus,
         readonly requestor?: {
             name: string,
             email: string
@@ -27,7 +30,7 @@ export class TestingRequestView {
             name: string,
             email: string
         },
-        readonly canVerif?: number
+        readonly canVerif?: number,
     ) { }
 
     static fromDomain(entity: TestingRequest): TestingRequestView {
@@ -45,9 +48,11 @@ export class TestingRequestView {
             entity.createdAt ? TimeView.fromDomain(entity.createdAt) : null,
             entity.updatedAt ? TimeView.fromDomain(entity.updatedAt) : null,
             entity.getTestingRequestItems().map((item) => TestingRequestItemView.fromDomain(item)),
+            entity.hasPaidItems,
+            entity.paymentStatus,
             entity.getRequestor(),
             entity.getLaboran(),
-            entity.getCanVerif()
+            entity.getCanVerif(),
         )
     }
 }

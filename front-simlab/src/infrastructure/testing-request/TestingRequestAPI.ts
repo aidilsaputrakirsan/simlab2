@@ -4,6 +4,7 @@ import { TestingRequest } from "@/domain/testing-request/TestingRequest"
 import { TestingRequestStatus } from "@/domain/testing-request/TestingRequestStatus"
 import { Time } from "@/domain/time/Time"
 import { TestingRequestItemAPI, toDomain as toTestingRequestItem } from "./TestingRequestItemAPI"
+import { PaymentStatus } from "@/domain/payment/PaymentStatus"
 
 export type TestingRequestApi = {
     id: number,
@@ -26,7 +27,9 @@ export type TestingRequestApi = {
     result_file: string | null,
     created_at: string | null,
     updated_at: string | null,
+    has_paid_items: boolean
     canVerif: number,
+    payment_status: string
     testing_request_items: TestingRequestItemAPI[]
 }
 
@@ -43,7 +46,9 @@ export function toDomain(api: TestingRequestApi): TestingRequest {
         api.information,
         api.result_file,
         api.created_at ? new Time(api.created_at) : null,
-        api.updated_at ? new Time(api.updated_at) : null
+        api.updated_at ? new Time(api.updated_at) : null,
+        api.has_paid_items,
+        api.payment_status as PaymentStatus
     )
 
     if (api.requestor) {

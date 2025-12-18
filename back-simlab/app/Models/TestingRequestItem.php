@@ -12,7 +12,8 @@ class TestingRequestItem extends Model
     protected $fillable = [
         'testing_type_id',
         'testing_request_id',
-        'quantity'
+        'quantity',
+        'price'
     ];
 
     public function testingRequest()

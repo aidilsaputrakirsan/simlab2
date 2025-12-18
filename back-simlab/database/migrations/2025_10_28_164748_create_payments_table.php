@@ -17,13 +17,12 @@ return new class extends Migration
             $table->string('payable_type');
             $table->index(['payable_type', 'payable_id'], 'payable_index');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('amount');
+            $table->string('payment_number')->nullable();
+            $table->integer('amount')->nullable();
             $table->string('invoice_file')->nullable();
-            $table->string('receipt_file')->nullable();
-            $table->string('va_number');
-            $table->enum('status', ['rejected', 'approved', 'pending'])->default('pending');
-            $table->foreignId('verified_by')->constrained('users')->onDelete('cascade');
-            $table->dateTime('verified_at');
+            $table->string('payment_proof')->nullable();
+            $table->string('va_number')->nullable();
+            $table->enum('status', ['draft','rejected', 'approved', 'pending'])->default('pending');
             $table->timestamps();
         });
     }

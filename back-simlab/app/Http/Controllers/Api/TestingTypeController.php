@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\TestingTypeRequest;
 use App\Http\Resources\TestingTypeResource;
+use App\Http\Resources\TestingTypeSelectResource;
 use App\Models\TestingType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -106,8 +107,8 @@ class TestingTypeController extends BaseController
     public function getDataForSelect()
     {
         try {
-            $testing_types = TestingType::select('id', 'name', 'unit')->get();
-            return $this->sendResponse($testing_types, 'Data pengujian berhasil diambil');
+            $testing_types = TestingType::select('id', 'name', 'unit', 'student_price', 'lecturer_price', 'external_price')->get();
+            return $this->sendResponse(TestingTypeSelectResource::collection($testing_types), 'Data pengujian berhasil diambil');
         } catch (\Exception $e) {
             return $this->sendError('Gagal mengambil data pengujian', [$e->getMessage()], 500);
         }

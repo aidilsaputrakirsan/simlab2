@@ -5,20 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentItem extends Model
+class PaymentApproval extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'payment_id',
-        'name',
-        'unit',
-        'price',
-        'quantity'
+        'action',
+        'approver_id',
+        'is_approved',
+        'information'
     ];
-
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class);
-    }
 }

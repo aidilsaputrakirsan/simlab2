@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Separator } from './ui/separator'
 import { SidebarTrigger } from './ui/sidebar'
 import { useTheme } from '../contexts/ThemeContext'

@@ -63,6 +63,22 @@ export const PracticumScheduleSessionColumn = (handleOpenConductionConfirm: (id:
         return renderConductedStatusBadge(Boolean(data.isClassConducted));
       }
     });
+
+    columns.push({
+      header: 'Catatan Pertemuan',
+      cell: ({ row }) => {
+        if (row.original.lecturerComment?.trim()) {
+          return (
+            <div className="flex flex-col">
+              <span className="font-medium">{row.original.lecturerComment}</span>
+              <span className="text-muted-foreground text-xs">{row.original.lecturerCommentedAt?.formatForInformation()}</span>
+            </div>
+          )
+        }
+
+        return <div>-</div>
+      }
+    })
     if ([userRole.Laboran, userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu].includes(role)) {
       columns.push({
         header: 'Catatan Laboran',

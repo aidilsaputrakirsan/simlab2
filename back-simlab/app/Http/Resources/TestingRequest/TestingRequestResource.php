@@ -53,6 +53,10 @@ class TestingRequestResource extends JsonResource
             'result_file' => $this->result_file,
             'created_at' => $this->convertToISO('created_at'),
             'updated_at' => $this->convertToISO('updated_at'),
+            'has_paid_items' => $this->hasPaidItems,
+            'payment_status' => $this->whenLoaded('payment', function () {
+                return $this->payment->status;
+            }),
             $this->mergeWhen(static::$approvals, function () {
                 return ['canVerif' => $this->canVerif(auth()->user())];
             }),

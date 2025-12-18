@@ -17,6 +17,8 @@ import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { toast } from 'sonner';
 import { ApiResponse } from '@/presentation/shared/Types';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
+import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
+import { MoneyView } from '@/application/money/MoneyView';
 
 const TestingRequestCreatePage = () => {
     const { user } = useAuth()
@@ -32,15 +34,18 @@ const TestingRequestCreatePage = () => {
         handleRemoveTestingItem
     } = useTestingRequestForm()
 
+    const totalAll = formData.testing_items.reduce((sum, item) => {
+        if (!item.price || !item.quantity) return sum;
+        return sum + item.price * item.quantity;
+    }, 0);
+
     const { errors, setErrors, processErrors } = useValidationErrors()
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const { testingTypes } = useTestingTypeSelect()
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
+    const handleSubmit = async () => {
         setErrors({})
-        setIsSubmitting(true)
 
         try {
             const res = await testingRequestService.createData(formData)
@@ -53,7 +58,7 @@ const TestingRequestCreatePage = () => {
                 processErrors(error.errors)
             }
         } finally {
-            setIsSubmitting(false)
+            setIsConfirmationOpen(false)
         }
     }
 
@@ -61,8 +66,8 @@ const TestingRequestCreatePage = () => {
         <>
             <Header title='Menu Pengujian' />
             <MainContent>
-                <form onSubmit={handleSubmit} className='grid xl:grid-cols-3 gap-4'>
-                    <Card className='xl:col-span-2 h-fit'>
+                <div className='flex flex-col gap-4'>
+                    <Card className='h-fit'>
                         <CardHeader>
                             <CardTitle>Ajukan Pengujian</CardTitle>
                             <CardAction>
@@ -200,10 +205,10 @@ const TestingRequestCreatePage = () => {
                             <CardTitle>Daftar Pengujian</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className='md:col-span-2 flex flex-col gap-5'>
+                            <div className='flex flex-col gap-5'>
                                 <Button type={'button'} onClick={handleAddTestingItem} size={'sm'} className='w-fit'>Tambah Pengujian <Plus /></Button>
                                 {formData.testing_items.map((item, idx) => (
-                                    <div className='gap-x-5 gap-y-4 flex-col flex items-end' key={idx}>
+                                    <div className='gap-x-5 gap-y-4 flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-row items-end' key={idx}>
                                         <FormGroup
                                             className='w-full'
                                             id='testing_type_id'
@@ -214,12 +219,15 @@ const TestingRequestCreatePage = () => {
                                                 options={testingTypes}
                                                 value={item.testing_type_id?.toString() || ''}
                                                 onChange={(val) => {
-                                                    setFormData((prev) => ({
-                                                        ...prev,
-                                                        testing_items: prev.testing_items.map((itm, i) =>
-                                                            i === idx ? { ...itm, testing_type_id: Number(val) } : itm
-                                                        )
-                                                    }))
+                                                    const selecteTestingType = testingTypes.find((data) => data.id === Number(val))
+                                                    if (selecteTestingType) {
+                                                        setFormData((prev) => ({
+                                                            ...prev,
+                                                            testing_items: prev.testing_items.map((itm, i) =>
+                                                                i === idx ? { ...itm, testing_type_id: selecteTestingType.id, price: selecteTestingType.price.amount, unit: selecteTestingType.unit, name: selecteTestingType.name } : itm
+                                                            )
+                                                        }))
+                                                    }
                                                 }}
                                                 placeholder="Pilih Jenis Pengujian"
                                                 optionLabelKey='name'
@@ -229,7 +237,7 @@ const TestingRequestCreatePage = () => {
                                         <FormGroup
                                             className='w-full'
                                             id='quantity'
-                                            label={`Kuantitas Pengujian ${item.testing_type_id ? 'per/' + testingTypes.find((data) => data.id === item.testing_type_id)?.unit : ''}`}
+                                            label={`Kuantitas Pengujian ${item.testing_type_id ? '(per/' + item.unit + ')' : ''}`}
                                             error={errors[`testing_items.${idx}.quantity`]}
                                             required>
                                             <Input
@@ -241,18 +249,67 @@ const TestingRequestCreatePage = () => {
                                                 placeholder='Kuantitas Pengujian'
                                             />
                                         </FormGroup>
+                                        <FormGroup
+                                            className='w-full'
+                                            id='price'
+                                            label={`Tarif Pengujian`}
+                                            required>
+                                            <Input
+                                                type='text'
+                                                value={item.price != null
+                                                    ? MoneyView.toViewModel(item.price).formatToIDR() + '/' + item.unit
+                                                    : ''}
+                                                id='price'
+                                                name='price'
+                                                placeholder='Tarif Pengujian'
+                                                disabled
+                                            />
+                                        </FormGroup>
+                                        <FormGroup
+                                            className='w-full'
+                                            id='quantity'
+                                            label={`Total Tarif`}
+                                            error={errors[`testing_items.${idx}.quantity`]}
+                                            required>
+                                            <Input
+                                                type='text'
+                                                value={item.price && item.quantity
+                                                    ? MoneyView.toViewModel(item.price).multiply(item.quantity).formatToIDR()
+                                                    : ''}
+                                                id='quantity'
+                                                name='quantity'
+                                                placeholder='Total Tarif'
+                                                disabled
+                                            />
+                                        </FormGroup>
                                         {formData.testing_items.length > 1 && (
-                                            <Button type={'button'} className='w-full' onClick={() => handleRemoveTestingItem(idx)} variant={'destructive'} size={'sm'}><Trash /></Button>
+                                            <Button type={'button'} className='w-full xl:w-fit md:col-span-2' onClick={() => handleRemoveTestingItem(idx)} variant={'destructive'} size={'sm'}><Trash /></Button>
                                         )}
                                     </div>
                                 ))}
+                                <FormGroup
+                                    className='self-end'
+                                    id='quantity'
+                                    label={`Total`}
+                                    required>
+                                    <Input
+                                        id='quantity'
+                                        value={MoneyView.toViewModel(totalAll).formatToIDR()}
+                                        name='quantity'
+                                        placeholder='Total Tarif'
+                                        disabled
+                                    />
+                                </FormGroup>
                             </div>
                         </CardContent>
                     </Card>
+
                     <div className='xl:col-span-3 flex justify-end'>
-                        <Button type='submit' disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : 'Simpan'}</Button>
+
+                        <Button type='submit' onClick={() => setIsConfirmationOpen(true)} >Simpan</Button>
+                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} />
                     </div>
-                </form>
+                </div>
             </MainContent>
         </>
     )

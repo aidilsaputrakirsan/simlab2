@@ -47,35 +47,42 @@ import TestingRequestPage from "./presentation/pages/admin/testing-request/Testi
 import TestingRequestCreatePage from "./presentation/pages/admin/testing-request/TestingRequestCreatePage";
 import TestingRequestVerification from "./presentation/pages/admin/testing-request/TestingRequestVerification";
 import TestingRequestDetailPage from "./presentation/pages/admin/testing-request/TestingRequestDetailPage";
+import BaseLayout from "./presentation/layouts/BaseLayout";
 
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <MainPage />
-    },
-    {
-        path: '/berita',
-        element: <NewsPage />
-    },
-    {
-        path: '/berita/:slug',
-        element: <NewsContent />
-    },
-    {
-        path: '/login',
-        element: (
-            <AuthProvider>
-                <Login />
-            </AuthProvider>
-        )
-    },
-    {
-        path: '/register',
-        element: (
-            <AuthProvider>
-                <RegisterPage />
-            </AuthProvider>
-        )
+        element: <BaseLayout/>,
+        children: [
+            {
+                path: '',
+                element: <MainPage />
+            },
+            {
+                path: 'berita',
+                element: <NewsPage />
+            },
+            {
+                path: 'berita/:slug',
+                element: <NewsContent />
+            },
+            {
+                path: 'login',
+                element: (
+                    <AuthProvider>
+                        <Login />
+                    </AuthProvider>
+                )
+            },
+            {
+                path: 'register',
+                element: (
+                    <AuthProvider>
+                        <RegisterPage />
+                    </AuthProvider>
+                )
+            },
+        ]
     },
     {
         path: '/panel',
@@ -356,7 +363,7 @@ export const router = createBrowserRouter([
                         path: '',
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.Mahasiswa, userRole.Dosen]}>
-                                <TestingRequestPage/>
+                                <TestingRequestPage />
                             </ProtectedRoute>
                         )
                     },
@@ -364,7 +371,7 @@ export const router = createBrowserRouter([
                         path: 'create',
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.Mahasiswa, userRole.Dosen]}>
-                                <TestingRequestCreatePage/>
+                                <TestingRequestCreatePage />
                             </ProtectedRoute>
                         )
                     },
@@ -379,8 +386,8 @@ export const router = createBrowserRouter([
                     {
                         path: 'verif',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran]}>
-                                <TestingRequestVerification/>
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminKeuangan]}>
+                                <TestingRequestVerification />
                             </ProtectedRoute>
                         )
                     },

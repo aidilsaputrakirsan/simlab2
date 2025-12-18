@@ -95,7 +95,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
-    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
+    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_keuangan'], function () {
         Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
         Route::get('/{id}/approvals', [TestingRequestController::class, 'getTestingRequestApproval']);
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
@@ -106,7 +106,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             // Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
 
-        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu'], function () {
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin_keuangan'], function () {
             Route::get('/verification', [TestingRequestController::class, 'getTestingRequestForVerification']);
             Route::post('/{id}/verify', [TestingRequestController::class, 'verify']);
         });
@@ -172,8 +172,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // logout route
     Route::post('/logout', [AuthController::class, 'logout']);
-});
-
-Route::get('/test', function () {
-    dd(now());
 });

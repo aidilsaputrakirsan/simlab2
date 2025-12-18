@@ -30,7 +30,7 @@ class UserRequest extends ApiRequest
         ];
 
         if (in_array($this->input('role'), ['dosen', 'kepala_lab_terpadu', 'koorprodi', 'mahasiswa', 'kepala_lab_jurusan'])) {
-            $rules['study_program_id'] = 'required';
+            $rules['study_program_id'] = 'required|exists:study_programs,id';
         }
 
         return $rules;
@@ -53,6 +53,7 @@ class UserRequest extends ApiRequest
             'role.required' => 'Peran tidak boleh kosong!',
 
             'study_program_id.required' => 'Prodi tidak boleh kosong!',
+            'study_program_id.exists' => 'Prodi tidak ditemukan!',
 
             'identity_num.string' => 'Nomor identitas harus berupa teks!',
             'identity_num.max' => 'Nomor identitas maksimal 191 karakter!',

@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useValidationErrors } from "../hooks/useValidationError";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import ItkLogo from '../assets/itk_logo.png'
 import { LoginDTO } from "@/application/auth/AuthDTO";
 
@@ -49,7 +49,7 @@ export const Login: React.FC = () => {
     };
 
     useEffect(() => {
-        navigate(location.pathname, { replace: true });
+        document.documentElement.classList.remove("dark")
     }, [])
 
     if (user) {
@@ -59,7 +59,7 @@ export const Login: React.FC = () => {
     return (
         <>
             <div className="grid min-h-screen bg-white md:grid-cols-2 lg:grid-cols-9">
-                <div className="flex flex-col items-center w-full px-5 py-32 gap-5 sm:px-10 md:px-16 lg:px-10 xl:px-16 h-fit lg:col-span-4">
+                <div className="flex flex-col items-center w-full px-5 py-32 gap-5 sm:px-10 md:px-16 lg:px-10 xl:px-16 h-fit lg:col-span-3">
                     <img src={ItkLogo} className="w-36" alt="" />
                     <div className="w-full text-left">
                         <h3 className="text-3xl font-medium">Selamat Datang</h3>
@@ -101,12 +101,11 @@ export const Login: React.FC = () => {
                         </div>
                     </form>
                 </div>
-                <div className="relative hidden md:block lg:col-span-5">
+                <div className="relative hidden md:block lg:col-span-6">
                     <div className="absolute w-full h-full col-span-2 bg-black opacity-50"></div>
                     <img src="https://labterpadu.itk.ac.id/halaman_depan/07.png" alt="" className="object-cover w-full h-full" />
                 </div>
             </div>
-            <Toaster position="top-right" richColors expand={true} closeButton />
         </>
     );
 };

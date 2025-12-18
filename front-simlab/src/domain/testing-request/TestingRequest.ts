@@ -1,3 +1,4 @@
+import { PaymentStatus } from "../payment/PaymentStatus";
 import { Laboran } from "../shared/value-object/Laboran";
 import { Requestor } from "../shared/value-object/Requestor";
 import { Time } from "../time/Time";
@@ -22,7 +23,9 @@ export class TestingRequest {
         readonly information: string | null,
         readonly resultFile: string | null,
         readonly createdAt: Time | null,
-        readonly updatedAt: Time | null
+        readonly updatedAt: Time | null,
+        readonly hasPaidItems: boolean,
+        readonly paymentStatus: PaymentStatus
     ){}
 
     setLaboran(laboran: Laboran) {

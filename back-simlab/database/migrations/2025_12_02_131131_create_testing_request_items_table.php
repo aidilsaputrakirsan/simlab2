@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('testing_type_id')->constrained()->onDelete('cascade');
             $table->foreignId('testing_request_id')->constrained()->onDelete('cascade');
+            $table->integer('price');
             $table->integer('quantity');
             $table->timestamps();
         });

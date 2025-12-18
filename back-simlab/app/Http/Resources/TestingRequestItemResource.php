@@ -22,6 +22,7 @@ class TestingRequestItemResource extends JsonResource
                 return $this->testingType->unit;
             }),
             'quantity' => $this->quantity,
+            'price' => $this->price
         ];
     }
 }

@@ -34,16 +34,16 @@ const BookingDetailDialog: React.FC<BookingDetailDialogProps> = ({ booking, open
                                 <div className="grid md:grid-cols-2 gap-5">
                                     <div className="flex flex-col gap-1">
                                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Nama Peminjam</label>
-                                        <span className="text-sm font-medium text-gray-800">{booking.user?.name}</span>
+                                        <span className="text-sm font-medium text-gray-800">{booking.requestor?.name}</span>
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Nomor Identitas Peminjam</label>
-                                        <span className="text-sm font-medium text-gray-800">{booking.user?.identityNum}</span>
+                                        <span className="text-sm font-medium text-gray-800">{booking.requestor?.identityNum}</span>
                                     </div>
-                                    <div className="flex flex-col gap-1">
+                                    {/* <div className="flex flex-col gap-1">
                                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Program Studi</label>
                                         <span className="text-sm font-medium text-gray-800">{booking.user?.studyProgram?.name}</span>
-                                    </div>
+                                    </div> */}
                                     <div className="flex flex-col gap-1">
                                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Nomor Hp (Whatsapp)</label>
                                         <span className="text-sm font-medium text-gray-800">{booking.phoneNumber}</span>

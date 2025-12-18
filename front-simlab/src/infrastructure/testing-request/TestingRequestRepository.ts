@@ -38,7 +38,22 @@ export class TestingRequestRepository implements ITestingRequestRepository {
         throw json['message']
     }
 
-    async createData(data: { phone_number: string; activity_name: string; supervisor: string | null; supervisor_email: string | null; testing_time: Date | undefined; information: string; testing_items: { testing_type_id: number | null; quantity: number | null; }[]; }): Promise<ApiResponse<TestingRequest>> {
+    async createData(data: {
+        phone_number: string;
+        activity_name: string;
+        supervisor: string | null;
+        supervisor_email: string | null;
+        testing_time: Date | undefined;
+        information: string;
+        testing_items: {
+            testing_type_id: number | null,
+            name: string | null,
+            quantity: number | null,
+            unit: string | null,
+            price: number | null,
+            total: number | null
+        }[];
+    }): Promise<ApiResponse<TestingRequest>> {
         const response = await fetchApi("/testing-requests", {
             method: "POST",
             body: JSON.stringify(data)

@@ -12,7 +12,11 @@ export const useTestingRequestForm = () => {
         testing_items: [
             {
                 testing_type_id: null,
-                quantity: null
+                quantity: null,
+                name: null,
+                unit: null,
+                price: null,
+                total: null
             }
         ]
     })
@@ -56,7 +60,11 @@ export const useTestingRequestForm = () => {
     const handleAddTestingItem = () => {
         const newTestingItem = {
             testing_type_id: null,
-            quantity: null
+            quantity: null,
+            name: null,
+            unit: null,
+            price: null,
+            total: null
         }
 
         setFormData(prev => ({

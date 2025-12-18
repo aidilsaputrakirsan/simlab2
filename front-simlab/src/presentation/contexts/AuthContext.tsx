@@ -13,6 +13,7 @@ interface AuthContextType {
     login: (credentials: LoginCredentials) => Promise<void>
     register: (credentials: RegisterCredentials) => Promise<void>
     logout: () => void,
+    checkAuth: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -29,18 +30,22 @@ export const AuthProvider = ({ children }: AuthProps) => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const checkAuth = async () => {
+        try {
+            const user = await authService.getCurrentUser(token || '')
+            setUser(user)
+        } catch (error: any) {
+            if (error.code === 401 && location.pathname.startsWith('/panel')) {
+                setUser(null)
+                navigate('/login')
+            }
+        }
+    }
+
     useEffect(() => {
         const initialAuth = async () => {
-            try {
-                const user = await authService.getCurrentUser(token || '')
-                setUser(user)
-            } catch (error: any) {
-                if (error.code === 401 && !location.pathname.startsWith('/login')) {
-                    navigate('/login')
-                }
-            } finally {
-                setLoading(false)
-            }
+            await checkAuth();
+            setLoading(false)
         }
 
         initialAuth();
@@ -70,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, register }}>
+        <AuthContext.Provider value={{ user, token, login, logout, register, checkAuth }}>
             {children}
         </AuthContext.Provider>
     )

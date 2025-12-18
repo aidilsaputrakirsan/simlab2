@@ -8,7 +8,7 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Button } from "../components/ui/button";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { Combobox } from "../components/custom/combobox";
 import { ApiResponse } from "@/presentation/shared/Types";
 import ItkLogo from '../assets/itk_logo.png'
@@ -87,7 +87,7 @@ export const RegisterPage: React.FC = () => {
                         <h4 className="text-base">Daftar akun untuk mengakases SIMLAB!</h4>
                     </div>
                     <form className="grid w-full grid-cols-1 mt-8 gap-5 md:grid-cols-2" onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="name">
                                 Nama <span className="text-red-500">*</span>
                             </Label>
@@ -103,7 +103,7 @@ export const RegisterPage: React.FC = () => {
                                 <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="email">
                                 Email <span className="text-red-500">*</span>
                             </Label>
@@ -119,7 +119,7 @@ export const RegisterPage: React.FC = () => {
                                 <p className="mt-1 text-xs italic text-red-500">{errors['email']}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2 md:col-span-2">
+                        <div className="flex flex-col gap-2 justify-end md:col-span-2">
                             <Label htmlFor="identity_num">
                                 NIM / NIP / NIPH / Identitas Lainnya <span className="text-red-500">*</span>
                             </Label>
@@ -138,7 +138,7 @@ export const RegisterPage: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="role">
                                 Daftar Sebagai <span className="text-red-500">*</span>
                             </Label>
@@ -164,7 +164,7 @@ export const RegisterPage: React.FC = () => {
                                 <p className="mt-1 text-xs italic text-red-500">{errors['role']}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="study_program_id">
                                 Program Studi (Kosongkan jika eksternal)
                             </Label>
@@ -185,7 +185,7 @@ export const RegisterPage: React.FC = () => {
                                 <p className="mt-1 text-xs italic text-red-500">{errors['study_program_id']}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="password">
                                 Password <span className="text-red-500">*</span>
                             </Label>
@@ -201,7 +201,7 @@ export const RegisterPage: React.FC = () => {
                                 <p className="mt-1 text-xs italic text-red-500">{errors['password']}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 justify-end">
                             <Label htmlFor="c_password">
                                 Konfirmasi Password <span className="text-red-500">*</span>
                             </Label>
@@ -235,7 +235,6 @@ export const RegisterPage: React.FC = () => {
                     <img src="https://labterpadu.itk.ac.id/halaman_depan/07.png" alt="" className="object-cover w-full h-full" />
                 </div>
             </div>
-            <Toaster position="top-right" richColors expand={true} closeButton />
         </>
     );
 };

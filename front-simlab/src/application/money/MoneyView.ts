@@ -14,4 +14,8 @@ export class MoneyView {
         const formatted = `Rp${absAmount.toLocaleString('id-ID', { minimumFractionDigits: 0 })}`;
         return this.amount < 0 ? `- ${formatted}` : formatted;
     }
+
+    multiply(quantity: number): MoneyView {
+        return new MoneyView(this.amount * (quantity || 0));
+    }
 }

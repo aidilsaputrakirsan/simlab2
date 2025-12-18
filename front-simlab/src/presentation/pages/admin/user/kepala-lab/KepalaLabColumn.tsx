@@ -3,8 +3,8 @@ import { UserView } from '@/application/user/UserView';
 import { Button } from '@/presentation/components/ui/button';
 
 interface ColumnProps {
-    openModal: (id?: number) => void;
-    openConfirm: (id: number) => void;
+    openModal: (kepalaLab: UserView) => void;
+    openConfirm: (kepalaLab: UserView) => void;
 }
 
 export const KepalaLabColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<UserView>[] => [
@@ -17,10 +17,10 @@ export const KepalaLabColumn = ({ openModal, openConfirm }: ColumnProps): Column
         accessorKey: 'id' as keyof UserView,
         cell: ({ row }) => (
             <div className='flex gap-2'>
-                <Button size={'sm'} onClick={() => openModal(row.original.id)}>
+                <Button size={'sm'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
-                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original.id)}>
+                <Button size={'sm'} variant={'destructive'} onClick={() => openConfirm(row.original)}>
                     Change to Dosen
                 </Button>
             </div>

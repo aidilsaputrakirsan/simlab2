@@ -52,10 +52,22 @@ class TestingRequest extends BaseModel
         return $this->hasMany(TestingRequestApproval::class, 'testing_request_id');
     }
 
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable');
+    }
+
     public function setTestingTimeAttribute($value)
     {
         $this->attributes['testing_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
     }
+
+    public function getHasPaidItemsAttribute()
+    {
+        return collect($this->testRequestItems)
+                ->contains(fn($item) => $item['price'] > 0);
+    }
+
 
     public function canVerif(User $user)
     {

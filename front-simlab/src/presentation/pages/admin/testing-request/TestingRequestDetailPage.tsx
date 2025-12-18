@@ -13,7 +13,8 @@ import { Skeleton } from '@/presentation/components/ui/skeleton'
 import Item from '@/presentation/components/Item'
 import { Badge } from '@/presentation/components/ui/badge'
 import TestingRequestBadgeStatus from './components/TestingRequestBadgeStatus'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/presentation/components/ui/table';
+import { MoneyView } from '@/application/money/MoneyView';
 import TestingRequestStepperDialog from './components/TestingRequestStepperDialog'
 
 const TestingRequestDetailPage = () => {
@@ -35,7 +36,6 @@ const TestingRequestDetailPage = () => {
             setIsLoading(true)
             try {
                 const res = await testingRequestService.getTestingRequestDetail(testingRequestId)
-                console.log(res);
 
                 setTestingRequest(res.data)
             } catch (error: any) {
@@ -82,64 +82,72 @@ const TestingRequestDetailPage = () => {
                         Kembali
                     </Button>
                 </div>
-                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                <div className='flex flex-col gap-4'>
                     <Card className='lg:col-span-2'>
                         <CardHeader>
                             <CardTitle>Informasi Umum</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 text-sm gap-4">
-                                    {testingRequest.requestor && (
-                                        <>
-                                            <Item title='Nama Pemohon' value={testingRequest.requestor.name} />
-                                            <Item title='Email Pemohon' value={testingRequest.requestor.email} />
-                                        </>
-                                    )}
-                                    <Item title='Dosen Pembimbing' value={testingRequest.supervisor} />
-                                    <Item title='Email Dosen Pembimbing' value={testingRequest.supervisorEmail} />
-                                    {testingRequest.laboran && (
-                                        <>
-                                            <Item title='Laboran Penanggung Jawab' value={testingRequest.laboran.name} />
-                                            <Item title='Email Laboran' value={testingRequest.laboran.email} />
-                                        </>
-                                    )}
-                                    <div className="flex flex-col">
-                                        <span className='font-semibold'>Waktu Pengujian</span>
-                                        <Badge variant={'secondary'} className='whitespace-normal'>{`${testingRequest.testingTime.formatForInformation()}`}</Badge>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className='font-semibold'>Status Pengajuan</span>
-                                        <TestingRequestBadgeStatus status={testingRequest.status} />
+                            <div className="grid grid-cols-1 md:grid-cols-2 text-sm gap-4">
+                                {testingRequest.requestor && (
+                                    <>
+                                        <Item title='Nama Pemohon' value={testingRequest.requestor.name} />
+                                        <Item title='Email Pemohon' value={testingRequest.requestor.email} />
+                                    </>
+                                )}
+                                <Item title='Dosen Pembimbing' value={testingRequest.supervisor} />
+                                <Item title='Email Dosen Pembimbing' value={testingRequest.supervisorEmail} />
+                                {testingRequest.laboran && (
+                                    <>
+                                        <Item title='Laboran Penanggung Jawab' value={testingRequest.laboran.name} />
+                                        <Item title='Email Laboran' value={testingRequest.laboran.email} />
+                                    </>
+                                )}
+                                <div className="flex flex-col">
+                                    <span className='font-semibold'>Waktu Pengujian</span>
+                                    <Badge variant={'secondary'} className='whitespace-normal'>{`${testingRequest.testingTime.formatForInformation()}`}</Badge>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className='font-semibold'>Status Pengajuan</span>
+                                    <TestingRequestBadgeStatus status={testingRequest.status} />
+                                </div>
+                                <div className='flex flex-col md:col-span-2'>
+                                    <span className='font-semibold'>Daftar Pengujian</span>
+                                    <div className='border rounded-lg overflow-hidden'>
+                                        <Table>
+                                            <TableHeader className='bg-primary hover:bg-primary/80 group'>
+                                                <TableRow>
+                                                    <TableHead className='text-white group-hover:text-secondary'>No</TableHead>
+                                                    <TableHead className='text-white group-hover:text-secondary'>Jenis Pengujian</TableHead>
+                                                    <TableHead className='text-white group-hover:text-secondary'>Kuantitas Pengujian</TableHead>
+                                                    <TableHead className='text-white group-hover:text-secondary'>Tarif Pengujian</TableHead>
+                                                    <TableHead className='text-white group-hover:text-secondary'>Total</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                                <TableBody>
+                                                    {testingRequest.testingRequestItems.map((item, sidx) => (
+                                                        <TableRow key={sidx}>
+                                                            <TableCell>{sidx + 1}</TableCell>
+                                                            <TableCell>{item.name}</TableCell>
+                                                            <TableCell>{item.quantity} per/{item.unit}</TableCell>
+                                                            <TableCell>{item.price.formatToIDR()}</TableCell>
+                                                            <TableCell>{MoneyView.toViewModel(item.price.amount * item.quantity).formatToIDR()}</TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                                <TableFooter>
+                                                    <TableRow>
+                                                        <TableCell colSpan={4} className="text-right font-semibold">Total</TableCell>
+                                                        <TableCell>
+                                                            {MoneyView.toViewModel(
+                                                                testingRequest.testingRequestItems.reduce((sum, it) => sum + (it.price?.amount ?? 0) * (it.quantity ?? 0), 0)
+                                                            ).formatToIDR()}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </TableFooter>
+                                        </Table>
                                     </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className='h-fit'>
-                        <CardHeader>
-                            <CardTitle>Daftar Pengujian</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className='border rounded-lg overflow-hidden'>
-                                <Table>
-                                    <TableHeader className='bg-primary hover:bg-primary/80 group'>
-                                        <TableRow>
-                                            <TableHead className='text-white group-hover:text-secondary'>No</TableHead>
-                                            <TableHead className='text-white group-hover:text-secondary'>Jenis Pengujian</TableHead>
-                                            <TableHead className='text-white group-hover:text-secondary'>Kuantitas Pengujian</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {testingRequest.testingRequestItems.map((item, sidx) => (
-                                            <TableRow key={sidx}>
-                                                <TableCell>{sidx + 1}</TableCell>
-                                                <TableCell>{item.name}</TableCell>
-                                                <TableCell>{item.quantity} per/{item.unit}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
                             </div>
                         </CardContent>
                     </Card>
