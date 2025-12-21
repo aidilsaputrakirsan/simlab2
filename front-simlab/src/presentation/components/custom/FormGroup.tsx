@@ -21,7 +21,7 @@ const FormGroup: React.FC<FormGroupProps> = ({
     return (
         <div className={className}>
             <div className='flex flex-col gap-2'>
-                <Label htmlFor={id}>
+                <Label htmlFor={id} className='gap-1'>
                     {label} {required && <span className="text-red-500">*</span>}
                 </Label>
                 {children}

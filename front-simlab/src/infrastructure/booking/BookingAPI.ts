@@ -5,6 +5,8 @@ import { Time } from "@/domain/time/Time";
 import { BookingEquipmentAPI, toDomain as toBookingEquipment } from "./BookingEquipmentAPI";
 import { BookingMaterialAPI, toDomain as toBookingMaterial } from "./BookingMaterialAPI";
 import { BookingApprovalAPI, toDomain as toBookingApproval } from "./BookingApprovalAPI";
+import { Requestor } from "@/domain/shared/value-object/Requestor";
+import { Laboran } from "@/domain/shared/value-object/Laboran";
 
 export type BookingAPI = {
     id: number;
@@ -26,7 +28,11 @@ export type BookingAPI = {
     academic_year: string,
     requestor: {
         name: string,
-        email: string
+        email: string,
+        identity_num: string,
+        study_program: string,
+        institution: string
+        is_mahasiswa: boolean
     };
     laboran: {
         name: string,
@@ -54,9 +60,9 @@ export function toDomain(api: BookingAPI): Booking {
         api.booking_type as BookingType,
         api.total_participant,
         api.participant_list,
-        Boolean(api.is_allowed_offsite),
         new Time(api.created_at),
-        new Time(api.updated_at)
+        new Time(api.updated_at),
+        api.is_allowed_offsite ? !!api.is_allowed_offsite : undefined,
     );
 
     if (api.is_requestor_can_return) {
@@ -68,11 +74,13 @@ export function toDomain(api: BookingAPI): Booking {
     }
 
     if (api.requestor) {
-        booking.setRequestor(api.requestor);
+        const requestor = new Requestor(api.requestor.name, api.requestor.email, api.requestor.identity_num, api.requestor.study_program, api.requestor.institution, api.requestor.is_mahasiswa)
+        booking.setRequestor(requestor);
     }
 
     if (api.laboran) {
-        booking.setLaboran(api.laboran);
+        const laboran = new Laboran(api.laboran.name, api.laboran.email)
+        booking.setLaboran(laboran);
     }
 
     if (api.academic_year) {

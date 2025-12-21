@@ -9,25 +9,27 @@ import {
     DialogDescription
 } from '@/presentation/components/ui/dialog'
 import { Button } from '@/presentation/components/ui/button'
-import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { toast } from 'sonner'
 import { ApiResponse } from '@/presentation/shared/Types'
+import FormGroup from './FormGroup'
 
 interface ApproveDialogProps {
     open: boolean,
     onOpenChange: (open: boolean) => void,
     handleSave: (information: string) => Promise<void>
+    isInformationRequired?: boolean
     title?: string,
     message?: string,
-    buttonLabel?: string
+    buttonLabel?: string,
 }
 
 const ApproveDialog: React.FC<ApproveDialogProps> = ({
     open,
     onOpenChange,
     handleSave,
+    isInformationRequired,
     title,
     message,
     buttonLabel
@@ -60,32 +62,30 @@ const ApproveDialog: React.FC<ApproveDialogProps> = ({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>{ title || 'Konfirmasi Verifikasi' }</DialogTitle>
-                    <DialogDescription>{ message || 'Apakah Anda yakin ingin melanjutkan proses verifikasi?' }</DialogDescription>
+                    <DialogTitle>{title || 'Konfirmasi Verifikasi'}</DialogTitle>
+                    <DialogDescription>{message || 'Apakah Anda yakin ingin melanjutkan proses verifikasi?'}</DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="reason">Catatan (*optional)</Label>
-                        <div className="flex flex-col gap-1">
-                            <Textarea
-                                id="reason"
-                                value={information}
-                                onChange={e => setInformation(e.target.value)}
-                                placeholder="Masukkan Catatan"
-                                rows={4}
-                            />
-                            {errors['information'] && (
-                                <p className=" text-xs italic text-red-500">{errors['information']}</p>
-                            )}
-                        </div>
-                    </div>
+                    <FormGroup
+                        id='name'
+                        label={`Catatan ${!isInformationRequired ? '(*optional)' : ''}`}
+                        error={errors['information']}
+                        required={isInformationRequired}>
+                        <Textarea
+                            id="reason"
+                            value={information}
+                            onChange={e => setInformation(e.target.value)}
+                            placeholder="Masukkan Catatan"
+                            rows={4}
+                        />
+                    </FormGroup>
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">Batal</Button>
                     </DialogClose>
                     <Button type="button" onClick={onSubmit} disabled={isSubmitting}>
-                        {isSubmitting ? 'Memproses...' : ( buttonLabel || 'Verifikasi')}
+                        {isSubmitting ? 'Memproses...' : (buttonLabel || 'Verifikasi')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

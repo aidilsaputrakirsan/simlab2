@@ -1,3 +1,5 @@
+import { Laboran } from "../shared/value-object/Laboran";
+import { Requestor } from "../shared/value-object/Requestor";
 import { Time } from "../time/Time";
 import { BookingApproval } from "./BookingApproval";
 import { BookingEquipment } from "./BookingEquipment";
@@ -7,14 +9,8 @@ import { BookingType } from "./BookingType";
 
 export class Booking {
     private laboratoryRoomName?: string
-    private requestor?: {
-        name: string,
-        email: string
-    }
-    private laboran?: {
-        name: string,
-        email: string,
-    }
+    private requestor?: Requestor
+    private laboran?: Laboran
     private academicYear?: string
     private bookingEquipments: BookingEquipment[] = []
     private bookingMaterial: BookingMaterial[] = []
@@ -35,9 +31,9 @@ export class Booking {
         readonly bookingType: BookingType,
         readonly totalParticipant: number,
         readonly participantList: string,
-        readonly isAllowedOffsite: boolean,
         readonly createdAt: Time,
         readonly updatedAt: Time,
+        readonly isAllowedOffsite?: boolean,
     ) { }
 
     // === Setter Methods
@@ -46,11 +42,11 @@ export class Booking {
         this.laboratoryRoomName = name;
     }
 
-    setLaboran(laboranData: {name: string, email: string}) {
+    setLaboran(laboranData: Laboran) {
         this.laboran = laboranData
     }
 
-    setRequestor(requestorData: {name: string; email: string}) {
+    setRequestor(requestorData: Requestor) {
         this.requestor = requestorData;
     }
 
@@ -80,11 +76,11 @@ export class Booking {
         return this.laboratoryRoomName;
     }
 
-    getLaboran(): {name: string, email: string} | undefined {
+    getLaboran(): Laboran | undefined {
         return this.laboran
     }
 
-    getRequestor(): {name: string, email: string} | undefined {
+    getRequestor(): Requestor | undefined {
         return this.requestor;
     }
 

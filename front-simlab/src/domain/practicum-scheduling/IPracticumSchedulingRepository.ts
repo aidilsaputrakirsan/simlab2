@@ -1,6 +1,6 @@
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumScheduling } from "./PracticumScheduling";
-import { PracticumStepper } from "./PracticumStepper";
+import { PracticumApproval } from "./PracticumApproval";
 
 export interface IPracticumSchedulingRepository {
     getAll(params: {
@@ -63,5 +63,5 @@ export interface IPracticumSchedulingRepository {
         materials?: number[]
     }): Promise<ApiResponse>
     isStillHaveDraftPracticum(): Promise<ApiResponse<boolean>>
-    getPracticumSteps(id: number): Promise<ApiResponse<PracticumStepper[]>>
+    getTestingRequestApprovals(id: number): Promise<ApiResponse<PracticumApproval[]>>
 }

@@ -1,46 +1,82 @@
 import { PracticumScheduling } from "@/domain/practicum-scheduling/PracticumScheduling";
-import { AcademicYearAPI, toDomain as toAcademicYear } from "../academic-year/AcademicYearAPI";
-import { UserApi, toDomain as toUser } from "../user/UserApi";
-import { PracticumApprovalAPI, toDomain as toPracticumApproval } from "./PracticumApprovalAPI";
 import { PracticumSchedulingEquipmentAPI, toDomain as toPracticumSchedulingEquipment } from "./PracticumSchedulingEquipmentAPI";
-import { PracticumSchedulingMaterialAPI, toDomain as toPracticumSchedulingMaterial  } from "./PracticumSchedulingMaterialAPI";
+import { PracticumSchedulingMaterialAPI, toDomain as toPracticumSchedulingMaterial } from "./PracticumSchedulingMaterialAPI";
 import { Time } from "@/domain/time/Time";
 import { PracticumSchedulingStatus } from "@/domain/practicum-scheduling/PracticumSchedulingStatus";
-import { PracticumAPI, toDomain as toPracticum } from "../practicum/PracticumAPI";
 import { PracticumClassAPI, toDomain as toPracticumClass } from "./PracticumClassAPI";
+import { Requestor } from "@/domain/shared/value-object/Requestor";
+import { Laboran } from "@/domain/shared/value-object/Laboran";
 
 export type PracticumSchedulingAPI = {
     id: number;
-    phone_number: number
+    academic_year: string,
+    phone_number: number,
+    requestor: {
+        name: string,
+        email: string,
+        identity_num: string,
+        study_program: string,
+        institution: string
+    },
+    laboran: {
+        name: string,
+        email: string
+    },
     status: string
     created_at: string;
     updated_at: string;
-    academic_year?: AcademicYearAPI;
-    user?: UserApi;
-    laboran?: UserApi;
-    practicum?: PracticumAPI;
-    practicum_classes?: PracticumClassAPI[];
-    practicum_scheduling_equipments?: PracticumSchedulingEquipmentAPI[];
-    practicum_scheduling_materials?: PracticumSchedulingMaterialAPI[];
-    kepala_lab_approval?: PracticumApprovalAPI;
-    laboran_approval?: PracticumApprovalAPI;
+    canVerif: number;
+    practicum_name: string;
+    practicum_classes: PracticumClassAPI[];
+    practicum_scheduling_equipments: PracticumSchedulingEquipmentAPI[];
+    practicum_scheduling_materials: PracticumSchedulingMaterialAPI[];
 }
 
 export function toDomain(api: PracticumSchedulingAPI): PracticumScheduling {
-    return new PracticumScheduling(
+    const practicumScheduling = new PracticumScheduling(
         api.id,
+        api.academic_year,
         api.phone_number,
         api.status as PracticumSchedulingStatus,
+        api.practicum_name,
         new Time(api.created_at),
         new Time(api.updated_at),
-        api.academic_year ? toAcademicYear(api.academic_year) : undefined,
-        api.user ? toUser(api.user) : undefined,
-        api.laboran ? toUser(api.laboran) : undefined,
-        api.practicum ? toPracticum(api.practicum) : undefined,
-        api.practicum_classes ? api.practicum_classes.map(toPracticumClass) : undefined,
-        api.practicum_scheduling_equipments ? api.practicum_scheduling_equipments.map(toPracticumSchedulingEquipment) : undefined,
-        api.practicum_scheduling_materials ? api.practicum_scheduling_materials.map(toPracticumSchedulingMaterial) : undefined,
-        api.kepala_lab_approval ? toPracticumApproval(api.kepala_lab_approval) : undefined,
-        api.laboran_approval ? toPracticumApproval(api.laboran_approval) : undefined,
-    );
+    )
+
+    if (api.requestor) {
+        const requestor = new Requestor(api.requestor.name, api.requestor.email, api.requestor.identity_num, api.requestor.study_program, api.requestor.institution)
+        practicumScheduling.setRequestor(requestor)
+    }
+
+    if (api.laboran) {
+        const laboran = new Laboran(api.laboran.name, api.laboran.email)
+        practicumScheduling.setLaboran(laboran)
+    }
+
+    if (api.canVerif !== undefined) {
+        practicumScheduling.setCanVerif(api.canVerif)
+    }
+
+    if (api.practicum_classes) {
+        const items = api.practicum_classes.map(
+            (item) => toPracticumClass(item)
+        )
+        practicumScheduling.setPracticumClasses(items)
+    }
+
+    if (api.practicum_scheduling_equipments) {
+        const items = api.practicum_scheduling_equipments.map(
+            (item) => toPracticumSchedulingEquipment(item)
+        )
+        practicumScheduling.setPracticumSchedlingEquipments(items)
+    }
+
+    if (api.practicum_scheduling_materials) {
+        const items = api.practicum_scheduling_materials.map(
+            (item) => toPracticumSchedulingMaterial(item)
+        )
+        practicumScheduling.setPracticumSchedlingMaterials(items)
+    }
+
+    return practicumScheduling
 }

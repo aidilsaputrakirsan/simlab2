@@ -19,6 +19,7 @@ import { ApiResponse } from '@/presentation/shared/Types';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 import { MoneyView } from '@/application/money/MoneyView';
+import { userRole } from '@/domain/User/UserRole';
 
 const TestingRequestCreatePage = () => {
     const { user } = useAuth()
@@ -94,7 +95,7 @@ const TestingRequestCreatePage = () => {
                                 </FormGroup>
                                 <FormGroup
                                     id='name'
-                                    label='Nomor Identitas Peminjam'
+                                    label='Nomor Identitas Pemohon'
                                     required>
                                     <Input
                                         type='text'
@@ -103,18 +104,34 @@ const TestingRequestCreatePage = () => {
                                         disabled={true}
                                     />
                                 </FormGroup>
-                                <FormGroup
-                                    className='md:col-span-2'
-                                    id='name'
-                                    label='Program Studi'
-                                    required>
-                                    <Input
-                                        type='text'
-                                        value={user?.studyProgram?.name}
-                                        placeholder='User'
-                                        disabled={true}
-                                    />
-                                </FormGroup>
+                                {user?.studyProgram && (
+                                    <FormGroup
+                                        className='md:col-span-2'
+                                        id='name'
+                                        label='Program Studi'
+                                        required>
+                                        <Input
+                                            type='text'
+                                            value={user?.studyProgram?.name}
+                                            placeholder='-'
+                                            disabled={true}
+                                        />
+                                    </FormGroup>
+                                )}
+                                {user?.institution && (
+                                    <FormGroup
+                                        className='md:col-span-2'
+                                        id='name'
+                                        label='Asal Institusi'
+                                        required>
+                                        <Input
+                                            type='text'
+                                            value={user?.institution?.name}
+                                            placeholder='-'
+                                            disabled={true}
+                                        />
+                                    </FormGroup>
+                                )}
                                 <FormGroup
                                     id='phone_number'
                                     label='Nomor Hp (Whatsapp)'
@@ -143,34 +160,36 @@ const TestingRequestCreatePage = () => {
                                         placeholder='Judul Proyek / Penelitian'
                                     />
                                 </FormGroup>
-                                <FormGroup
-                                    id='supervisor'
-                                    label='Dosen Pembimbing'
-                                    error={errors['supervisor']}
-                                    required>
-                                    <Input
-                                        type='text'
-                                        id='supervisor'
-                                        value={formData.supervisor ?? ''}
-                                        name='supervisor'
-                                        onChange={handleChange}
-                                        placeholder='Dosen Pembimbing'
-                                    />
-                                </FormGroup>
-                                <FormGroup
-                                    id='supervisor_email'
-                                    label='Email Dosen Pembimbing'
-                                    error={errors['supervisor_email']}
-                                    required>
-                                    <Input
-                                        type='text'
-                                        id='supervisor_email'
-                                        value={formData.supervisor_email ?? ''}
-                                        name='supervisor_email'
-                                        onChange={handleChange}
-                                        placeholder='Email Dosen Pembimbing'
-                                    />
-                                </FormGroup>
+                                {user?.role === userRole.Mahasiswa && (
+                                    <>
+                                        <FormGroup
+                                            id='supervisor'
+                                            label='Dosen Pembimbing'
+                                            error={errors['supervisor']}
+                                            required>
+                                            <Input
+                                                type='text'
+                                                id='supervisor'
+                                                name='supervisor'
+                                                onChange={handleChange}
+                                                placeholder='Dosen Pembimbing'
+                                            />
+                                        </FormGroup>
+                                        <FormGroup
+                                            id='supervisor_email'
+                                            label='Email Dosen Pembimbing'
+                                            error={errors['supervisor_email']}
+                                            required>
+                                            <Input
+                                                type='text'
+                                                id='supervisor_email'
+                                                name='supervisor_email'
+                                                onChange={handleChange}
+                                                placeholder='Email Dosen Pembimbing'
+                                            />
+                                        </FormGroup>
+                                    </>
+                                )}
                                 <FormGroup
                                     className='md:col-span-2'
                                     id='testing_time'
@@ -208,7 +227,7 @@ const TestingRequestCreatePage = () => {
                             <div className='flex flex-col gap-5'>
                                 <Button type={'button'} onClick={handleAddTestingItem} size={'sm'} className='w-fit'>Tambah Pengujian <Plus /></Button>
                                 {formData.testing_items.map((item, idx) => (
-                                    <div className='gap-x-5 gap-y-4 flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-row items-end' key={idx}>
+                                    <div className='gap-x-5 gap-y-4 flex flex-col items-start md:grid md:grid-cols-2 xl:flex xl:flex-row' key={idx}>
                                         <FormGroup
                                             className='w-full'
                                             id='testing_type_id'
@@ -269,7 +288,6 @@ const TestingRequestCreatePage = () => {
                                             className='w-full'
                                             id='quantity'
                                             label={`Total Tarif`}
-                                            error={errors[`testing_items.${idx}.quantity`]}
                                             required>
                                             <Input
                                                 type='text'

@@ -38,7 +38,7 @@ export const BookingVerificationColumn = ({ role, openApproval, openRejection, o
     },
     {
         header: 'Waktu', accessorKey: 'startTime', cell: ({ row }) => (
-            <Badge variant={'secondary'}>{row.original.startTime.formatForInformation()} | {row.original.endTime.formatForInformation()}</Badge>
+            <Badge variant={'secondary'}>{row.original.getEventDateRange()} | {row.original.getEventTimeRange()}</Badge>
         )
     },
     {

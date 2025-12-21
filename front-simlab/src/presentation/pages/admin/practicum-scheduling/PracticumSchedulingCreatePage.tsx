@@ -23,6 +23,7 @@ import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useLaboratoryRoomSelect } from '../laboratory-room/hooks/useLaboratoryRoomSelect';
 import { usePracticumSelect } from '../practicum/hooks/usePracticumSelect';
 import { useUserSelect } from '../user/hooks/useUserSelect';
+import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 
 
 const PracticumSchedulingCreatePage = () => {
@@ -61,8 +62,7 @@ const PracticumSchedulingCreatePage = () => {
         duplicateClassByIndex
     } = usePracticumSchedulingForm()
 
-    const { errors, processErrors } = useValidationErrors()
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { errors, processErrors, setErrors } = useValidationErrors()
     const navigate = useNavigate();
 
     const { laboratoryRooms } = useLaboratoryRoomSelect()
@@ -81,23 +81,21 @@ const PracticumSchedulingCreatePage = () => {
         }
     }, [isHasDraftPracticum])
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        
+
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
+    const handleSubmit = async () => {
+        setErrors({})
         try {
             const res = await practicumSchedulingService.create(formData);
             toast.success(res.message)
-            navigate(`/panel/penjadwalan-praktikum/${res.data?.id}/manage`)
             refreshIsHasDraftPracticum()
+            navigate(`/panel/penjadwalan-praktikum/${res.data?.id}/manage`)
         } catch (e) {
             const error = e as ApiResponse
             if (error.errors) {
                 processErrors(error.errors);
             }
             toast.error(error.message)
-        } finally {
-            setIsSubmitting(false);
         }
     }
 
@@ -113,7 +111,7 @@ const PracticumSchedulingCreatePage = () => {
                         </Button>
                     </NavLink>
                 </div>
-                <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
+                <div className='flex flex-col gap-5'>
                     <Card>
                         <CardHeader>
                             <CardTitle>Ajukan Peminjaman</CardTitle>
@@ -294,7 +292,7 @@ const PracticumSchedulingCreatePage = () => {
                                         <Label htmlFor=''>Total Kelompok <span className="text-red-500">*</span></Label>
                                         <div>
                                             <Input
-                                                type='text'
+                                                type='number'
                                                 name='total_group'
                                                 value={classes.total_group ?? ''}
                                                 onChange={(e) => handleClassChange(e, cidx)}
@@ -384,9 +382,10 @@ const PracticumSchedulingCreatePage = () => {
                     ))}
                     <div className='flex justify-end gap-3'>
                         <Button type='button' variant={'secondary'} onClick={handleAddClass}>Tambah Kelas <Plus /></Button>
-                        <Button type='submit' disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : 'Simpan'}</Button>
+                        <Button type='button' onClick={() => setIsConfirmationOpen(true)}>Simpan & Lanjutkan</Button>
+                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan & Lanjutkan'/>
                     </div>
-                </form>
+                </div>
             </div>
         </>
     )

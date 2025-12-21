@@ -1,7 +1,8 @@
-import { PracticumModule } from "../practicum-module/PracticumModule";
 import { Time } from "../time/Time";
 
 export class PracticumSession {
+    private practicumModule?: string
+
     constructor(
         readonly id: number,
         readonly startTime: Time,
@@ -11,6 +12,13 @@ export class PracticumSession {
         readonly laboranCommentedAt: Time | null,
         readonly lecturerComment: string | null,
         readonly lecturerCommentedAt: Time | null,
-        readonly practicumModule?: PracticumModule
     ){}
+
+    setPracticumModule(practicumModule: string) {
+        this.practicumModule = practicumModule
+    }
+
+    getPracticumModule(): string | undefined {
+        return this.practicumModule
+    }
 }

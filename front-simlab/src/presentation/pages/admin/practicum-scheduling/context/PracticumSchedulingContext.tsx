@@ -31,10 +31,10 @@ export const PracticumSchedulingProvider = ({ children }: PracticumSchedulingPro
     }
 
     useEffect(() => {
-        isStillHaveDraftPracticum()
+        isStillHaveDraftPracticum()        
     }, [])
 
-    const refreshIsHasDraftPracticum = () => isStillHaveDraftPracticum
+    const refreshIsHasDraftPracticum = () => isStillHaveDraftPracticum()
 
     return (
         <PracticumSchedulingContext.Provider value={{ isHasDraftPracticum, refreshIsHasDraftPracticum }}>

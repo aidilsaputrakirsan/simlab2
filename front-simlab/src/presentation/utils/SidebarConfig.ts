@@ -17,6 +17,7 @@ export const navItems: NavItem[] = [
     roles: [userRole.Admin, userRole.Laboran],
     items: [
       { title: "Tahun Akademik", url: "/panel/tahun-akademik", roles: [userRole.Admin] },
+      { title: "Institusi", url: "/panel/institusi", roles: [userRole.Admin] },
       { title: "Fakultas", url: "/panel/fakultas", roles: [userRole.Admin] },
       { title: "Jurusan", url: "/panel/jurusan", roles: [userRole.Admin] },
       { title: "Prodi", url: "/panel/prodi", roles: [userRole.Admin] },
@@ -46,32 +47,22 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Peminjaman",
-    url: "/panel/peminjaman",
-    icon: CalendarClock,
-    roles: [userRole.Kooprodi, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
-  },
-  {
     title: "Penjadwalan Praktikum",
     url: "/panel/penjadwalan-praktikum",
     icon: CalendarPlus,
     roles: [userRole.KepalaLabJurusan, userRole.Dosen],
   },
   {
+    title: "Peminjaman",
+    url: "/panel/peminjaman",
+    icon: CalendarClock,
+    roles: [userRole.Kooprodi, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
+  },
+  {
     title: "Pengujian",
     url: "/panel/pengujian",
     icon: CalendarPlus,
     roles: [userRole.Dosen, userRole.Mahasiswa],
-  },
-  {
-    title: "Manajemen Peminjaman",
-    url: "#",
-    icon: CalendarClock,
-    roles: [userRole.KepalaLabTerpadu, userRole.Laboran],
-    items: [
-      // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
-      { title: "Verifikasi Peminjaman", url: "/panel/peminjaman/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran]},
-    ],
   },
   {
     title: "Manajemen Penjadwalan Praktikum",
@@ -81,6 +72,16 @@ export const navItems: NavItem[] = [
     items: [
       // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
       { title: "Verifikasi Penjadwalan Praktikum", url: "/panel/penjadwalan-praktikum/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Kooprodi]},
+    ],
+  },
+  {
+    title: "Manajemen Peminjaman",
+    url: "#",
+    icon: CalendarClock,
+    roles: [userRole.KepalaLabTerpadu, userRole.Laboran],
+    items: [
+      // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
+      { title: "Verifikasi Peminjaman", url: "/panel/peminjaman/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran]},
     ],
   },
   {

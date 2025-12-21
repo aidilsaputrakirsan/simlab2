@@ -21,6 +21,7 @@ import { PracticumSchedulingView } from '@/application/practicum-scheduling/Prac
 import { useLaboratoryEquipmentDataTable } from '../../laboratory-equipment/hooks/useLaboratoryEquipmentDataTable'
 import { useLaboratoryMaterialDataTable } from '../../laboratory-material/hooks/useLaboratoryMaterialDataTable'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
+import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 
 interface PracticumScheduleEquipmentNMaterialFormProps {
     practicumScheduling: PracticumSchedulingView | undefined
@@ -35,11 +36,9 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
         gsap.fromTo(sectionRef.current, { opacity: 0, y: 100 }, { opacity: 1, y: 0, duration: 1 })
     }, [])
 
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const navigate = useNavigate();
     const [loading] = useState(practicumScheduling ? true : false);
     const [isOpenDetail, setIsOpenDetail] = useState<boolean>(false)
-    const { refreshIsHasDraftPracticum } = usePracticumScheduling()
 
     const {
         formData,
@@ -64,22 +63,20 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
         laboratoryMaterials,
         isLoading: isMaterialLoading,
         ...materialTable
-    } = useLaboratoryMaterialDataTable({ filter_laboratory_room: 0 })
+    } = useLaboratoryMaterialDataTable()
 
     const {practicumSchedulingService} = useDepedencies()
+        const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
+    
     const handleSubmit = async () => {
         if (!practicumScheduling) return;
-        setIsSubmitting(true);
         try {
             const res = await practicumSchedulingService.storePracticumSchedulingEquipmentMaterial(practicumScheduling.id, formData);
             toast.success(res.message);
             navigate('/panel/penjadwalan-praktikum');
-            refreshIsHasDraftPracticum()
         } catch (e: any) {
             toast.error(e?.message || 'Gagal submit');
             processErrors(e.errors);
-        } finally {
-            setIsSubmitting(false);
         }
     }
 
@@ -279,11 +276,8 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
 
                     {/* === Submit Button === */}
                     <div className='flex justify-end'>
-                        <Button
-                            type='button'
-                            disabled={isSubmitting || !practicumScheduling?.id}
-                            onClick={handleSubmit}
-                        >{isSubmitting ? 'Menyimpan...' : 'Simpan'}</Button>
+                        <Button type='submit' onClick={() => setIsConfirmationOpen(true)}>Simpan</Button>
+                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan'/>
                     </div>
                 </div>
             </div >

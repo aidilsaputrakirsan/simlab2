@@ -111,7 +111,7 @@ const ManagementPracticumSchedulingDetailPage = () => {
         <>
             <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
                 <div className="flex items-center justify-between flex-col-reverse sm:flex-row mb-2 gap-2">
-                    <PracticumSchedulingStepperDialog service={practicumSchedulingService} practicumSchedulingId={practicumScheduling.id} />
+                    <PracticumSchedulingStepperDialog practicumSchedulingId={practicumScheduling.id} />
                     <Button className="gap-2 w-full sm:w-fit" onClick={() => navigate(backTo)}>
                         <ArrowLeft className="w-4 h-4" />
                         Kembali
@@ -125,14 +125,14 @@ const ManagementPracticumSchedulingDetailPage = () => {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-8">
-                                {practicumScheduling.user && (
+                                {practicumScheduling.requestor && (
                                     <div className="flex flex-col gap-5">
                                         <div className="flex flex-col gap-5">
-                                            <Item title='Nama' value={practicumScheduling.user.name} />
-                                            <Item title='Prodi' value={practicumScheduling.user.studyProgram?.name} />
-                                            <Item title='Email' value={practicumScheduling.user.email} />
+                                            <Item title='Nama Pemohon' value={practicumScheduling.requestor.name} />
+                                            <Item title='Prodi' value={practicumScheduling.requestor.studyProgram} />
+                                            <Item title='Email' value={practicumScheduling.requestor.email} />
                                             <Item title='No Hp' value={practicumScheduling.phoneNumber} />
-                                            <Item title='Mata Kuliah/Pratikum' value={practicumScheduling.practicum?.name} />
+                                            <Item title='Mata Kuliah/Pratikum' value={practicumScheduling.practicumName} />
                                             <Item title='Laboran Penanggung Jawab' value={practicumScheduling.laboran?.name} />
                                             <div className="flex flex-col">
                                                 <span className='font-semibold'>Status Pengajuan</span>
@@ -172,7 +172,7 @@ const ManagementPracticumSchedulingDetailPage = () => {
                                             <Item title={'Nama Kelas'} value={cls.name} />
                                             <Item title={'Dosen Pengampu'} value={cls.lecturer?.name} />
                                             <Item title={'Asisten Dosen'} value={cls.practicumAssistant} />
-                                            <Item title={'Ruangan Praktikum'} value={cls.laboratoryRoom?.name} />
+                                            <Item title={'Ruangan Praktikum'} value={cls.laboratoryRoomName} />
                                             <Item title={'Total Partisipan'} value={cls.totalParticipant} />
                                             <Item title={'Total Kelompok'} value={cls.totalGroup} />
                                         </div>

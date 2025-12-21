@@ -4,9 +4,9 @@ import { PracticumSchedulingAPI, toDomain } from "./PracticumSchedulingAPI";
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumScheduling } from "@/domain/practicum-scheduling/PracticumScheduling";
 import { fetchApi } from "../ApiClient";
-import { PracticumStepper } from "@/domain/practicum-scheduling/PracticumStepper";
-import { PracticumStepperAPI, toDomain as toPracticumStepper } from "./PracticumStepperAPI";
 import { generateQueryStringFromObject } from "../Helper";
+import { PracticumApproval } from "@/domain/practicum-scheduling/PracticumApproval";
+import { PracticumApprovalAPI, toDomain as toPracticumApproval } from "./PracticumApprovalAPI";
 
 export class PracticumSchedulingRepository implements IPracticumSchedulingRepository {
     async getAll(params: { page: number; per_page: number; search: string; }): Promise<PaginatedResponse<PracticumScheduling>> {
@@ -146,12 +146,12 @@ export class PracticumSchedulingRepository implements IPracticumSchedulingReposi
         throw json
     }
 
-    async verify(id: number, data: { 
+    async verify(id: number, data: {
         action: 'approve' | 'reject' | 'revision',
         laboran_id?: number,
         information?: string,
         materials?: number[]
-     }): Promise<ApiResponse> {
+    }): Promise<ApiResponse> {
         const response = await fetchApi(`/practicum-schedule/${id}/verify`, {
             method: 'POST',
             body: JSON.stringify(data)
@@ -176,14 +176,14 @@ export class PracticumSchedulingRepository implements IPracticumSchedulingReposi
         throw json
     }
 
-    async getPracticumSteps(id: number): Promise<ApiResponse<PracticumStepper[]>> {
-        const response = await fetchApi(`/practicum-schedule/${id}/steps`, { method: 'GET' });
+    async getTestingRequestApprovals(id: number): Promise<ApiResponse<PracticumApproval[]>> {
+        const response = await fetchApi(`/practicum-schedule/${id}/approvals`, { method: 'GET' });
         const json = await response.json();
         if (response.ok) {
-            const list = json['data'] as PracticumStepperAPI[];
+            const list = json['data'] as PracticumApprovalAPI[];
             return {
                 ...json,
-                data: list?.map(toPracticumStepper) || []
+                data: list?.map(toPracticumApproval) || []
             }
         }
         throw json;

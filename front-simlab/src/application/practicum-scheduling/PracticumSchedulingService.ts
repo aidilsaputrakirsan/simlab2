@@ -2,14 +2,14 @@ import { PracticumSchedulingRepository } from "@/infrastructure/practicum-schedu
 import { PracticumSchedulingEquipmentNMaterialInputDTO, PracticumSchedulingInputDTO, PracticumSchedulingLecturerNotesDTO, PracticumSchedulingSessionConductedDTO, PracticumSchedulingTableParam, PracticumSchedulingVerifyDTO } from "./dto/PracticumSchedulingDTO";
 import { PracticumSchedulingView } from "./PracticumSchedulingView";
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
-import { PracticumStepperView } from "./PracticumStepperView";
+import { PracticumApprovalView } from "./PracticumApprovalView";
 
 export class PracticumSchedulingService {
     private readonly practicumSchedulingRepository = new PracticumSchedulingRepository()
 
     async getPracticumSchedulingData(params: PracticumSchedulingTableParam): Promise<PaginatedResponse<PracticumSchedulingView>> {
         const practicumSchedulings = await this.practicumSchedulingRepository.getAll(params)
-        
+
         return {
             ...practicumSchedulings,
             data: practicumSchedulings.data.map(PracticumSchedulingView.fromDomain) || []
@@ -77,11 +77,11 @@ export class PracticumSchedulingService {
         return await this.practicumSchedulingRepository.isStillHaveDraftPracticum()
     }
 
-    async getPracticumSteps(id: number): Promise<ApiResponse<PracticumStepperView[]>> {
-        const response = await this.practicumSchedulingRepository.getPracticumSteps(id);
+    async getTestingRequestApprovals(id: number): Promise<ApiResponse<PracticumApprovalView[]>> {
+        const testingRequestApprovals = await this.practicumSchedulingRepository.getTestingRequestApprovals(id);
         return {
-            ...response,
-            data: response.data ? response.data.map(PracticumStepperView.fromDomain) : []
+            ...testingRequestApprovals,
+            data: testingRequestApprovals.data ? testingRequestApprovals.data.map(PracticumApprovalView.fromDomain) : []
         };
     }
 }

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/compone
 import Table from '@/presentation/components/Table';
 import { PracticumScheduleVerificationColumn } from '../column/PracticumScheduleVerificationColumn';
 import RejectionDialog from '@/presentation/components/custom/RejectionDialog';
-import { userRole } from '@/domain/User/UserRole';
 import ApproveWithLaboranSelectDialog from '@/presentation/components/custom/ApproveWithLaboranSelectDialog';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { usePracticumSchedulingVerificationDataTable } from '../hooks/usePracticumSchedulingVerificationDataTable';
@@ -98,7 +97,7 @@ const KepalaLabTerpaduPracticumScheduleApproval = () => {
           <CardContent>
             <Table
               data={practicumSchedulings}
-              columns={PracticumScheduleVerificationColumn({ role: userRole.KepalaLabTerpadu, openApproval, openRejection })}
+              columns={PracticumScheduleVerificationColumn({ openApproval, openRejection })}
               loading={isLoading}
               searchTerm={searchTerm}
               handleSearch={(e) => handleSearch(e)}

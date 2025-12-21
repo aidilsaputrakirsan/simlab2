@@ -7,7 +7,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/application/hooks/useAuth';
-import { Label } from '@/presentation/components/ui/label';
 import { Input } from '@/presentation/components/ui/input';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
 import { ApiResponse } from '@/presentation/shared/Types';
@@ -21,6 +20,9 @@ import { useLaboratoryRoomSelect } from '../laboratory-room/hooks/useLaboratoryR
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useBooking } from './context/BookingContext';
 import { useBookingForm } from './hooks/useBookingForm';
+import FormGroup from '@/presentation/components/custom/FormGroup';
+import { userRole } from '@/domain/User/UserRole';
+import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 
 const BookingCreatePage = () => {
   const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -45,7 +47,7 @@ const BookingCreatePage = () => {
   const { user } = useAuth()
   const { laboratoryRooms } = useLaboratoryRoomSelect()
   const { bookingService } = useDepedencies()
-  const { isHasDraftBooking } = useBooking()
+  const { isHasDraftBooking, refreshIsHasDraftBooking } = useBooking()
 
   const {
     formData,
@@ -54,8 +56,7 @@ const BookingCreatePage = () => {
     handleDateTimeChange
   } = useBookingForm()
 
-  const { errors, processErrors } = useValidationErrors()
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { errors, processErrors, setErrors } = useValidationErrors()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,10 +65,10 @@ const BookingCreatePage = () => {
     }
   }, [isHasDraftBooking])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
 
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
+  const handleSubmit = async () => {
+    setErrors({})
     try {
       const res = await bookingService.createData(formData);
       toast.success(res.message)
@@ -76,14 +77,13 @@ const BookingCreatePage = () => {
       } else {
         navigate(`/panel/peminjaman/${res.data?.id}/manage`)
       }
+      refreshIsHasDraftBooking()
     } catch (e) {
       const error = e as ApiResponse
       toast.error(error.message)
       if (error.errors) {
         processErrors(error.errors);
       }
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -104,251 +104,233 @@ const BookingCreatePage = () => {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <form className='grid md:grid-cols-2 gap-x-5 gap-y-4' onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-2">
-                <Label>
-                  Nama Peminjam <span className="text-red-500">*</span>
-                </Label>
+            <div className='grid md:grid-cols-2 gap-x-5 gap-y-4'>
+              <FormGroup
+                id='name'
+                label='Nama Pemohon'
+                required>
                 <Input
                   type='text'
                   value={user?.name}
                   placeholder='User'
                   disabled={true}
                 />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>
-                  Nomor Identitas Peminjam <span className="text-red-500">*</span>
-                </Label>
+              </FormGroup>
+              <FormGroup
+                id='name'
+                label='Nomor Identitas Pemohon'
+                required>
                 <Input
                   type='text'
                   value={user?.identityNum}
                   placeholder='-'
                   disabled={true}
                 />
-              </div>
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <Label>
-                  Program Studi <span className="text-red-500">*</span>
-                </Label>
+              </FormGroup>
+              {user?.studyProgram && (
+                <FormGroup
+                  className='md:col-span-2'
+                  id='name'
+                  label='Program Studi'
+                  required>
+                  <Input
+                    type='text'
+                    value={user?.studyProgram?.name}
+                    placeholder='-'
+                    disabled={true}
+                  />
+                </FormGroup>
+              )}
+              {user?.institution && (
+                <FormGroup
+                  className='md:col-span-2'
+                  id='name'
+                  label='Asal Institusi'
+                  required>
+                  <Input
+                    type='text'
+                    value={user?.institution?.name}
+                    placeholder='-'
+                    disabled={true}
+                  />
+                </FormGroup>
+              )}
+              <FormGroup
+                id='phone_number'
+                label='Nomor Hp (Whatsapp)'
+                error={errors['phone_number']}
+                required>
                 <Input
                   type='text'
-                  value={user?.studyProgram?.name}
-                  placeholder='-'
-                  disabled={true}
+                  id='phone_number'
+                  name='phone_number'
+                  onChange={handleChange}
+                  placeholder='Nomor Hp'
                 />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='phone_number'>
-                  Nomor Hp (Whatsapp) <span className="text-red-500">*</span>
-                </Label>
-                <div>
-                  <Input
-                    type='text'
-                    id='phone_number'
-                    name='phone_number'
-                    onChange={handleChange}
-                    placeholder='Nomor Hp'
-                  />
-                  {errors['phone_number'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['phone_number']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='purpose'>
-                  Tujuan Peminjaman <span className="text-red-500">*</span>
-                </Label>
-                <div>
-                  <Input
-                    type='text'
-                    id='purpose'
-                    name='purpose'
-                    onChange={handleChange}
-                    placeholder='Tujuan Peminjaman'
-                  />
-                  {errors['purpose'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['purpose']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='activity_name'>
-                  Judul Proyek / Penelitian <span className="text-red-500">*</span>
-                </Label>
-                <div>
-                  <Input
-                    type='text'
-                    id='activity_name'
-                    name='activity_name'
-                    onChange={handleChange}
-                    placeholder='Judul Proyek / Penelitian'
-                  />
-                  {errors['activity_name'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['activity_name']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='supporting_file'>
-                  Surat Pengantar / Berkas Pendukung
-                </Label>
-                <div>
-                  <Input
-                    type='file'
-                    id='supporting_file'
-                    name='supporting_file'
-                    onChange={handleChange}
-                  />
-                  {errors['supporting_file'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['supporting_file']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='supervisor'>
-                  Dosen Pembimbing
-                </Label>
-                <div>
-                  <Input
-                    type='text'
+              </FormGroup>
+              <FormGroup
+                id='purpose'
+                label='Tujuan Peminjaman'
+                error={errors['purpose']}
+                required>
+                <Input
+                  type='text'
+                  id='purpose'
+                  name='purpose'
+                  onChange={handleChange}
+                  placeholder='Tujuan Peminjaman'
+                />
+              </FormGroup>
+              <FormGroup
+                id='activity_name'
+                label='Judul Proyek / Penelitian'
+                error={errors['activity_name']}
+                required>
+                <Input
+                  type='text'
+                  id='activity_name'
+                  name='activity_name'
+                  onChange={handleChange}
+                  placeholder='Judul Proyek / Penelitian'
+                />
+              </FormGroup>
+              <FormGroup
+                id='supporting_file'
+                label='Surat Pengantar / Berkas Pendukung'
+                error={errors['supporting_file']}>
+                <Input
+                  type='file'
+                  id='supporting_file'
+                  name='supporting_file'
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              {user?.role === userRole.Mahasiswa && (
+                <>
+                  <FormGroup
                     id='supervisor'
-                    name='supervisor'
-                    onChange={handleChange}
-                    placeholder='Dosen Pembimbing'
-                  />
-                  {errors['supervisor'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['supervisor']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='supervisor_email'>
-                  Email Dosen Pembimbing
-                </Label>
-                <div>
-                  <Input
-                    type='text'
-                    id='supervisor_email'
-                    name='supervisor_email'
-                    onChange={handleChange}
-                    placeholder='Email Dosen Pembimbing'
-                  />
-                  {errors['supervisor_email'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['supervisor_email']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <Label className="">Tanggal & Waktu</Label>
-                <div>
-                  <BookingDateTimeRangePicker
-                    startDateTime={formData.start_time}
-                    endDateTime={formData.end_time}
-                    onChange={handleDateTimeChange} />
-                  {errors['end_time'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['end_time']}</p>
-                  )}
-                </div>
-              </div>
-              {(formData['booking_type'] === 'room' || formData['booking_type'] === 'room_n_equipment') && (
-                <div className="flex flex-col gap-2 md:col-span-2">
-                  <Label htmlFor='ruangan_laboratorium_id'>
-                    Ruangan <span className="text-red-500">*</span>
-                  </Label>
-                  <div>
-                    <Combobox
-                      options={laboratoryRooms}
-                      value={formData.laboratory_room_id?.toString() || ''}
-                      onChange={(val) => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          laboratory_room_id: val ? Number(val) : null
-                        }))
-                      }}
-                      placeholder="Pilih ruangan"
-                      optionLabelKey='name'
-                      optionValueKey='id'
+                    label='Dosen Pembimbing'
+                    error={errors['supervisor']}
+                    required>
+                    <Input
+                      type='text'
+                      id='supervisor'
+                      name='supervisor'
+                      onChange={handleChange}
+                      placeholder='Dosen Pembimbing'
                     />
-                    {errors['laboratory_room_id'] && (
-                      <p className="mt-1 text-xs italic text-red-500">{errors['laboratory_room_id']}</p>
-                    )}
-                  </div>
-                </div>
+                  </FormGroup>
+                  <FormGroup
+                    id='supervisor_email'
+                    label='Email Dosen Pembimbing'
+                    error={errors['supervisor_email']}
+                    required>
+                    <Input
+                      type='text'
+                      id='supervisor_email'
+                      name='supervisor_email'
+                      onChange={handleChange}
+                      placeholder='Email Dosen Pembimbing'
+                    />
+                  </FormGroup>
+                </>
               )}
-              <div className="flex flex-col gap-2 ">
-                <Label htmlFor='booing_type'>
-                  Jenis Peminjaman <span className="text-red-500">*</span>
-                </Label>
-                <div>
-                  <Select
-                    name='booking_type'
-                    value={formData['booking_type']}
-                    onValueChange={(value) =>
-                      handleChange({
-                        target: {
-                          name: 'booking_type',
-                          value: value
-                        }
-                      } as React.ChangeEvent<HTMLSelectElement>)
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih Jenis Peminjaman" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Jenis Peminjaman</SelectLabel>
-                        <SelectItem value='room'>Peminjaman Ruangan</SelectItem>
-                        <SelectItem value='room_n_equipment'>Peminjaman Ruangan dan Alat</SelectItem>
-                        <SelectItem value='equipment'>Peminjaman Alat</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {errors['booking_type'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['booking_type']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor='total_participant'>
-                  Jumlah Partisipan <span className="text-red-500">*</span>
-                </Label>
-                <div>
-                  <Input
-                    type='number'
-                    id='total_participant'
-                    name='total_participant'
-                    onChange={handleChange}
-                    placeholder='0'
+              <FormGroup
+                className='md:col-span-2'
+                id=''
+                label='Tanggal & Waktu'
+                error={errors['end_time']}
+                required>
+                <BookingDateTimeRangePicker
+                  startDateTime={formData.start_time}
+                  endDateTime={formData.end_time}
+                  onChange={handleDateTimeChange} />
+              </FormGroup>
+              {(formData['booking_type'] === 'room' || formData['booking_type'] === 'room_n_equipment') && (
+                <FormGroup
+                  className='md:col-span-2'
+                  id='ruangan_laboratorium_id'
+                  label='Ruangan'
+                  error={errors['ruangan_laboratorium_id']}
+                  required>
+                  <Combobox
+                    options={laboratoryRooms}
+                    value={formData.laboratory_room_id?.toString() || ''}
+                    onChange={(val) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        laboratory_room_id: val ? Number(val) : null
+                      }))
+                    }}
+                    placeholder="Pilih ruangan"
+                    optionLabelKey='name'
+                    optionValueKey='id'
                   />
-                  {errors['total_participant'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['total_participant']}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <Label htmlFor='testing_type'>
-                  List Partisipan
-                </Label>
-                <div>
-                  <Textarea
-                    name="participant_list"
-                    id="participant_list"
-                    onChange={handleChange}
-                    placeholder='Keterangan'
-                  >
-                  </Textarea>
-                  {errors['participant_list'] && (
-                    <p className="mt-1 text-xs italic text-red-500">{errors['participant_list']}</p>
-                  )}
-                </div>
-              </div>
+                </FormGroup>
+              )}
+              <FormGroup
+                id='booking_type'
+                label='Jenis Peminjaman'
+                error={errors['booking_type']}
+                required>
+                <Select
+                  name='booking_type'
+                  value={formData['booking_type']}
+                  onValueChange={(value) =>
+                    handleChange({
+                      target: {
+                        name: 'booking_type',
+                        value: value
+                      }
+                    } as React.ChangeEvent<HTMLSelectElement>)
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Jenis Peminjaman" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Jenis Peminjaman</SelectLabel>
+                      <SelectItem value='room'>Peminjaman Ruangan</SelectItem>
+                      <SelectItem value='room_n_equipment'>Peminjaman Ruangan dan Alat</SelectItem>
+                      <SelectItem value='equipment'>Peminjaman Alat</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormGroup>
+              <FormGroup
+                id='total_participant'
+                label='Jumlah Partisipan'
+                error={errors['total_participant']}
+                required>
+                <Input
+                  type='number'
+                  id='total_participant'
+                  name='total_participant'
+                  onChange={handleChange}
+                  placeholder='0'
+                />
+              </FormGroup>
+              <FormGroup
+                className='md:col-span-2'
+                id='participant_list'
+                label='Jumlah Partisipan'
+                error={errors['participant_list']}
+                required>
+                <Textarea
+                  name="participant_list"
+                  id="participant_list"
+                  onChange={handleChange}
+                  placeholder='1. Nama'
+                >
+                </Textarea>
+              </FormGroup>
 
               <div className='md:col-span-2 flex justify-end'>
-                <Button type='submit' disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : 'Simpan'}</Button>
+                <Button type='button' onClick={() => setIsConfirmationOpen(true)}>Simpan & Lanjutkan</Button>
+                <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan & Lanjutkan' />
               </div>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>

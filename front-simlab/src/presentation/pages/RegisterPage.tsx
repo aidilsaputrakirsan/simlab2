@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { StudyProgram } from "../../domain/study-program/StudyProgram";
 import { useAuth } from "../../application/hooks/useAuth";
-import { StudyProgramRepository } from "../../infrastructure/study-program/StudyProgramRepository";
 import { useValidationErrors } from "../hooks/useValidationError";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
@@ -13,34 +11,33 @@ import { Combobox } from "../components/custom/combobox";
 import { ApiResponse } from "@/presentation/shared/Types";
 import ItkLogo from '../assets/itk_logo.png'
 import { RegisterDTO } from "@/application/auth/AuthDTO";
-
-const studyProgramRepository = new StudyProgramRepository()
+import FormGroup from "../components/custom/FormGroup";
+import PasswordInput from "../components/custom/PasswordInput";
+import { useStudyProgramSelect } from "./admin/study-program/hooks/useStudyProgramSelect";
+import { useInstitutionSelect } from "./admin/institution/hooks/useInstitutionSelect";
+import { Checkbox } from "../components/ui/checkbox";
 
 export const RegisterPage: React.FC = () => {
     const [formData, setFormData] = useState<RegisterDTO>({
         name: '',
         identity_num: '',
         role: '',
-        study_program_id: 0,
+        study_program_id: null,
+        institution_id: null,
+        institution: '',
         email: '',
         password: '',
         c_password: ''
     });
-    const { errors, processErrors } = useValidationErrors()
+    const { errors, processErrors, setErrors } = useValidationErrors()
     const [isLoading, setIsLoading] = useState(false);
-    const [studyProgram, setStudyProgram] = useState<StudyProgram[]>([])
+    const { studyPrograms } = useStudyProgramSelect()
+    const { institutions } = useInstitutionSelect()
     const { user, register } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const getProdi = async () => {
-        try {
-            const response = await studyProgramRepository.getPublicData()
-            setStudyProgram(response.data || [])
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const [isNotRegisteredInstitution, setIsNotRegisteredInstitution] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -54,7 +51,7 @@ export const RegisterPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-
+        setErrors({})
         try {
             await register(formData);
             navigate('/login');
@@ -70,8 +67,26 @@ export const RegisterPage: React.FC = () => {
     };
 
     useEffect(() => {
-        getProdi()
-    }, []);
+        setFormData((prev) => ({
+            ...prev,
+            institution_id: null,
+            institution: ''
+        }))
+    }, [formData.role])
+
+    useEffect(() => {
+        if (isNotRegisteredInstitution) {
+            setFormData((prev) => ({
+                ...prev,
+                institution_id: null,
+            }))
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                institution: '',
+            }))
+        }
+    }, [isNotRegisteredInstitution])
 
     if (user) {
         return <Navigate to="/panel" state={{ from: location }} replace />;
@@ -87,26 +102,25 @@ export const RegisterPage: React.FC = () => {
                         <h4 className="text-base">Daftar akun untuk mengakases SIMLAB!</h4>
                     </div>
                     <form className="grid w-full grid-cols-1 mt-8 gap-5 md:grid-cols-2" onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="name">
-                                Nama <span className="text-red-500">*</span>
-                            </Label>
+                        <FormGroup
+                            id='name'
+                            label='Nama'
+                            error={errors['name']}
+                            required>
                             <Input
                                 id="name"
-                                type="name"
+                                type="text"
                                 name="name"
                                 placeholder="Nama Lengkap"
                                 value={formData.name}
                                 onChange={handleChange}
                             />
-                            {errors['name'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['name']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="email">
-                                Email <span className="text-red-500">*</span>
-                            </Label>
+                        </FormGroup>
+                        <FormGroup
+                            id='email'
+                            label='Email'
+                            error={errors['email']}
+                            required>
                             <Input
                                 id="email"
                                 type="email"
@@ -115,33 +129,28 @@ export const RegisterPage: React.FC = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                             />
-                            {errors['email'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['email']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end md:col-span-2">
-                            <Label htmlFor="identity_num">
-                                NIM / NIP / NIPH / Identitas Lainnya <span className="text-red-500">*</span>
-                            </Label>
-                            <div>
-                                <Input
-                                    id="identity_num"
-                                    type="identity_num"
-                                    name="identity_num"
-                                    placeholder="NIM / NIP / NIPH / Identitas Lainnya"
+                        </FormGroup>
+                        <FormGroup
+                            className="md:col-span-2"
+                            id='identity_num'
+                            label='NIM / NIP / NIPH / Identitas Lainnya'
+                            error={errors['identity_num']}
+                            required>
+                            <Input
+                                id="identity_num"
+                                type="identity_num"
+                                name="identity_num"
+                                placeholder="NIM / NIP / NIPH / Identitas Lainnya"
 
-                                    value={formData.identity_num}
-                                    onChange={handleChange}
-                                />
-                                {errors['identity_num'] && (
-                                    <p className="mt-1 text-xs italic text-red-500">{errors['identity_num']}</p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="role">
-                                Daftar Sebagai <span className="text-red-500">*</span>
-                            </Label>
+                                value={formData.identity_num}
+                                onChange={handleChange}
+                            />
+                        </FormGroup>
+                        <FormGroup
+                            id='role'
+                            label='Daftar Sebagai'
+                            error={errors['role']}
+                            required>
                             <Select name='role' onValueChange={(value) =>
                                 handleChange({
                                     target: {
@@ -160,63 +169,98 @@ export const RegisterPage: React.FC = () => {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            {errors['role'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['role']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="study_program_id">
-                                Program Studi (Kosongkan jika eksternal)
-                            </Label>
-                            <Combobox
-                                options={studyProgram}
-                                value={formData.study_program_id?.toString() || ''}
-                                onChange={(val) => {
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        study_program_id: val ? Number(val) : 0
-                                    }))
-                                }}
-                                placeholder="Pilih Prodi"
-                                optionLabelKey='name'
-                                optionValueKey='id'
-                            />
-                            {errors['study_program_id'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['study_program_id']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="password">
-                                Password <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
+                        </FormGroup>
+                        {formData.role === 'pihak_luar' ? (
+                            <div className="flex flex-col gap-2">
+                                {isNotRegisteredInstitution ? (
+                                    <FormGroup
+                                        id='institution'
+                                        label='Institusi'
+                                        error={errors['institution']}
+                                        required>
+                                        <Input
+                                            id="institution"
+                                            type="text"
+                                            name="institution"
+                                            placeholder="Institusi"
+                                            value={formData.institution}
+                                            onChange={handleChange}
+                                        />
+                                    </FormGroup>
+                                ) : (
+                                    <FormGroup
+                                        id='institution_id'
+                                        label='Institusi'
+                                        error={errors['institution_id']}
+                                        required>
+                                        <Combobox
+                                            options={institutions}
+                                            value={formData.institution_id?.toString() || ''}
+                                            onChange={(val) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    institution_id: val ? Number(val) : null
+                                                }))
+                                            }}
+                                            placeholder="Pilih Institusi"
+                                            optionLabelKey='name'
+                                            optionValueKey='id'
+                                        />
+                                    </FormGroup>
+                                )}
+
+                                <div className="flex items-center gap-3">
+                                    <Checkbox id="institution_not_found" onCheckedChange={(val) => setIsNotRegisteredInstitution(val as boolean)} />
+                                    <Label htmlFor="institution_not_found">institusi tidak terdaftar?</Label>
+                                </div>
+                            </div>
+                        ) : (
+                            <FormGroup
+                                id='study_program_id'
+                                label='Program Studi'
+                                error={errors['study_program_id']}
+                                required>
+                                <Combobox
+                                    options={studyPrograms}
+                                    value={formData.study_program_id?.toString() || ''}
+                                    onChange={(val) => {
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            study_program_id: val ? Number(val) : 0
+                                        }))
+                                    }}
+                                    placeholder="Pilih Prodi"
+                                    optionLabelKey='name'
+                                    optionValueKey='id'
+                                />
+                            </FormGroup>
+                        )}
+                        <FormGroup
+                            id='password'
+                            label='Password'
+                            error={errors['password']}
+                            required>
+                            <PasswordInput
                                 id="password"
                                 name="password"
-                                type="password"
                                 placeholder="xxxxxxxxx"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
-                            {errors['password'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['password']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 justify-end">
-                            <Label htmlFor="c_password">
-                                Konfirmasi Password <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
+                        </FormGroup>
+                        <FormGroup
+                            id='c_password'
+                            label='Password'
+                            error={errors['c_password']}
+                            required>
+                            <PasswordInput
                                 id="c_password"
                                 name="c_password"
-                                type="password"
                                 placeholder="xxxxxxxxx"
                                 value={formData.c_password}
                                 onChange={handleChange}
                             />
-                            {errors['c_password'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['c_password']}</p>
-                            )}
-                        </div>
+                        </FormGroup>
                         <Button
                             type="submit"
                             disabled={isLoading}

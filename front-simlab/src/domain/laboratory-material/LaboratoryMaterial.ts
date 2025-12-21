@@ -1,5 +1,3 @@
-import { LaboratoryRoom } from "../laboratory-room/LaboratoryRoom";
-
 export class LaboratoryMaterial {
     constructor(
         readonly id: number,
@@ -15,6 +13,5 @@ export class LaboratoryMaterial {
         readonly studentPrice: number,
         readonly lecturerPrice: number,
         readonly externalPrice: number,
-        readonly laboratoryRoom?: LaboratoryRoom
     ) { }
 }

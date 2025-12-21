@@ -1,7 +1,5 @@
 import { LaboratoryMaterialInputDTO } from "@/application/laboratory-material/LaboratoryMaterialDTO"
 import { LaboratoryMaterialView } from "@/application/laboratory-material/LaboratoryMaterialView"
-import { LaboratoryRoomSelectView } from "@/application/laboratory-room/LaboratoryRoomSelectView"
-import { Combobox } from "@/presentation/components/custom/combobox"
 import FormGroup from "@/presentation/components/custom/FormGroup"
 import { Button } from "@/presentation/components/ui/button"
 import { Calendar } from "@/presentation/components/ui/calendar"
@@ -18,7 +16,6 @@ import { CalendarIcon } from "lucide-react"
 interface LaboratoryRoomFormDialogProps {
     title: string,
     open: boolean,
-    laboratoryRooms: LaboratoryRoomSelectView[]
     onOpenChange: (open: boolean) => void,
     handleSave: (data: any) => Promise<void>,
     laboratoryMaterial?: LaboratoryMaterialView
@@ -29,14 +26,12 @@ import React, { useEffect, useState } from 'react'
 const LaboratoryMaterialFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
     title,
     open,
-    laboratoryRooms,
     onOpenChange,
     handleSave,
     laboratoryMaterial
 }) => {
     const defaultFormData: LaboratoryMaterialInputDTO = {
         code: '',
-        laboratory_room_id: undefined,
         material_name: '',
         brand: '',
         stock: 0,
@@ -59,7 +54,6 @@ const LaboratoryMaterialFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
         if (laboratoryMaterial) {
             setFormData({
                 code: laboratoryMaterial?.code ?? '',
-                laboratory_room_id: laboratoryMaterial?.laboratoryRoom?.id,
                 material_name: laboratoryMaterial?.materialName ?? '',
                 brand: laboratoryMaterial?.brand ?? '',
                 stock: laboratoryMaterial?.stock ?? 0,
@@ -173,6 +167,7 @@ const LaboratoryMaterialFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
                                 />
                             </FormGroup>
                             <FormGroup
+                                className="md:col-span-2"
                                 id="unit"
                                 label="Satuan Bahan"
                                 error={errors['unit']}
@@ -184,25 +179,6 @@ const LaboratoryMaterialFormDialog: React.FC<LaboratoryRoomFormDialogProps> = ({
                                     value={formData['unit'] || ''}
                                     onChange={handleChange}
                                     placeholder='Satuan Bahan'
-                                />
-                            </FormGroup>
-                            <FormGroup
-                                id="location"
-                                label="Lokasi Alat"
-                                error={errors['laboratory_room_id']}
-                                required>
-                                <Combobox
-                                    options={laboratoryRooms}
-                                    value={formData.laboratory_room_id?.toString() || ''}
-                                    onChange={(val) => {
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            laboratory_room_id: val ? Number(val) : 0
-                                        }))
-                                    }}
-                                    placeholder="Pilih Lokasi"
-                                    optionLabelKey='name'
-                                    optionValueKey='id'
                                 />
                             </FormGroup>
 

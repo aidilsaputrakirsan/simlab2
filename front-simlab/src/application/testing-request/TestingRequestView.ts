@@ -47,7 +47,7 @@ export class TestingRequestView {
             entity.resultFile,
             entity.createdAt ? TimeView.fromDomain(entity.createdAt) : null,
             entity.updatedAt ? TimeView.fromDomain(entity.updatedAt) : null,
-            entity.getTestingRequestItems().map((item) => TestingRequestItemView.fromDomain(item)),
+            entity.getTestingRequestItems().map(TestingRequestItemView.fromDomain),
             entity.hasPaidItems,
             entity.paymentStatus,
             entity.getRequestor(),

@@ -128,7 +128,7 @@ const DosenPage = () => {
                     studyPrograms={studyPrograms}
                     handleSave={handleSave}
                     user={selectedDosen}
-                    role={userRole.KepalaLabJurusan}
+                    role={userRole.Dosen}
                     title={!isEdit ? 'Tambah Dosen' : 'Edit Dosen'}
                 />
             </MainContent>

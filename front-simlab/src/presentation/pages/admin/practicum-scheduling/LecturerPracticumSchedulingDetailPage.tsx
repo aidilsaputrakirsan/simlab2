@@ -119,10 +119,10 @@ const LecturerPracticumSchedulingDetailPage = () => {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-8">
-                                        {practicumScheduling.user && (
+                                        {practicumScheduling.requestor && (
                                             <div className="flex flex-col gap-5">
                                                 <div className="flex flex-col gap-5">
-                                                    <Item title='Mata Kuliah/Pratikum' value={practicumScheduling.practicum?.name} />
+                                                    <Item title='Mata Kuliah/Pratikum' value={practicumScheduling.practicumName} />
                                                     <Item title='Laboran Penanggung Jawab' value={practicumScheduling.laboran?.name} />
                                                     <div className="flex flex-col">
                                                         <span className='font-semibold'>Status Pengajuan</span>
@@ -162,7 +162,7 @@ const LecturerPracticumSchedulingDetailPage = () => {
                                                     <Item title={'Nama Kelas'} value={cls.name} />
                                                     <Item title={'Dosen Pengampu'} value={cls.lecturer?.name} />
                                                     <Item title={'Asisten Dosen'} value={cls.practicumAssistant} />
-                                                    <Item title={'Ruangan Praktikum'} value={cls.laboratoryRoom?.name} />
+                                                    <Item title={'Ruangan Praktikum'} value={cls.laboratoryRoomName} />
                                                     <Item title={'Total Partisipan'} value={cls.totalParticipant} />
                                                     <Item title={'Total Kelompok'} value={cls.totalGroup} />
                                                 </div>
@@ -175,7 +175,7 @@ const LecturerPracticumSchedulingDetailPage = () => {
                         </div>
                     </div>
                 )}
-            <ApproveDialog onOpenChange={setIsOpenConfirmation} open={isOpenConfirmation} handleSave={handleLecturerNote} title='Catatan Dosen' message='Tuliskan catatan atau keterangan terkait sesi ini' buttonLabel='Simpan' />
+            <ApproveDialog onOpenChange={setIsOpenConfirmation} open={isOpenConfirmation} handleSave={handleLecturerNote} title='Catatan Dosen' message='Tuliskan catatan atau keterangan terkait sesi ini' buttonLabel='Simpan' isInformationRequired />
         </>
     )
 }

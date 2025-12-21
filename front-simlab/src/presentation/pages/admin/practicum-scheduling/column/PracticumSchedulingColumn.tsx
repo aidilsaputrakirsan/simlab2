@@ -9,14 +9,14 @@ export const PracticumSchedulingColumn = (): ColumnDef<PracticumSchedulingView>[
         header: 'Tahun Akademik',
         accessorKey: 'academicYear',
         cell: ({ row }) => (
-            `${row.original.academicYear?.name}`
+            `${row.original.academicYear}`
         )
     },
     {
         header: 'Praktikum',
         accessorKey: 'praktikumId',
         cell: ({ row }) => (
-            `${row.original.practicum?.name}`
+            `${row.original.practicumName}`
         )
     },
     {

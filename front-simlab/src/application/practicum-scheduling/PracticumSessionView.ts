@@ -1,6 +1,5 @@
 import { PracticumSession } from "@/domain/practicum-scheduling/PracticumSession";
 import { TimeView } from "../time/TimeView";
-import { PracticumModuleView } from "../practicum-module/PracticumModuleView";
 
 export class PracticumSessionView {
     private constructor(
@@ -12,7 +11,7 @@ export class PracticumSessionView {
         readonly laboranCommentedAt: TimeView | null,
         readonly lecturerComment: string | null,
         readonly lecturerCommentedAt: TimeView | null,
-        readonly practicumModule?: PracticumModuleView
+        readonly practicumModule?: string
     ) { }
 
     static fromDomain(entity: PracticumSession): PracticumSessionView {
@@ -25,7 +24,7 @@ export class PracticumSessionView {
             entity.laboranCommentedAt ? TimeView.fromDomain(entity.laboranCommentedAt) : null,
             entity.lecturerComment,
             entity.lecturerCommentedAt ? TimeView.fromDomain(entity.lecturerCommentedAt) : null,
-            entity.practicumModule ? PracticumModuleView.fromDomain(entity.practicumModule) : undefined
+            entity.getPracticumModule()
         )
     }
 

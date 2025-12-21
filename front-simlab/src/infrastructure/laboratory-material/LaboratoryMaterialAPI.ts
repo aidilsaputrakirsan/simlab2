@@ -1,5 +1,4 @@
 import { LaboratoryMaterial } from "../../domain/laboratory-material/LaboratoryMaterial";
-import { LaboratoryRoomAPI, toDomain as toLaboratoryRoom } from "../laboratory-room/LaboratoryRoomAPI";
 
 export type LaboratoryMaterialAPI = {
     id: number;
@@ -15,7 +14,6 @@ export type LaboratoryMaterialAPI = {
     student_price: number;
     lecturer_price: number;
     external_price: number;
-    laboratory_room: LaboratoryRoomAPI
 }
 
 export function toDomain(api: LaboratoryMaterialAPI): LaboratoryMaterial {
@@ -33,6 +31,5 @@ export function toDomain(api: LaboratoryMaterialAPI): LaboratoryMaterial {
         api.student_price,
         api.lecturer_price,
         api.external_price,
-        api.laboratory_room ? toLaboratoryRoom(api.laboratory_room) : undefined
     );
 }

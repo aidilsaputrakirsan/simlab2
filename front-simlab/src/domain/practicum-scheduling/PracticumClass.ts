@@ -1,9 +1,11 @@
 import { Time } from "../time/Time";
-import { LaboratoryRoom } from "../laboratory-room/LaboratoryRoom";
-import { User } from "../User/User";
 import { PracticumSession } from "./PracticumSession";
+import { Lecturer } from "../shared/value-object/Lecturer";
 
 export class PracticumClass {
+    private laboratoryRoomName?: string
+    private lecturer?: Lecturer
+    
     constructor(
         readonly id: number,
         readonly name: string,
@@ -12,8 +14,22 @@ export class PracticumClass {
         readonly totalGroup: number,
         readonly createdAt: Time,
         readonly updatedAt: Time,
-        readonly lecturer?: User,
-        readonly laboratoryRoom?: LaboratoryRoom,
         readonly practicumSessions?: PracticumSession[]
     ){}
+
+    setLaboratoryRoomName(name: string) {
+        this.laboratoryRoomName = name
+    }
+
+    setLecturer(lecturerData: Lecturer) {
+        this.lecturer = lecturerData
+    }
+
+    getLaboratoryRoomName(): string | undefined {
+        return this.laboratoryRoomName
+    }
+
+    getLecturer(): Lecturer | undefined {
+        return this.lecturer
+    }
 }

@@ -111,8 +111,12 @@ export const BookingDetailPage: React.FC = () => {
                       <Item title='Email Pemohon' value={booking.requestor.name} />
                     </>
                   )}
-                  <Item title='Dosen Pembimbing' value={booking.supervisor} />
-                  <Item title='Email Dosen Pembimbing' value={booking.supervisorEmail} />
+                  {booking.requestor?.isMahasiswa && (
+                    <>
+                      <Item title='Dosen Pembimbing' value={booking.supervisor} />
+                      <Item title='Email Dosen Pembimbing' value={booking.supervisorEmail} />
+                    </>
+                  )}
                   {booking.laboran && (
                     <>
                       <Item title='Laboran Penanggung Jawab' value={booking.laboran.name} />
@@ -124,7 +128,7 @@ export const BookingDetailPage: React.FC = () => {
                   <Item title='Keperluan' value={booking.purpose} />
                   <div className="flex flex-col">
                     <span className='font-semibold'>Waktu Peminjaman</span>
-                    <Badge variant={'secondary'} className='whitespace-normal'>{`${booking.startTime.formatForInformation()} - ${booking.endTime.formatForInformation()}`}</Badge>
+                    <Badge variant={'secondary'} className='whitespace-normal'>{`${booking.getEventDateRange()} | ${booking.getEventTimeRange()}`}</Badge>
                   </div>
                   <div className="flex flex-col">
                     <span className='font-semibold'>Status Pengajuan</span>
@@ -132,7 +136,7 @@ export const BookingDetailPage: React.FC = () => {
                   </div>
                   <Item title='Tanggal Diajukan' value={booking.createdAt.formatForInformation()} />
                   {hasEquipment && (
-                    <BookingEquipmentDialog data={equipments} is_allowed_offsite={booking.bookingType === BookingType.Equipment ? booking.isAllowedOffsite : undefined} />
+                    <BookingEquipmentDialog data={equipments} is_allowed_offsite={!!booking.isAllowedOffsite} />
                   )}
                   {hasMaterial && (
                     <BookingMaterialDialog data={materials} />

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/compone
 import Table from '@/presentation/components/Table';
 import { PracticumScheduleVerificationColumn } from '../column/PracticumScheduleVerificationColumn';
 import { PracticumSchedulingView } from '@/application/practicum-scheduling/PracticumSchedulingView';
-import { userRole } from '@/domain/User/UserRole';
 import RejectionDialog from '@/presentation/components/custom/RejectionDialog';
 import ApproveWithLaboratoryMaterialRealizationDialog from '@/presentation/components/custom/ApproveWithLaboratoryMaterialRealizationDialog';
 import { usePracticumSchedulingVerificationDataTable } from '../hooks/usePracticumSchedulingVerificationDataTable';
@@ -99,7 +98,7 @@ const LaboranPracticumScheduleApproval = () => {
                     <CardContent>
                         <Table
                             data={practicumSchedulings}
-                            columns={PracticumScheduleVerificationColumn({ role: userRole.Laboran, openApproval, openRejection })}
+                            columns={PracticumScheduleVerificationColumn({ openApproval, openRejection })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}

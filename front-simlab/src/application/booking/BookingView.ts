@@ -5,6 +5,8 @@ import { Booking } from "@/domain/booking/Booking";
 import { BookingEquipmentView } from "./BookingEquipmentView";
 import { BookingMaterialtView } from "./BookingMaterialView";
 import { BookingApprovalView } from "./BookingApprovalView";
+import { Requestor } from "@/domain/shared/value-object/Requestor";
+import { Laboran } from "@/domain/shared/value-object/Laboran";
 
 export class BookingView {
     constructor(
@@ -21,22 +23,16 @@ export class BookingView {
         readonly bookingType: BookingType,
         readonly totalParticipant: number,
         readonly participantList: string,
-        readonly isAllowedOffsite: boolean,
         readonly createdAt: TimeView,
         readonly updatedAt: TimeView,
         readonly bookingEquipments: BookingEquipmentView[],
         readonly bookingMaterials: BookingMaterialtView[],
         readonly bookingApproval: BookingApprovalView[],
         readonly isRequestorCanReturn: boolean,
+        readonly isAllowedOffsite?: boolean,
         readonly academicYear?: string,
-        readonly requestor?: {
-            name: string,
-            email: string
-        },
-        readonly laboran?: {
-            name: string,
-            email: string
-        },
+        readonly requestor?: Requestor,
+        readonly laboran?: Laboran,
         readonly laboratoryRoomName?: string,
     ) { }
 
@@ -55,13 +51,13 @@ export class BookingView {
             entity.bookingType,
             entity.totalParticipant,
             entity.participantList,
-            entity.isAllowedOffsite,
             TimeView.fromDomain(entity.createdAt),
             TimeView.fromDomain(entity.updatedAt),
             entity.getEquipments().map((eq) => BookingEquipmentView.fromDomain(eq)),
             entity.getMaterials().map((m) => BookingMaterialtView.fromDomain(m)),
             entity.getApprovals().map((ap) => BookingApprovalView.fromDomain(ap)),
             entity.getIsRequestorCanReturn(),
+            entity.isAllowedOffsite,
             entity.getAcademicYear(),
             entity.getRequestor(),
             entity.getLaboran(),
@@ -83,5 +79,17 @@ export class BookingView {
             default:
                 return 'N/a'
         }
+    }
+
+    getEventDateRange(): string {
+        if (this.startTime.formatForDateInformation() === this.endTime.formatForDateInformation()) {
+            return this.startTime.formatForDateInformation()
+        }
+
+        return `${this.startTime.formatForDateInformation()} - ${this.endTime.formatForDateInformation()}`
+    }
+
+    getEventTimeRange(): string {
+        return `${this.startTime.formatForTime()} - ${this.endTime.formatForTime()}`
     }
 }

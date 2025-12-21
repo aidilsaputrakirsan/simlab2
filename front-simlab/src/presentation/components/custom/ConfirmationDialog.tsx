@@ -16,15 +16,15 @@ interface ConfirmationDialogProps {
     onConfirm: () => Promise<void>
     confirmVariant?: "default" | "destructive"
     title?: string,
-    message?: string
+    message?: string,
+    confirmLabel?: string,
 }
 
-export default function ConfirmationDialog({ open, onOpenChange, onConfirm, confirmVariant, title, message }: ConfirmationDialogProps) {
+export default function ConfirmationDialog({ open, onOpenChange, onConfirm, confirmVariant, title, message, confirmLabel }: ConfirmationDialogProps) {
     const [isLoading, setIsLoading] = useState(false)
     async function submit() {
         setIsLoading(true)
         try {
-            
             await onConfirm()
         } finally {
             setIsLoading(false)
@@ -47,7 +47,7 @@ export default function ConfirmationDialog({ open, onOpenChange, onConfirm, conf
                         </Button>
                     </DialogClose>
                     <Button type="button" variant={confirmVariant} disabled={isLoading} onClick={submit}>
-                        { isLoading ? 'Memproses...' : 'Lanjut' }
+                        { isLoading ? 'Memproses...' : ( confirmLabel ?? 'Lanjut') }
                     </Button>
                 </DialogFooter>
             </DialogContent>

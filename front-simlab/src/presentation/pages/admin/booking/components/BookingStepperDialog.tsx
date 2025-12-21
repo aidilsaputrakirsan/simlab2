@@ -94,7 +94,7 @@ const BookingStepperDialog: React.FC<BookingStepperDialogProps> = ({
                                 {bookingSteps.length > index + 1 && (
                                     <Separator
                                         orientation="vertical"
-                                        className="bg-muted absolute left-2 top-4"
+                                        className="dark:bg-foreground/30 bg-muted absolute left-2 top-4"
                                     />
                                 )}
                                 {getStepperStatus(step.status)}

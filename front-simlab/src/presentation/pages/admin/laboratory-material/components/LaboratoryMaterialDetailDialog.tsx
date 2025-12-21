@@ -30,13 +30,12 @@ const LaboratoryMaterialDetailDialog: React.FC<LaboratoryMaterialDetailDialogPro
                                 <Item title='Nama Bahan' value={laboratoryMaterial?.materialName} />
                                 <Item title='Merek' value={laboratoryMaterial?.brand} />
                                 <Item title='Jumlah Bahan' value={`${laboratoryMaterial?.stock} ${laboratoryMaterial?.unit}`} />
-                                <Item title='Lokasi Bahan' value={laboratoryMaterial?.laboratoryRoom?.name} />
                                 <Item title='Tanggal Pembelian ' value={`${laboratoryMaterial?.purchaseDate}`} />
                                 <Item title='Tanggal Kadaluarsa ' value={`${laboratoryMaterial?.expiryDate}`} />
                                 <Item title='Tanggal Restock Terakhir ' value={`${laboratoryMaterial?.refillDate}`} />
                                 <Item title='Harga Mahasiswa' value={laboratoryMaterial?.studentPrice.formatToIDR()} />
                                 <Item title='Harga Dosen' value={laboratoryMaterial?.lecturerPrice.formatToIDR()} />
-                                <Item className='sm:col-span-2' title='Harga External' value={laboratoryMaterial?.externalPrice.formatToIDR()} />
+                                <Item title='Harga External' value={laboratoryMaterial?.externalPrice.formatToIDR()} />
                                 <Item className='sm:col-span-2' title='Keterangan' value={laboratoryMaterial?.description} />
                             </div>
                         </div>

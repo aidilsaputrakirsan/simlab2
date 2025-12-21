@@ -17,7 +17,7 @@ const PracticumSchedulingPage = () => {
             return <PracticumSchedulingTeachingListPage/>
 
         default:
-            return (<>Unauthorized</>)
+            return null
     }
 }
 

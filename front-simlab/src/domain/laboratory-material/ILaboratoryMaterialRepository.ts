@@ -10,7 +10,6 @@ export interface ILaboratoryMaterialRepository {
     }): Promise<PaginatedResponse<LaboratoryMaterial>>
     createData(data: {
         code: string;
-        laboratory_room_id: number | undefined;
         material_name: string;
         brand: string;
         stock: number;
@@ -22,7 +21,6 @@ export interface ILaboratoryMaterialRepository {
     }): Promise<ApiResponse>
     updateData(id: number, data: {
         code: string;
-        laboratory_room_id: number | undefined;
         material_name: string;
         brand: string;
         stock: number;

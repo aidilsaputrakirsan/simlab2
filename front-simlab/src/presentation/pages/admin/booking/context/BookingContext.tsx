@@ -34,7 +34,7 @@ export const BookingProvider = ({ children }: BookingProps) => {
         isStillHaveDraftBooking()
     }, [])
 
-    const refreshIsHasDraftBooking = () => isStillHaveDraftBooking
+    const refreshIsHasDraftBooking = () => isStillHaveDraftBooking()
     return (
         <BookingContext.Provider value={{ isHasDraftBooking, refreshIsHasDraftBooking }}>
             {children}

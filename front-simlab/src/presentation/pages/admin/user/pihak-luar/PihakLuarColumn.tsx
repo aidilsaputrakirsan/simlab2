@@ -7,16 +7,21 @@ interface ColumnProps {
 }
 
 export const PihakLuarColumn = ({ openConfirm }: ColumnProps): ColumnDef<UserView>[] => [
-    { header: 'Email', accessorKey: 'email' as keyof UserView},
-    { header: 'Nama', accessorKey: 'name' as keyof UserView},
+    { header: 'Email', accessorKey: 'email' as keyof UserView },
+    { header: 'Nama', accessorKey: 'name' as keyof UserView },
     { header: 'NIM / NIP / NIPH / Lainnya', accessorKey: 'identityNum' as keyof UserView, cell: ({ row }) => row.original.identityNum ?? '-' },
-    { header: 'Tanggal pembuatan akun', accessorKey: 'createdAt' as keyof UserView, cell: ({ row }) => {
-        if (!row.original.createdAt) return '-';
-        const date = new Date(row.original.createdAt);
-        const formatted = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-
-        return formatted;
-    } },
+    {
+        header: 'Asal Institusi', accessorKey: 'institution' as keyof UserView,
+        cell: ({ row }) => (
+            <span>{row.original.institution?.name}</span>
+        )
+    },
+    {
+        header: 'Tanggal pembuatan akun', accessorKey: 'createdAt' as keyof UserView,
+        cell: ({ row }) => (
+            <span>{row.original.createdAt?.formatForInformation()}</span>
+        )
+    },
     {
         header: 'Action',
         accessorKey: 'id' as keyof UserView,

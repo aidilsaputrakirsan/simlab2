@@ -1,5 +1,4 @@
 import { LaboratoryMaterial } from "@/domain/laboratory-material/LaboratoryMaterial";
-import { LaboratoryRoomView } from "../laboratory-room/LaboratoryRoomView";
 import { MoneyView } from "../money/MoneyView";
 
 export class LaboratoryMaterialView {
@@ -17,7 +16,6 @@ export class LaboratoryMaterialView {
         readonly studentPrice: MoneyView,
         readonly lecturerPrice: MoneyView,
         readonly externalPrice: MoneyView,
-        readonly laboratoryRoom?: LaboratoryRoomView
     ) { }
 
     static fromDomain(entity: LaboratoryMaterial): LaboratoryMaterialView {
@@ -35,7 +33,6 @@ export class LaboratoryMaterialView {
             MoneyView.toViewModel(entity.studentPrice),
             MoneyView.toViewModel(entity.lecturerPrice),
             MoneyView.toViewModel(entity.externalPrice),
-            entity.laboratoryRoom ? LaboratoryRoomView.fromDomain(entity.laboratoryRoom) : undefined
         )
     }
 }

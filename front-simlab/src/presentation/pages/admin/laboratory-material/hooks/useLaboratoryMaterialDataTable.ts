@@ -4,13 +4,7 @@ import { useDepedencies } from "@/presentation/contexts/useDepedencies"
 import { useDebounce } from "@/presentation/hooks/useDebounce"
 import { useCallback, useEffect, useState } from "react"
 
-interface useLaboratoryMaterialDataTableProps {
-    filter_laboratory_room: number
-}
-
-export const useLaboratoryMaterialDataTable = ({
-    filter_laboratory_room
-}: useLaboratoryMaterialDataTableProps) => {
+export const useLaboratoryMaterialDataTable = () => {
     const { laboratoryMaterialService } = useDepedencies()
 
     const table = useTable()
@@ -34,14 +28,13 @@ export const useLaboratoryMaterialDataTable = ({
             page: currentPage,
             per_page: perPage,
             search: searchTerm,
-            filter_laboratory_room: filter_laboratory_room
         })
 
         setLaboratoryMaterials(response.data ?? [])
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, debounceSearchTerm, filter_laboratory_room])
+    }, [currentPage, perPage, debounceSearchTerm])
 
     useEffect(() => {
         getData();

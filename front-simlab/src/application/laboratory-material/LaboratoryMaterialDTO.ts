@@ -1,6 +1,5 @@
 export interface LaboratoryMaterialInputDTO {
     code: string;
-    laboratory_room_id: number | undefined;
     material_name: string;
     brand: string;
     stock: number;
@@ -18,5 +17,4 @@ export interface LaboratoryMaterialTableParams {
     page: number,
     per_page: number,
     search: string,
-    filter_laboratory_room?: number,
 }

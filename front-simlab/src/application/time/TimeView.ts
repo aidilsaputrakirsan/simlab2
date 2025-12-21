@@ -109,6 +109,10 @@ export class TimeView {
         return this.formatToDisplay({})
     }
 
+    formatForDateInformation() {
+        return this.formatToDisplay({time: 'hide', timezone: 'hide'})
+    }
+
     fomatForOptionalTimeInformation(showTime?: boolean) {
         return this.formatToDisplay({ time: showTime ? 'show' : 'hide', timezone: showTime ? 'show' : 'hide' })
     }

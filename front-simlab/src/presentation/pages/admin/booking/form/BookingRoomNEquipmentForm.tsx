@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useValidationErrors } from '@/presentation/hooks/useValidationError'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import { Skeleton } from '@/presentation/components/ui/skeleton'
 import { Input } from '@/presentation/components/ui/input'
 import { Button } from '@/presentation/components/ui/button'
 import Table from '@/presentation/components/Table'
@@ -15,10 +14,8 @@ import { useLaboratoryEquipmentDataTable } from '../../laboratory-equipment/hook
 import { useLaboratoryMaterialDataTable } from '../../laboratory-material/hooks/useLaboratoryMaterialDataTable'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
-// import { useLaboratoryMaterial } from '@/application/laboratory-material/hooks/useLaboratoryMaterial'
 
 const BookingRoomNEquipmentForm: React.FC = () => {
-    const [isSubmitting, setIsSubmitting] = useState(false)
     const { id } = useParams()
     const navigate = useNavigate();
     const bookingId = id ? Number(id) : undefined
@@ -43,12 +40,11 @@ const BookingRoomNEquipmentForm: React.FC = () => {
         laboratoryMaterials,
         isLoading: isMaterialLoading,
         ...materialTable
-    } = useLaboratoryMaterialDataTable({ filter_laboratory_room: 0 })
+    } = useLaboratoryMaterialDataTable()
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
     const handleSubmit = async () => {
         if (!bookingId) return
-        setIsSubmitting(true)
         try {
             const res = await bookingService.storeBookingEquipmentMaterial(bookingId, formData)
             toast.success(res.message)
@@ -56,8 +52,6 @@ const BookingRoomNEquipmentForm: React.FC = () => {
         } catch (e: any) {
             toast.error(e?.message || 'Gagal submit')
             processErrors(e.errors)
-        } finally {
-            setIsSubmitting(false)
         }
     }
 

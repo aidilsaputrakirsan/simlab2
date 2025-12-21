@@ -12,7 +12,6 @@ export const LaboratoryMaterialSelectColumn = ({ handleSelectItem, selectedIds =
 	{ header: 'Nama Bahan', accessorKey: 'materialName' as keyof LaboratoryMaterialView },
 	{ header: 'Merek', accessorKey: 'brand' as keyof LaboratoryMaterialView },
 	{ header: 'Jumlah', accessorKey: 'stock' as keyof LaboratoryMaterialView, cell: ({ row }) => (<span>{row.original.stock} {row.original.unit}</span>) },
-	{ header: 'Lokasi Bahan', accessorKey: 'laboratoryRoom' as keyof LaboratoryMaterialView, cell: ({ row }) => row.original.laboratoryRoom?.name },
 	{
 		header: 'Action',
 		accessorKey: 'id' as keyof LaboratoryMaterialView,

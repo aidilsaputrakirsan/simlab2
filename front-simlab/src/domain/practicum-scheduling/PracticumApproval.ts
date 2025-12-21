@@ -1,15 +1,16 @@
 import { Time } from "../time/Time";
-import { User } from "../User/User";
+import { PracticumApprovalAction } from "./PracticumApprovalAction";
+import { PracticumApprovalStatus } from "./PracticumApprovalStatus";
 
 export class PracticumApproval {
     constructor(
         readonly id: number,
         readonly role: string,
-        readonly approverId: number,
-        readonly isApproved: number,
+        readonly action: PracticumApprovalAction,
+        readonly status: PracticumApprovalStatus,
+        readonly description: string,
         readonly information: string,
-        readonly createdAt: Time,
-        readonly updatedAt: Time,
-        readonly approver?: User,
-    ){}
+        readonly approvedAt?: Time,
+        readonly approver?: string,
+    ) { }
 }
