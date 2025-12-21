@@ -11,13 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class StudyProgramController extends BaseController
 {
-    public function getPublicStudyProgramData()
-    {
-        $study_programs = StudyProgram::select('id', 'name')->get();
-
-        return $this->sendResponse($study_programs, "Study Program Retreive Successfully");
-    }
-
     public function index(Request $request)
     {
         try {

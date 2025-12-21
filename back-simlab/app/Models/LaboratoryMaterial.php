@@ -10,7 +10,6 @@ class LaboratoryMaterial extends BaseModel
 
     protected $fillable = [
         'code',
-        'laboratory_room_id',
         'material_name',
         'brand',
         'stock',
@@ -23,9 +22,4 @@ class LaboratoryMaterial extends BaseModel
         'lecturer_price',
         'external_price'
     ];
-
-    public function laboratoryRoom()
-    {
-        return $this->belongsTo(LaboratoryRoom::class, 'laboratory_room_id');
-    }
 }

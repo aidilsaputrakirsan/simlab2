@@ -46,15 +46,15 @@ class TestingRequestApproval extends BaseModel
         return [
             'request_testing' => [
                 'role' => 'pemohon',
-                'description' => 'Pemohon mengajukan peminjaman',
+                'description' => 'Pemohon mengajukan pengujian',
             ],
             'verified_by_head' => [
                 'role' => 'kepala_lab_terpadu',
-                'description' => 'Melakukan verifikasi terhadap peminjaman',
+                'description' => 'Melakukan verifikasi terhadap permohonan pengujian',
             ],
             'verified_by_laboran' => [
                 'role' => 'laboran',
-                'description' => 'Menerima tugas dari Kepala Laboratorium Terpadu dan selanjutnya melakukan pengecekkan terhadap peminjaman.',
+                'description' => 'Menerima tugas dari Kepala Laboratorium Terpadu dan selanjutnya melakukan pengecekkan terhadap permohonan pengujian.',
             ],
         ];
     }

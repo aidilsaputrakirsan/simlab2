@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Institution extends Model
+class Institution extends BaseModel
 {
     use HasFactory;
 
@@ -13,6 +13,6 @@ class Institution extends Model
 
     public function users()
     {
-        return $this->hasMany(Institution::class, 'institution_id');
+        return $this->hasMany(User::class, 'institution_id');
     }
 }

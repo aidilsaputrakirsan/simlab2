@@ -23,7 +23,6 @@ class LaboratoryMaterialRequest extends ApiRequest
         $id = $this->route('laboratory_material'); // useful for update
         $rules = [
             'code' => "required|string|max:50|unique:laboratory_materials,code," . ($id ?? 'NULL') . ",id",
-            'laboratory_room_id' => 'required',
             'material_name' => 'required|string|max:100',
             'brand' => 'nullable|string|max:100',
             'stock' => 'required|integer|min:0',
@@ -49,8 +48,6 @@ class LaboratoryMaterialRequest extends ApiRequest
             'code.string' => 'Kode bahan harus berupa teks.',
             'code.max' => 'Kode bahan maksimal 50 karakter.',
             'code.unique' => 'Kode bahan sudah terdaftar.',
-
-            'laboratory_room_id.required' => 'Ruangan laboratorium wajib dipilih.',
 
             'material_name.required' => 'Nama bahan wajib diisi.',
             'material_name.string' => 'Nama bahan harus berupa teks.',

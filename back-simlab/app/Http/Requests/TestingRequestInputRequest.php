@@ -24,8 +24,6 @@ class TestingRequestInputRequest extends ApiRequest
         $rules =  [
             'phone_number' => 'required|max:14',
             'activity_name' => 'required|max:225',
-            'supervisor' => 'max:225',
-            'supervisor_email' => 'max:225',
             'testing_time' => 'required',
             'information' => 'nullable|string',
             'testing_items' => 'required|array|min:1',
@@ -38,11 +36,9 @@ class TestingRequestInputRequest extends ApiRequest
         ];
 
         // If supervisor is filled, supervisor_email is required, and vice versa
-        if ($this->filled('supervisor') && !$this->filled('supervisor_email')) {
-            $rules['supervisor_email'] .= '|required|email';
-        }
-        if ($this->filled('supervisor_email') && !$this->filled('supervisor')) {
-            $rules['supervisor'] .= '|required';
+        if ($this->user()->role === 'mahasiswa') {
+            $rules['supervisor'] = 'max:225|required';
+            $rules['supervisor_email'] = 'max:225|required|email';
         }
 
         return $rules;

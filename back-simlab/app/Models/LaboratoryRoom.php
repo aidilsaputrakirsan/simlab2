@@ -23,13 +23,8 @@ class LaboratoryRoom extends BaseModel
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function alatLaboratorium()
+    public function laboratoryEquipments()
     {
         return $this->hasMany(LaboratoryEquipment::class, 'laboratory_room_id');
-    }
-
-    public function bahanLaboratorium()
-    {
-        return $this->hasMany(LaboratoryMaterial::class, 'laboratory_material_id');
     }
 }

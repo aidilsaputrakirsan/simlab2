@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Booking;
 
+use App\Http\Resources\RequestorResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -35,10 +36,7 @@ class BookingResource extends JsonResource
                 return $this->academicYear->name;
             }),
             'requestor' => $this->whenLoaded('user', function () {
-                return [
-                    'name' => $this->user->name,
-                    'email' => $this->user->email
-                ];
+                return new RequestorResource($this->user);
             }),
             'laboran' => $this->whenLoaded('laboran', function () {
                 return [
@@ -61,7 +59,9 @@ class BookingResource extends JsonResource
             'booking_type' => $this->booking_type,
             'total_participant' => $this->total_participant,
             'participant_list' => $this->participant_list,
-            'is_allowed_offsite' => (bool) $this->is_allowed_offsite,
+            $this->mergeWhen($this->status === 'approved', function() {
+                return ['is_allowed_offsite' => $this->is_allowed_offsite];
+            }),
             'created_at' => $this->convertToISO('created_at'),
             'updated_at' => $this->convertToISO('updated_at'),
             $this->mergeWhen(static::$approvals, function () {

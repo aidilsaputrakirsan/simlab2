@@ -6,6 +6,7 @@ use App\Http\Requests\PracticumEquipmenMaterialRequest;
 use App\Http\Requests\PracticumSchedulingLecturerNoteRequest;
 use App\Http\Requests\PracticumSchedulingRequest;
 use App\Http\Requests\PracticumSchedulingSessionConductedRequest;
+use App\Http\Requests\PracticumSchedulingVerifyRequest;
 use App\Http\Resources\PracticumScheduling\PracticumSchedulingResource;
 use App\Models\PracticumApproval;
 use App\Models\PracticumGroup;
@@ -65,7 +66,15 @@ class PracticumSchedulingController extends BaseController
             // Execute pagination
             $practicumSchedulings = $query->paginate($perPage, ['*'], 'page', $page);
 
-            return $this->sendResponse($practicumSchedulings, "Practicum Scheduling retrieved successfully");
+            $response = [
+                'current_page' => $practicumSchedulings->currentPage(),
+                'last_page' => $practicumSchedulings->lastPage(),
+                'per_page' => $practicumSchedulings->perPage(),
+                'total' => $practicumSchedulings->total(),
+                'data' => PracticumSchedulingResource::collection($practicumSchedulings)
+            ];
+
+            return $this->sendResponse($response, "Practicum Scheduling retrieved successfully");
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve Practicum Scheduling', [$e->getMessage()], 500);
         }
@@ -111,11 +120,15 @@ class PracticumSchedulingController extends BaseController
 
             // Execute pagination
             $practicumSchedulings = $query->paginate($perPage, ['*'], 'page', $page);
-            $practicumSchedulings->getCollection()->each(function ($practicumScheduling) {
-                $practicumScheduling->append(['kepala_lab_approval', 'laboran_approval']);
-            });
+            $response = [
+                'current_page' => $practicumSchedulings->currentPage(),
+                'last_page' => $practicumSchedulings->lastPage(),
+                'per_page' => $practicumSchedulings->perPage(),
+                'total' => $practicumSchedulings->total(),
+                'data' => PracticumSchedulingResource::collectionWithApproval($practicumSchedulings)
+            ];
 
-            return $this->sendResponse($practicumSchedulings, "Practicum Scheduling retrieved successfully");
+            return $this->sendResponse($response, "Practicum Scheduling retrieved successfully");
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve Practicum Scheduling', [$e->getMessage()], 500);
         }
@@ -156,13 +169,21 @@ class PracticumSchedulingController extends BaseController
             // Execute pagination
             $practicumSchedulings = $query->paginate($perPage, ['*'], 'page', $page);
 
-            return $this->sendResponse($practicumSchedulings, "Practicum Scheduling retrieved successfully");
+            $response = [
+                'current_page' => $practicumSchedulings->currentPage(),
+                'last_page' => $practicumSchedulings->lastPage(),
+                'per_page' => $practicumSchedulings->perPage(),
+                'total' => $practicumSchedulings->total(),
+                'data' => PracticumSchedulingResource::collection($practicumSchedulings)
+            ];
+
+            return $this->sendResponse($response, "Practicum Scheduling retrieved successfully");
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve Practicum Scheduling', [$e->getMessage()], 500);
         }
     }
 
-    public function verifyPracticumScheduling(Request $request, $id)
+    public function verifyPracticumScheduling(PracticumSchedulingVerifyRequest $request, $id)
     {
         DB::beginTransaction();
         try {
@@ -170,9 +191,6 @@ class PracticumSchedulingController extends BaseController
 
             $practicumScheduling = PracticumScheduling::findOrFail($id);
             $status = $practicumScheduling->status;
-            $action = $request->action;
-            $isApprove = $action === 'approve';
-            $isRevision = $action === 'revision';
 
             // Do validation restriction based on status
             if ($status === 'draft') {
@@ -185,72 +203,22 @@ class PracticumSchedulingController extends BaseController
                 return $this->sendError('Peminjaman ini telah dilakukan verifikasi sebelumnya', [], 400);
             }
 
-            // rov
-            $validationError = $this->validateApprovalFlow($practicumScheduling, $user);
-            if ($validationError) {
-                DB::rollBack();
-                return $this->sendError($validationError, [], 400);
+            if ($practicumScheduling->canVerif($user) !== 1) {
+                return $this->sendError('Anda tidak diizinkan untuk melakukan verifikasi', [], 400);
             }
 
-            // Prevent duplicate approval by same role and user
-            $existingApproval = PracticumApproval::where([
-                'practicum_scheduling_id' => $practicumScheduling->id,
-                'role' => $user->role,
-                'approver_id' => $user->id,
-            ])->first();
-            if ($existingApproval) {
-                DB::rollBack();
-                return $this->sendError('Anda sudah melakukan verifikasi untuk penjadwalan ini.', [], 400);
+            $isApprove = $request->action === 'approve' ? 1 : ($request->action === 'revision' ? 2 : 0);
+            $response = $this->assignPracticumSchedulingDataByRole($practicumScheduling, $user, $request, $isApprove);
+            if ($response) {
+                // assignPracticumSchedulingDataByRole may already roll back; just return the error response
+                return $response;
             }
 
-            // Special update for Kepala Lab Terpadu and Laboran
-            if ($user->role === 'kepala_lab_terpadu' && $isApprove && $request->has('laboran_id')) {
-                $practicumScheduling->update(['laboran_id' => $request->laboran_id]);
-            }
-
-            if ($user->role === 'laboran' && $isApprove && $request->filled('materials')) {
-                $materials = $request->materials;
-
-                foreach ($practicumScheduling->practicumSchedulingMaterials as $key => $material) {
-                    $realization = $materials[$key] ?? 0;
-
-                    if ($realization <= 0) {
-                        DB::rollBack();
-                        return $this->sendError('Terjadi kesalahan dalam proses verifikasi', ['materials' => 'Minimal bahan yang disediakan lebih dari 0'], 400);
-                    }
-
-                    if ($realization > $material->quantity) {
-                        DB::rollBack();
-                        return $this->sendError('Terjadi kesalahan dalam proses verifikasi', ['materials' => 'Terdapat bahan yang melebihi jumlah yang diajukan'], 400);
-                    }
-
-                    $material->update(['realization' => $request->materials[$key]]);
-                }
-
-                $practicumScheduling->update(['status' => 'approved']);
-            }
-
-            if (!$isApprove) {
-                $practicumScheduling->update(['status' => 'rejected']);
-            }
-
-            if ($isRevision) {
-                $practicumScheduling->update(['status' => 'revision']);
-            }
-
-            PracticumApproval::create([
-                'practicum_scheduling_id' => $practicumScheduling->id,
-                'role' => $user->role,
-                'approver_id' => $user->id,
-                'is_approved' => $isApprove ? 1 : ($isRevision ? 2 : 0),
-                'information' => $request->information,
-            ]);
+            $approvalAction = $user->role === 'laboran' ? 'verified_by_laboran' : 'verified_by_head';
+            $this->recordApproval($practicumScheduling->id, $approvalAction, $user->id, $isApprove, $request->information);
 
             DB::commit();
-            return $this->sendResponse(
-                $practicumScheduling->fresh(),
-                'Penjadwalan praktikum berhasil ' . ($isApprove ? 'disetujui' : 'ditolak')
-            );
+            return $this->sendResponse([],'Berhasil melakukan verifikasi pengajuan penjadwalan praktikum');
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
             return $this->sendError('Practicum Scheduling Not Found', [], 404);
@@ -258,25 +226,6 @@ class PracticumSchedulingController extends BaseController
             DB::rollBack();
             return $this->sendError('Failed to verify practicum scheduling', [$e->getMessage()], 500);
         }
-    }
-
-    private function validateApprovalFlow($practicumScheduling, $user): ?string
-    {
-        if ($user->role === 'laboran') {
-            if (!$practicumScheduling->kepala_lab_approval) {
-                return 'Kepala Lab Terpadu harus verifikasi terlebih dahulu.';
-            }
-            $kepalaLabApproval = $practicumScheduling->kepala_lab_approval;
-            if ($kepalaLabApproval && isset($kepalaLabApproval['approved']) && $kepalaLabApproval['approved'] === false) {
-                return 'Kepala Lab Terpadu telah menolak, Laboran tidak dapat verifikasi.';
-            }
-        }
-
-        if ($user->role === 'kepala_lab_terpadu' && $practicumScheduling->kepala_lab_approval) {
-            return 'Kepala Lab Terpadu sudah melakukan verifikasi.';
-        }
-
-        return null; // valid
     }
 
     public function isStillHaveDraftPracticum()
@@ -346,13 +295,6 @@ class PracticumSchedulingController extends BaseController
                 }
             }
 
-            PracticumApproval::create([
-                'practicum_scheduling_id' => $practicumScheduling->id,
-                'role' => 'Pemohon',
-                'approver_id' => $user->id,
-                'is_approved' => 1
-            ]);
-
             DB::commit();
             return $this->sendResponse($practicumScheduling->load(['user', 'practicum']), "Practicum Scheduling Created Successfully");
         } catch (\Exception $e) {
@@ -393,20 +335,10 @@ class PracticumSchedulingController extends BaseController
                 $practicumScheduling->update(['status' => 'pending']);
             }
 
-            PracticumApproval::firstOrCreate([
-                'practicum_scheduling_id' => $practicumScheduling->id,
-                'role' => 'Pemohon',
-                'approver_id' => auth()->id(),
-            ], [
-                'approved' => 1
-            ]);
+            $this->recordApproval($practicumScheduling->id, 'request_practicum', $user->id, 1);
 
             DB::commit();
-            $practicumScheduling->load([
-                'practicumSchedulingEquipments.equipmentable',
-                'practicumSchedulingMaterials.laboratoryMaterial'
-            ]);
-            return $this->sendResponse($practicumScheduling, 'Practicum Equipment & Material Submitted Successfully');
+            return $this->sendResponse([], 'Practicum Equipment & Material Submitted Successfully');
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
             return $this->sendError('Practicum Scheduling Not Found', [], 404);
@@ -452,58 +384,15 @@ class PracticumSchedulingController extends BaseController
         }
     }
 
-    public function getPracticumSteps($id)
+    public function getPracticumSchedulingApproval($id)
     {
         try {
             $practicumScheduling = PracticumScheduling::with(['practicumApprovals.approver'])->findOrFail($id);
-            $roles = ['pemohon', 'kepala_lab_terpadu', 'laboran'];
-            $stepper = [];
-            $allApproved = true;
-            $hasBeenRejected = false;
-            foreach ($roles as $role) {
-                $approval = $practicumScheduling->practicumApprovals->where('role', $role)->sortByDesc('created_at')->first();
-                if ($approval) {
-                    // Normalize status: 1 = approved, 2 = revision, 0 = rejected
-                    if ($approval->is_approved === 1) {
-                        $status = 'approved';
-                    } elseif ($approval->is_approved === 2) {
-                        $status = 'revision';
-                    } elseif ($approval->is_approved === 0) {
-                        $status = 'rejected';
-                        $hasBeenRejected = true;
-                    } else {
-                        $status = 'pending';
-                    }
-                } else {
-                    $status = $hasBeenRejected ? 'rejected' : 'pending';
-                }
-
-                $stepper[] = [
-                    'role' => ucwords(str_replace('_', ' ', $role)),
-                    'status' => $status,
-                    'information' => $approval?->information,
-                    'approved_at' => $approval?->created_at ? Carbon::parse($approval->created_at)->setTimezone(config('app.timezone'))->toIso8601String() : null,
-                    'approver' => $approval?->approver?->name,
-                ];
-
-                if ($status !== 'approved') {
-                    $allApproved = false;
-                }
-            }
-
-            $stepper[] = [
-                'role' => 'Selesai',
-                'status' => $allApproved ? 'approved' : ($hasBeenRejected ? 'rejected' : 'pending'),
-                'information' => null,
-                'approved_at' => null,
-                'approver' => null,
-            ];
-
-            return $this->sendResponse($stepper, 'Practicum Scheduling Approvals Retrieved Successfully');
+            return $this->sendResponse($practicumScheduling->approval_steps, 'Berhasil mengambil data pengujian');
         } catch (ModelNotFoundException $e) {
-            return $this->sendError("Practicum Scheduling Not Found", [], 404);
+            return $this->sendError("Data pengujian tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to retrieve approvals', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan dalam mengambil data pengujian', [$e->getMessage()]);
         }
     }
 
@@ -660,6 +549,63 @@ class PracticumSchedulingController extends BaseController
                 'laboratory_material_id' => $mt['id'],
                 'quantity' => $mt['quantity'] * $scheduling->total_groups
             ]);
+        }
+    }
+
+    private function recordApproval($practicumSchedulingId, $action, $approverId, $status, $information = null)
+    {
+        PracticumApproval::create([
+            'practicum_scheduling_id' => $practicumSchedulingId,
+            'action' => $action,
+            'approver_id' => $approverId,
+            'is_approved' => $status,
+            'information' => $information
+        ]);
+    }
+
+    private function assignPracticumSchedulingDataByRole($practicumScheduling, $user, $request, $isApprove)
+    {
+        // is REJECTED
+        if (!$isApprove) {
+            $practicumScheduling->update(['status' => 'rejected']);
+
+            // Notify applicant about rejection
+
+            return null;
+        }
+
+        // is APPROVED
+        switch ($user->role) {
+            case 'kepala_lab_terpadu':
+                // Assign laboran
+                $practicumScheduling->update(['laboran_id' => $request->laboran_id]);
+
+                // Notify the assigned laboran
+                return null;
+
+            case 'laboran':
+                if ($request->filled('materials')) {
+                    $materials = $request->materials;
+                    foreach ($practicumScheduling->practicumSchedulingMaterials as $key => $material) {
+                        $realization = $materials[$key] ?? 0;
+
+                        if ($realization <= 0) {
+                            return $this->sendError('Terjadi kesalahan dalam proses verifikasi', ['materials' => 'Minimal bahan yang disediakan lebih dari 0'], 400);
+                        }
+
+                        if ($realization > $material->quantity) {
+                            return $this->sendError('Terjadi kesalahan dalam proses verifikasi', ['materials' => 'Terdapat bahan yang melebihi jumlah yang diajukan'], 400);
+                        }
+
+                        $material->update(['realization' => $request->materials[$key]]);
+                    }
+
+                }
+                // Final approval (laboran confirms everything)
+                $practicumScheduling->update(['status' => 'approved']);
+
+                // Notify applicant
+                return null;
         }
     }
 }

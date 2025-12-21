@@ -156,35 +156,6 @@ class TestingRequestController extends BaseController
         }
     }
 
-    // public function create(array $data)
-    // {
-    //     $testing = TestingRequest::create([
-    //         'phone_number'  => $data['phone_number'],
-    //         'activity_name' => $data['activity_name'],
-    //         'supervisor'    => $data['supervisor'],
-    //         'supervisor_email' => $data['supervisor_email'],
-    //         'testing_time'  => $data['testing_time'],
-    //         'information'   => $data['information'],
-    //     ]);
-
-    //     // simpan items
-    //     foreach ($data['testing_items'] as $item) {
-    //         $testing->items()->create($item);
-    //     }
-
-    //     // cek item berbayar
-    //     $hasPaidItems = collect($data['testing_items'])
-    //         ->contains(fn($item) => $item['price'] > 0);
-
-    //     if ($hasPaidItems) {
-    //         $testing->payment()->create([
-    //             'status' => 'draft'
-    //         ]);
-    //     }
-
-    //     return $testing;
-    // }
-
     public function verify(TestingRequestVerifyRequest $request, $id)
     {
         DB::beginTransaction();
@@ -268,7 +239,7 @@ class TestingRequestController extends BaseController
     private function assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove)
     {
         // is REJECTED
-        if (! $isApprove) {
+        if (!$isApprove) {
             $testingRequest->update(['status' => 'rejected']);
 
             // Notify applicant about rejection

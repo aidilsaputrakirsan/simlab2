@@ -17,7 +17,6 @@ class LaboratoryMaterialSeeder extends Seeder
         LaboratoryMaterial::insert([
             [
                 'code' => 'MAT-001',
-                'laboratory_room_id' => 1,
                 'material_name' => 'Natrium Klorida',
                 'brand' => 'Merck',
                 'stock' => 20,
@@ -32,7 +31,6 @@ class LaboratoryMaterialSeeder extends Seeder
             ],
             [
                 'code' => 'MAT-002',
-                'laboratory_room_id' => 1,
                 'material_name' => 'Aquadest',
                 'brand' => 'Bratachem',
                 'stock' => 50,
@@ -47,7 +45,6 @@ class LaboratoryMaterialSeeder extends Seeder
             ],
             [
                 'code' => 'MAT-003',
-                'laboratory_room_id' => 2,
                 'material_name' => 'Ethanol 96%',
                 'brand' => 'Sigma',
                 'stock' => 10,

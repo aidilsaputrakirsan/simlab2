@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class BookingApproval extends Model
+class BookingApproval extends BaseModel
 {
     use HasFactory;
 

@@ -29,8 +29,14 @@ class RegisterRequest extends ApiRequest
         ];
 
         // Conditional rule: if role is not "Pihak Luar", require prodi_id
-        if ($this->input('role') !== 'pihak_luar') {
-            $rules['study_program_id'] = 'required';
+        switch ($this->input('role')) {
+            case 'mahasiswa':
+                $rules['study_program_id'] = 'required';
+                break;
+            case 'pihak_luar':
+                $rules['institution_id'] = 'required_without:institution|nullable|exists:institutions,id';
+                $rules['institution'] = 'required_without:institution_id|max:191';
+                break;
         }
 
         return $rules;
@@ -46,6 +52,11 @@ class RegisterRequest extends ApiRequest
             'email.email' => 'Format email tidak valid!',
             'email.max' => 'Email maksimal 191 karakter!',
             'email.unique' => 'Email sudah terdaftar!',
+
+            'institution_id.required_without' => 'Pilih institusi atau isi nama institusi baru.',
+            'institution_id.exists' => 'Institusi tidak valid.',
+            'institution.required_without' => 'Isi nama institusi atau pilih institusi yang sudah ada.',
+            'institution.max' => 'Institusi maksimal 191 karakter!',
 
             'identity_num.required' => 'NIM / NIP / NIPH / Identitas lainnya tidak boleh kosong!',
             'identity_num.max' => 'Identitas maksimal 100 karakter!',

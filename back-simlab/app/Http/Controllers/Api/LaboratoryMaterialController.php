@@ -12,11 +12,7 @@ class LaboratoryMaterialController extends BaseController
     public function index(Request $request)
     {
         try {
-            $query = LaboratoryMaterial::query()->with('laboratoryRoom');
-
-            if ($request->filter_laboratory_room) {
-                $query->where('laboratory_room_id', $request->filter_laboratory_room);
-            }
+            $query = LaboratoryMaterial::query();
 
             if ($request->has('search')) {
                 $searchTerm = $request->search;

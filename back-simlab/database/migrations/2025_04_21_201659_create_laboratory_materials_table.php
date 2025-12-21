@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('laboratory_materials', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->foreignId('laboratory_room_id')->constrained()->onDelete('cascade');
             $table->string('material_name');
             $table->string('brand')->nullable();
             $table->integer('stock');

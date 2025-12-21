@@ -17,7 +17,7 @@ class UserController extends BaseController
     {
         try {
             // Start with a base query
-            $query = User::query()->with('studyProgram');
+            $query = User::query()->with(['studyProgram', 'institution']);
 
             if ($request->filter_study_program) {
                 $query->where('study_program_id', $request->filter_study_program);

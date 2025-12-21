@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AcademicYearController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\FacultyController;
+use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Api\LaboratoryEquipmentController;
 use App\Http\Controllers\Api\LaboratoryMaterialController;
 use App\Http\Controllers\Api\LaboratoryRoomController;
@@ -36,9 +37,8 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 // Universal Api
-Route::prefix('pub')->group(function () {
-    Route::get('/study-programs', [StudyProgramController::class, 'getPublicStudyProgramData']);
-});
+Route::get('/study-programs/select', [StudyProgramController::class, 'getDataForSelect']);
+Route::get('/institutions/select', [InstitutionController::class, 'getDataForSelect']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('laboratory-rooms', LaboratoryRoomController::class)->only(['index']);
@@ -58,6 +58,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/academic-years/{id}/toggle-status', [AcademicYearController::class, 'toggleStatus']);
         Route::resource('academic-years', AcademicYearController::class);
 
+        // Institution Route
+        Route::resource('institutions', InstitutionController::class)->except(['show']);
+
         // Faculty Route
         Route::get('/faculties/select', [FacultyController::class, 'getDataForSelect']);
         Route::resource('faculties', FacultyController::class);
@@ -70,7 +73,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('testing-types', TestingTypeController::class);
 
         // Study Program Route
-        Route::get('/study-programs/select', [StudyProgramController::class, 'getDataForSelect']);
         Route::resource('study-programs', StudyProgramController::class);
 
         // Practicum
@@ -142,7 +144,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Practical Schedule
     Route::group(['prefix' => 'practicum-schedule', 'as' => 'practicum', 'middleware' => 'role:dosen|kepala_lab_jurusan|laboran|kepala_lab_terpadu'], function () {
         Route::get('/{id}/detail', [PracticumSchedulingController::class, 'getPracticumSchedulingData']);
-        Route::get('/{id}/steps', [PracticumSchedulingController::class, 'getPracticumSteps']);
+        Route::get('/{id}/approvals', [PracticumSchedulingController::class, 'getPracticumSchedulingApproval']);
 
         // route based on role: laboran
         Route::group(['middleware' => 'role:dosen'], function () {

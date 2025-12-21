@@ -24,8 +24,6 @@ class BookingRequest extends ApiRequest
             'purpose' => 'required|max:225',
             'supporting_file' => 'mimes:doc,docx,pdf|max:5046',
             'activity_name' => 'required|max:225',
-            'supervisor' => 'max:225',
-            'supervisor_email' => 'max:225',
             'start_time' => 'required',
             'end_time' => 'required|after_or_equal:start_time',
             'booking_type' => 'required',
@@ -39,12 +37,9 @@ class BookingRequest extends ApiRequest
             $rules['laboratory_room_id'] = 'required';
         }
 
-        // If supervisor is filled, supervisor_email is required, and vice versa
-        if ($this->filled('supervisor') && !$this->filled('supervisor_email')) {
-            $rules['supervisor_email'] .= '|required|email';
-        }
-        if ($this->filled('supervisor_email') && !$this->filled('supervisor')) {
-            $rules['supervisor'] .= '|required';
+        if ($this->user()->role === 'mahasiswa') {
+            $rules['supervisor'] = 'max:225|required';
+            $rules['supervisor_email'] = 'max:225|required|email';
         }
 
         return $rules;

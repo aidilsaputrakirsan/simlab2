@@ -102,6 +102,7 @@ class BookingController extends BaseController
             // Eager load relations for report context
             $query->with([
                 'user.studyProgram',
+                'user.institution',
                 'academicYear',
             ]);
 
@@ -359,7 +360,7 @@ class BookingController extends BaseController
             DB::commit();
             // Only send to supervisor if booking type is 'room'
             if ($isRoom) {
-                $booking->load(['user.studyProgram']);
+                $booking->load(['user.studyProgram', 'user.institution']);
                 $this->sendToSupervisor($booking);
                 return $this->sendResponse($booking, "Pengajuan peminjaman berhasil");
             }
@@ -375,7 +376,7 @@ class BookingController extends BaseController
     {
         try {
             // Mendapatkan data booking (peminjaman) berdasarkan id
-            $booking = Booking::with(['user', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial'])->findOrFail($id);
+            $booking = Booking::with(['user.studyProgram', 'user.institution', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial'])->findOrFail($id);
 
             return $this->sendResponse(new BookingResource($booking), 'Booking Retrieved Successfully');
         } catch (ModelNotFoundException $e) {
@@ -431,7 +432,7 @@ class BookingController extends BaseController
             $this->recordApproval($booking->id, 'request_booking', auth()->id(), 1);
 
             DB::commit();
-            $booking->load(['user.studyProgram', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
+            $booking->load(['user.studyProgram', 'user.institution', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
             $this->sendToSupervisor($booking);
             return $this->sendResponse($booking, 'Pengajuan peminjaman ruangan, alat & bahan berhasil diajukan');
         } catch (ModelNotFoundException $e) {
@@ -468,7 +469,7 @@ class BookingController extends BaseController
             $this->recordApproval($booking->id, 'request_booking', auth()->id(), 1);
 
             DB::commit();
-            $booking->load(['equipments.laboratoryEquipment', 'user.studyProgram']);
+            $booking->load(['equipments.laboratoryEquipment', 'user.studyProgram', 'user.institution']);
             $this->sendToSupervisor($booking);
             return $this->sendResponse($booking, 'Peminjaman berhasi diajukan');
         } catch (ModelNotFoundException $e) {
