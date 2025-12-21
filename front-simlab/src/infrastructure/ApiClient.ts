@@ -15,7 +15,7 @@ export async function fetchApi(endpoint: string, options: RequestOptions = {}) {
     if (StorageManager.hasSession()) {
         headers.set('Authorization', `Bearer ${StorageManager.getAccessToken()}`);
     }
-
+    
     // Only set content-type if not FormData (browser sets boundary for FormData automatically)
     if (!isFormData) {
         headers.set('Content-Type', 'application/json');

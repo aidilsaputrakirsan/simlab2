@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\TestingRequest;
 
+use App\Http\Resources\RequestorResource;
 use App\Http\Resources\TestingRequestItemResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,10 +32,7 @@ class TestingRequestResource extends JsonResource
                 return $this->academicYear->name;
             }),
             'requestor' => $this->whenLoaded('requestor', function () {
-                return [
-                    'name' => $this->requestor->name,
-                    'email' => $this->requestor->email,
-                ];
+                return new RequestorResource($this->requestor);
             }),
             'laboran' => $this->whenLoaded('laboran', function () {
                 return [
@@ -56,6 +54,15 @@ class TestingRequestResource extends JsonResource
             'has_paid_items' => $this->hasPaidItems,
             'payment_status' => $this->whenLoaded('payment', function () {
                 return $this->payment->status;
+            }),
+            'payment_id' => $this->whenLoaded('payment', function () {
+                return $this->payment->id;
+            }),
+            'is_invoice_has_uploaded' => $this->whenLoaded('payment', function () {
+                return $this->payment->is_invoice_has_uploaded;
+            }),
+            'is_payment_proof_has_uploaded' => $this->whenLoaded('payment', function () {
+                return $this->payment->is_payment_proof_has_uploaded;
             }),
             $this->mergeWhen(static::$approvals, function () {
                 return ['canVerif' => $this->canVerif(auth()->user())];

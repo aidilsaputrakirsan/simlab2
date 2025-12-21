@@ -1,6 +1,6 @@
 export enum userRole {
     Admin = 'admin',
-    AdminKeuangan = 'admin_keuangan',
+    AdminPengujian = 'admin_pengujian',
     KepalaLabTerpadu = 'kepala_lab_terpadu',
     Dosen = 'dosen',
     Kooprodi = 'koorprodi',

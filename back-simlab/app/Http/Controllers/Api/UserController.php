@@ -51,16 +51,18 @@ class UserController extends BaseController
     public function store(UserRequest $request)
     {
         try {
-            $studyProgram = StudyProgram::find($request->study_program_id);
+            if ($request->role !== 'laboran' && $request->role !== 'admin_pengujian') {
+                $studyProgram = StudyProgram::find($request->study_program_id);
 
-            // Validate role for new user
-            $validationError = $this->validateRoleAssignment(
-                role: $request->role,
-                studyProgramId: $studyProgram->id,
-                majorId: $studyProgram->major_id
-            );
-            if ($validationError) {
-                return $this->sendError($validationError['message'], [], $validationError['code'] ?? 422);
+                // Validate role for new user
+                $validationError = $this->validateRoleAssignment(
+                    role: $request->role,
+                    studyProgramId: $studyProgram->id,
+                    majorId: $studyProgram->major_id
+                );
+                if ($validationError) {
+                    return $this->sendError($validationError['message'], [], $validationError['code'] ?? 422);
+                }
             }
 
             $user = User::create($request->validated());

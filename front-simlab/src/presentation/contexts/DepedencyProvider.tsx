@@ -6,6 +6,7 @@ import { LaboratoryEquipmentService } from "@/application/laboratory-equipment/L
 import { LaboratoryMaterialService } from "@/application/laboratory-material/LaboratoryMaterialService"
 import { LaboratoryRoomService } from "@/application/laboratory-room/LaboratoryRoomService"
 import { MajorService } from "@/application/major/MajorService"
+import { PaymentService } from "@/application/payment/PaymentService"
 import { PracticumModuleService } from "@/application/practicum-module/PracticumModuleService"
 import { PracticumSchedulingService } from "@/application/practicum-scheduling/PracticumSchedulingService"
 import { PracticumService } from "@/application/practicum/PracticumService"
@@ -32,7 +33,8 @@ type Services = {
     bookingService: BookingService,
     testingCategoryService: TestingCategoryService,
     testingRequestService: TestingRequestService,
-    institutionService: InstitutionService
+    institutionService: InstitutionService,
+    paymentService: PaymentService
 }
 
 const services: Services = {
@@ -51,7 +53,8 @@ const services: Services = {
     bookingService: new BookingService(),
     testingCategoryService: new TestingCategoryService(),
     testingRequestService: new TestingRequestService(),
-    institutionService: new InstitutionService()
+    institutionService: new InstitutionService(),
+    paymentService: new PaymentService()
 }
 
 export const DepedencyContext = createContext<Services>(services)

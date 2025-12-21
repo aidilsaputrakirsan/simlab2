@@ -11,6 +11,7 @@ import {
 import { BookingView } from '@/application/booking/BookingView'
 import React from 'react'
 import Item from "@/presentation/components/Item"
+import { Eye } from "lucide-react"
 
 interface BookingDetailDialogProps {
     open: boolean,
@@ -54,7 +55,7 @@ const BookingDetailDialog: React.FC<BookingDetailDialogProps> = ({ booking, open
                                         <label className="font-semibold">Surat Pengantar / Berkas Pendukung</label>
                                         {booking.supportingFile ? (
                                             <a href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${booking.supportingFile}`} className='w-full' target='_blank'>
-                                                <Button className='w-full'>Open File</Button>
+                                                <Button className='w-full'>Open File <Eye/></Button>
                                             </a>
                                         ) : (
                                             <Button variant={'secondary'}>N/A</Button>

@@ -7,7 +7,7 @@ import { BookingView } from '@/application/booking/BookingView';
 import Header from '@/presentation/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { Button } from '@/presentation/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye } from 'lucide-react';
 import { useAuth } from '@/application/hooks/useAuth';
 import { Skeleton } from '@/presentation/components/ui/skeleton';
 import Item from '@/presentation/components/Item';
@@ -17,7 +17,6 @@ import BookingMaterialDialog from './components/BookingMaterialDialog';
 import { userRole } from '@/domain/User/UserRole';
 import BookingBadgeStatus from './components/BookingBadgeStatus';
 import { Badge } from '@/presentation/components/ui/badge';
-import { BookingType } from '@/domain/booking/BookingType';
 
 export const BookingDetailPage: React.FC = () => {
   useGSAP(() => {
@@ -107,10 +106,27 @@ export const BookingDetailPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 text-sm gap-4">
                   {booking.requestor && (
                     <>
-                      <Item title='Nama Pemohon' value={booking.requestor.email} />
-                      <Item title='Email Pemohon' value={booking.requestor.name} />
+                      <Item title='Nama Pemohon' value={booking.requestor.name} />
+                      <Item title='Email Pemohon' value={booking.requestor.email} />
+                      {booking.requestor.studyProgram && (
+                        <Item title='Program Studi' value={booking.requestor.studyProgram} />
+                      )}
+                      {booking.requestor.institution && (
+                        <Item title='Asal Institusi' value={booking.requestor.institution} />
+                      )}
                     </>
                   )}
+                  <div className="flex flex-col">
+                    <span className='font-semibold'>Surat Pengantar / Berkas Pendukung</span>
+                    {booking.supportingFile ? (
+                      <a href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${booking.supportingFile}`} className='w-full' target='_blank'>
+                        <Button className='w-full'>Open File <Eye/></Button>
+                      </a>
+                    ) : (
+                      <Button variant={'secondary'}>N/A</Button>
+                    )}
+                  </div>
+
                   {booking.requestor?.isMahasiswa && (
                     <>
                       <Item title='Dosen Pembimbing' value={booking.supervisor} />

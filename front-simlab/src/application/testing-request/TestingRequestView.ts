@@ -3,6 +3,8 @@ import { TimeView } from "../time/TimeView"
 import { TestingRequest } from "@/domain/testing-request/TestingRequest"
 import { TestingRequestItemView } from "@/application/testing-request/TestingRequestItemView"
 import { PaymentStatus } from "@/domain/payment/PaymentStatus"
+import { Requestor } from "@/domain/shared/value-object/Requestor"
+import { Laboran } from "@/domain/shared/value-object/Laboran"
 
 export class TestingRequestView {
     constructor(
@@ -22,14 +24,11 @@ export class TestingRequestView {
         
         readonly hasPaidItems: boolean,
         readonly paymentStatus: PaymentStatus,
-        readonly requestor?: {
-            name: string,
-            email: string
-        },
-        readonly laboran?: {
-            name: string,
-            email: string
-        },
+        readonly paymentId: number,
+        readonly isInvoiceHasUploaded: boolean,
+        readonly isPaymentProofHasUploaded: boolean,
+        readonly requestor?: Requestor,
+        readonly laboran?: Laboran,
         readonly canVerif?: number,
     ) { }
 
@@ -50,6 +49,9 @@ export class TestingRequestView {
             entity.getTestingRequestItems().map(TestingRequestItemView.fromDomain),
             entity.hasPaidItems,
             entity.paymentStatus,
+            entity.paymentId,
+            entity.isInvoiceHasUploaded,
+            entity.isPaymentProofHasUploaded,
             entity.getRequestor(),
             entity.getLaboran(),
             entity.getCanVerif(),

@@ -11,7 +11,11 @@ export type TestingRequestApi = {
     academic_year: string,
     requestor: {
         name: string,
-        email: string
+        email: string,
+        identity_num: string,
+        study_program: string,
+        institution: string
+        is_mahasiswa: boolean
     },
     laboran: {
         name: string,
@@ -29,8 +33,11 @@ export type TestingRequestApi = {
     updated_at: string | null,
     has_paid_items: boolean
     canVerif: number,
-    payment_status: string
-    testing_request_items: TestingRequestItemAPI[]
+    payment_status: string,
+    payment_id: number
+    testing_request_items: TestingRequestItemAPI[],
+    is_invoice_has_uploaded: boolean,
+    is_payment_proof_has_uploaded: boolean
 }
 
 export function toDomain(api: TestingRequestApi): TestingRequest {
@@ -48,11 +55,14 @@ export function toDomain(api: TestingRequestApi): TestingRequest {
         api.created_at ? new Time(api.created_at) : null,
         api.updated_at ? new Time(api.updated_at) : null,
         api.has_paid_items,
-        api.payment_status as PaymentStatus
+        api.payment_status as PaymentStatus,
+        api.payment_id,
+        api.is_invoice_has_uploaded,
+        api.is_payment_proof_has_uploaded
     )
 
     if (api.requestor) {
-        const requestor = new Requestor(api.requestor.name, api.requestor.email)
+        const requestor = new Requestor(api.requestor.name, api.requestor.email, api.requestor.identity_num, api.requestor.study_program, api.requestor.institution, api.requestor.is_mahasiswa)
         testRequest.setRequestor(requestor)
     }
 

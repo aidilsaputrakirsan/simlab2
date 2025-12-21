@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LaboratoryEquipmentController;
 use App\Http\Controllers\Api\LaboratoryMaterialController;
 use App\Http\Controllers\Api\LaboratoryRoomController;
 use App\Http\Controllers\Api\MajorController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PracticumController;
 use App\Http\Controllers\Api\PracticumModuleController;
 use App\Http\Controllers\Api\PracticumSchedulingController;
@@ -51,6 +52,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/laboratory-rooms/select', [LaboratoryRoomController::class, 'getDataForSelect']);
     Route::get('/users/select', [UserController::class, 'getDataForSelect']);
     Route::get('/testing-types/select', [TestingTypeController::class, 'getDataForSelect']);
+
+    Route::group(['prefix' => 'payments', 'as' => 'payments'], function () {
+        Route::middleware(['role:admin_pengujian'])->group(function(){
+            Route::put('/{id}/create-payment', [PaymentController::class, 'createPayment']);
+            Route::put('/{id}/verif', [PaymentController::class, 'verif']);
+        });
+
+        Route::put('/{id}/store-proof', [PaymentController::class, 'storePaymentProof']);
+        Route::get('/{id}', [PaymentController::class, 'getPaymentData']);
+    });
 
     // Admin only API
     Route::middleware(['role:admin'])->group(function () {
@@ -97,7 +108,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
-    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_keuangan'], function () {
+    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_pengujian'], function () {
         Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
         Route::get('/{id}/approvals', [TestingRequestController::class, 'getTestingRequestApproval']);
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
@@ -108,7 +119,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             // Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
 
-        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin_keuangan'], function () {
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin_pengujian'], function () {
             Route::get('/verification', [TestingRequestController::class, 'getTestingRequestForVerification']);
             Route::post('/{id}/verify', [TestingRequestController::class, 'verify']);
         });

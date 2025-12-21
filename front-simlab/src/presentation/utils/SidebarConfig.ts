@@ -8,7 +8,7 @@ export const navItems: NavItem[] = [
     icon: LayoutDashboard,
     is_end: true,
     // roles: [userRole.Admin, userRole.KepalaLabTerpadu,userRole.Kooprodi, userRole.KepalaLabJurusan,  userRole.Laboran,userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen' ],
-    roles: [userRole.Admin, userRole.KepalaLabTerpadu, userRole.Kooprodi, userRole.KepalaLabJurusan, userRole.Laboran, userRole.Mahasiswa, userRole.PihakLuar, userRole.Dosen, userRole.AdminKeuangan ],
+    roles: [userRole.Admin, userRole.KepalaLabTerpadu, userRole.Kooprodi, userRole.KepalaLabJurusan, userRole.Laboran, userRole.Mahasiswa, userRole.PihakLuar, userRole.Dosen, userRole.AdminPengujian ],
   },
   {
     title: "Data Master",
@@ -37,6 +37,7 @@ export const navItems: NavItem[] = [
     roles: [userRole.Admin],
     items: [
       { title: "Admin", url: "/panel/admin", roles: [userRole.Admin] },
+      { title: "Admin Pengujian", url: "/panel/admin-pengujian", roles: [userRole.Admin] },
       { title: "Kepala Lab Terpadu", url: "/panel/kepala-lab-terpadu", roles: [userRole.Admin] },
       { title: "Koorprodi", url: "/panel/koorprodi", roles: [userRole.Admin] },
       { title: "Kepala Lab Jurusan", url: "/panel/kepala-lab-jurusan", roles: [userRole.Admin] },
@@ -88,10 +89,10 @@ export const navItems: NavItem[] = [
     title: "Manajemen Pengujian",
     url: "#",
     icon: CalendarRange,
-    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan, userRole.AdminKeuangan],
+    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan, userRole.AdminPengujian],
     items: [
       // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
-      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminKeuangan]},
+      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminPengujian]},
     ],
   },
 ]

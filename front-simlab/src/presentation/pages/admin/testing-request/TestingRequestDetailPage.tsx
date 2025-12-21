@@ -16,6 +16,8 @@ import TestingRequestBadgeStatus from './components/TestingRequestBadgeStatus'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/presentation/components/ui/table';
 import { MoneyView } from '@/application/money/MoneyView';
 import TestingRequestStepperDialog from './components/TestingRequestStepperDialog'
+import { PaymentStatus } from '@/domain/payment/PaymentStatus'
+import PaymentDetailDialog from '../payment/components/PaymentDetailDialog'
 
 const TestingRequestDetailPage = () => {
     const { user } = useAuth()
@@ -23,7 +25,7 @@ const TestingRequestDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const testingRequestId = Number(id);
     const backTo =
-        user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu].includes(user.role)
+        user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu, userRole.AdminPengujian].includes(user.role)
             ? '/panel/pengujian/verif'
             : '/panel/pengujian';
 
@@ -83,7 +85,7 @@ const TestingRequestDetailPage = () => {
                     </Button>
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <Card className='lg:col-span-2'>
+                    <Card>
                         <CardHeader>
                             <CardTitle>Informasi Umum</CardTitle>
                         </CardHeader>
@@ -93,6 +95,12 @@ const TestingRequestDetailPage = () => {
                                     <>
                                         <Item title='Nama Pemohon' value={testingRequest.requestor.name} />
                                         <Item title='Email Pemohon' value={testingRequest.requestor.email} />
+                                        {testingRequest.requestor.studyProgram && (
+                                            <Item title='Program Studi' value={testingRequest.requestor.studyProgram} />
+                                        )}
+                                        {testingRequest.requestor.institution && (
+                                            <Item title='Asal Institusi' value={testingRequest.requestor.institution} />
+                                        )}
                                     </>
                                 )}
                                 <Item title='Dosen Pembimbing' value={testingRequest.supervisor} />
@@ -111,6 +119,12 @@ const TestingRequestDetailPage = () => {
                                     <span className='font-semibold'>Status Pengajuan</span>
                                     <TestingRequestBadgeStatus status={testingRequest.status} />
                                 </div>
+                                {testingRequest.paymentStatus !== PaymentStatus.Draft && testingRequest.paymentId && (
+                                    <div className="flex flex-col">
+                                        <span className='font-semibold'>Pembayaran</span>
+                                        <PaymentDetailDialog paymentId={testingRequest.paymentId}/>
+                                    </div>
+                                )}
                                 <div className='flex flex-col md:col-span-2'>
                                     <span className='font-semibold'>Daftar Pengujian</span>
                                     <div className='border rounded-lg overflow-hidden'>
@@ -124,27 +138,27 @@ const TestingRequestDetailPage = () => {
                                                     <TableHead className='text-white group-hover:text-secondary'>Total</TableHead>
                                                 </TableRow>
                                             </TableHeader>
-                                                <TableBody>
-                                                    {testingRequest.testingRequestItems.map((item, sidx) => (
-                                                        <TableRow key={sidx}>
-                                                            <TableCell>{sidx + 1}</TableCell>
-                                                            <TableCell>{item.name}</TableCell>
-                                                            <TableCell>{item.quantity} per/{item.unit}</TableCell>
-                                                            <TableCell>{item.price.formatToIDR()}</TableCell>
-                                                            <TableCell>{MoneyView.toViewModel(item.price.amount * item.quantity).formatToIDR()}</TableCell>
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                                <TableFooter>
-                                                    <TableRow>
-                                                        <TableCell colSpan={4} className="text-right font-semibold">Total</TableCell>
-                                                        <TableCell>
-                                                            {MoneyView.toViewModel(
-                                                                testingRequest.testingRequestItems.reduce((sum, it) => sum + (it.price?.amount ?? 0) * (it.quantity ?? 0), 0)
-                                                            ).formatToIDR()}
-                                                        </TableCell>
+                                            <TableBody>
+                                                {testingRequest.testingRequestItems.map((item, sidx) => (
+                                                    <TableRow key={sidx}>
+                                                        <TableCell>{sidx + 1}</TableCell>
+                                                        <TableCell>{item.name}</TableCell>
+                                                        <TableCell>{item.quantity} per/{item.unit}</TableCell>
+                                                        <TableCell>{item.price.formatToIDR()}</TableCell>
+                                                        <TableCell>{MoneyView.toViewModel(item.price.amount * item.quantity).formatToIDR()}</TableCell>
                                                     </TableRow>
-                                                </TableFooter>
+                                                ))}
+                                            </TableBody>
+                                            <TableFooter>
+                                                <TableRow>
+                                                    <TableCell colSpan={4} className="text-right font-semibold">Total</TableCell>
+                                                    <TableCell>
+                                                        {MoneyView.toViewModel(
+                                                            testingRequest.testingRequestItems.reduce((sum, it) => sum + (it.price?.amount ?? 0) * (it.quantity ?? 0), 0)
+                                                        ).formatToIDR()}
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableFooter>
                                         </Table>
                                     </div>
                                 </div>

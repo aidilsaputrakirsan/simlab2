@@ -323,7 +323,6 @@ const TestingRequestCreatePage = () => {
                     </Card>
 
                     <div className='xl:col-span-3 flex justify-end'>
-
                         <Button type='submit' onClick={() => setIsConfirmationOpen(true)} >Simpan</Button>
                         <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} />
                     </div>

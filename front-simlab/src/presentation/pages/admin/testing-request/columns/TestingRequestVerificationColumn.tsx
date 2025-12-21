@@ -5,6 +5,8 @@ import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
 import TestingRequestVerificationAction from "../components/TestingRequestVerificationAction";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/presentation/components/ui/button";
+import PaymentBadgeStatus from "../../payment/components/PaymentBadgeStatus";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
 
 interface ColumnProps {
     openApproval: (id: number) => void;
@@ -34,6 +36,19 @@ export const TestingRequestVerificationColumn = ({ openApproval, openRejection }
             return (
                 <TestingRequestBadgeStatus status={row.original.status} />
             )
+        }
+    },
+    {
+        header: "Status Pembayaran",
+        accessorKey: 'satus',
+        cell: ({ row }) => {
+            if (row.original.hasPaidItems) {
+                if (row.original.paymentStatus === PaymentStatus.Draft) {
+                    return <Badge variant={"outline"}>Menunggu Penerbitan Pembayaran</Badge>
+                }
+                return <PaymentBadgeStatus status={row.original.paymentStatus}/>
+            }
+            return <span>-</span>
         }
     },
     {

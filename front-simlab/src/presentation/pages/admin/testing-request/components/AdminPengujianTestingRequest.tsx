@@ -6,13 +6,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useTestingRequestVerificationDataTable } from '../hooks/useTestingRequestVerificationDataTable';
 import Table from '@/presentation/components/Table';
 import { TestingRequestPaymentColumn } from '../columns/TestingRequestPaymentColumn';
+import { usePaymentHandler } from '../../payment/hooks/usePaymentHandler';
+import PaymentCreateFormDialog from '../../payment/components/PaymentCreateFormDialog';
+import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 
-const AdminKeuanganTestingRequest: React.FC = () => {
-    const [selectedStatus, setSelectedStatus] = useState<string>('')
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [selectedStatus])
-
+const AdminPengujianTestingRequest: React.FC = () => {
   const {
     testingRequests,
     isLoading,
@@ -27,38 +25,35 @@ const AdminKeuanganTestingRequest: React.FC = () => {
     totalItems,
     totalPages,
     currentPage,
-    setCurrentPage,
-  } = useTestingRequestVerificationDataTable({ filter_status: selectedStatus })
+  } = useTestingRequestVerificationDataTable({ filter_status: 'approved' })
+
+  const {
+    dialogs,
+    // openers
+    openCreatePayment,
+    openApproval,
+    openRejection,
+    // closers
+    closeCreatePayment,
+    closeApproval,
+    closeRejection,
+    // action
+    handleCreatePayment,
+    handleApproval,
+    handleRejection
+  } = usePaymentHandler(refresh)
   return (
     <>
       <Header title='Menu Pengujian' />
       <MainContent>
         <Card>
           <CardHeader>
-            <CardTitle>Menu Verifikasi Peminjaman</CardTitle>
+            <CardTitle>Menu Verifikasi Pembayaran Pengujian</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="w-full mb-3 md:w-1/3">
-              <div className="relative">
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Status</SelectLabel>
-                      <SelectItem value=" ">All</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
             <Table
               data={testingRequests}
-              columns={TestingRequestPaymentColumn()}
+              columns={TestingRequestPaymentColumn({ openCreatePayment, openApproval, openRejection })}
               loading={isLoading}
               searchTerm={searchTerm}
               handleSearch={(e) => handleSearch(e)}
@@ -72,8 +67,11 @@ const AdminKeuanganTestingRequest: React.FC = () => {
           </CardContent>
         </Card>
       </MainContent>
+      <PaymentCreateFormDialog open={dialogs.createPayment} onOpenChange={closeCreatePayment} handleSave={handleCreatePayment} />
+      <ConfirmationDialog open={dialogs.approval} onOpenChange={closeApproval} onConfirm={handleApproval} />
+      <ConfirmationDialog open={dialogs.rejection} onOpenChange={closeRejection} onConfirm={handleRejection} />
     </>
   )
 }
 
-export default AdminKeuanganTestingRequest
+export default AdminPengujianTestingRequest

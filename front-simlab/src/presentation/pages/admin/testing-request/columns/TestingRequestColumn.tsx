@@ -4,9 +4,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/presentation/components/ui/button";
-import { PaymentStatus } from "@/domain/payment/PaymentStatus";
+import PaymentRequestorAction from "../../payment/components/PaymentRequestorAction";
 
-export const TestingRequestColumn = (): ColumnDef<TestingRequestView>[] => [
+interface ColumnProps {
+    openPayment: (id: number) => void
+}
+
+export const TestingRequestColumn = ({ openPayment }: ColumnProps): ColumnDef<TestingRequestView>[] => [
     {
         header: 'Tahun Akademik',
         accessorKey: 'academicYear'
@@ -24,7 +28,7 @@ export const TestingRequestColumn = (): ColumnDef<TestingRequestView>[] => [
     },
     {
         header: "Status Pengajuan",
-        accessorKey: 'satus',
+        accessorKey: 'status',
         cell: ({ row }) => {
             return (
                 <TestingRequestBadgeStatus status={row.original.status} />
@@ -35,16 +39,7 @@ export const TestingRequestColumn = (): ColumnDef<TestingRequestView>[] => [
         header: "Status Pembayaran",
         accessorKey: 'satus',
         cell: ({ row }) => {
-            if (row.original.hasPaidItems) {
-                switch (row.original.paymentStatus) {
-                    case PaymentStatus.Draft:
-                        return <Badge variant={"outline"}>Menunggu Penerbitan Pembayaran</Badge>
-                
-                    default:
-                        break;
-                }
-            }
-            return <div>-</div>
+            return <PaymentRequestorAction data={row.original} onOpenPayment={openPayment}/>
         }
     },
     {

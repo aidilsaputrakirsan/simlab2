@@ -25,7 +25,10 @@ export class TestingRequest {
         readonly createdAt: Time | null,
         readonly updatedAt: Time | null,
         readonly hasPaidItems: boolean,
-        readonly paymentStatus: PaymentStatus
+        readonly paymentStatus: PaymentStatus,
+        readonly paymentId: number,
+        readonly isInvoiceHasUploaded: boolean,
+        readonly isPaymentProofHasUploaded: boolean
     ){}
 
     setLaboran(laboran: Laboran) {

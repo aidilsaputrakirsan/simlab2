@@ -1,4 +1,3 @@
-import { TestingRequestView } from "@/application/testing-request/TestingRequestView";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useReducer, useState } from "react";
 import { toast } from "sonner";
@@ -25,7 +24,6 @@ function dialogReducer(
 }
 
 export const useTestingRequestVerification = (
-    testingRequests: TestingRequestView[],
     refresh?: () => void
 ) => {
     const { testingRequestService } = useDepedencies()

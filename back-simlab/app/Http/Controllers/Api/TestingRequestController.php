@@ -30,7 +30,6 @@ class TestingRequestController extends BaseController
             $query->with([
                 'academicYear',
                 'payment'
-
             ]);
             $user = auth()->user();
 
@@ -91,7 +90,7 @@ class TestingRequestController extends BaseController
             }
 
             if ($request->filter_status) {
-                $query->where('status', $request->status);
+                $query->where('status', $request->filter_status);
             }
 
             if ($request->has('search') && strlen($request->search) > 0) {
@@ -196,7 +195,7 @@ class TestingRequestController extends BaseController
     public function getTestingRequestData($id)
     {
         try {
-            $testingRequest = TestingRequest::with(['requestor', 'laboran', 'academicYear', 'testRequestItems.testingType'])->findOrFail($id);
+            $testingRequest = TestingRequest::with(['requestor.studyProgram', 'requestor.institution', 'laboran', 'academicYear', 'testRequestItems.testingType', 'payment'])->findOrFail($id);
 
             return $this->sendResponse(new TestingRequestResource($testingRequest), 'Berhasil mengambil data pengujian');
         } catch (ModelNotFoundException $e) {
@@ -225,7 +224,9 @@ class TestingRequestController extends BaseController
             'status' => 'draft'
         ]);
 
+        $totalAmount = 0;
         foreach ($testingRequestItems as $item) {
+            $totalAmount += ($item['quantity'] * $item['price']);
             PaymentItem::create([
                 'payment_id' => $payment->id,
                 'name' => $item['name'],
@@ -234,6 +235,7 @@ class TestingRequestController extends BaseController
                 'price' => $item['price'],
             ]);
         }
+        $payment->update(['amount' => $totalAmount]);
     }
 
     private function assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove)

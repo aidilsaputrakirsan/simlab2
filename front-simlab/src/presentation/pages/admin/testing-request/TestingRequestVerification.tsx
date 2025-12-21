@@ -1,9 +1,8 @@
 import { useAuth } from '@/application/hooks/useAuth'
 import { userRole } from '@/domain/User/UserRole'
-import React from 'react'
 import KepalaLabTerpaduTestingRequestApproval from './components/KepalaLabTerpaduTestingRequestApproval'
 import LaboranTestingRequestVerification from './components/LaboranTestingRequestVerification'
-import AdminKeuanganTestingRequest from './components/AdminKeuanganTestingRequest'
+import AdminPengujianTestingRequest from './components/AdminPengujianTestingRequest'
 
 const TestingRequestVerification = () => {
     const { user } = useAuth()
@@ -17,8 +16,8 @@ const TestingRequestVerification = () => {
                 <LaboranTestingRequestVerification/>
             )}
 
-            {user?.role === userRole.AdminKeuangan && (
-                <AdminKeuanganTestingRequest/>
+            {user?.role === userRole.AdminPengujian && (
+                <AdminPengujianTestingRequest/>
             )}
         </>
     )

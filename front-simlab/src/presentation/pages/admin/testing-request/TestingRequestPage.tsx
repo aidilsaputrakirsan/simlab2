@@ -9,6 +9,8 @@ import Table from '@/presentation/components/Table';
 import { TestingRequestColumn } from './columns/TestingRequestColumn';
 import { NavLink } from 'react-router-dom';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select'
+import PaymentProofFormDialog from '../payment/components/PaymentProofFormDialog';
+import { usePaymentHandler } from '../payment/hooks/usePaymentHandler';
 
 const TestingRequestPage = () => {
     const [selectedStatus, setSelectedStatus] = useState<string>('')
@@ -32,6 +34,17 @@ const TestingRequestPage = () => {
         setCurrentPage,
         refresh
     } = useTestingRequestDataTable({ status: selectedStatus })
+
+    const {
+        selectedPayment,
+        dialogs,
+        // openers
+        openPaymentProof,
+        // closers
+        closePaymentProof,
+        // action
+        handleStorePaymentProof,
+      } = usePaymentHandler(refresh)
 
     return (
         <>
@@ -70,7 +83,7 @@ const TestingRequestPage = () => {
                         </div>
                         <Table
                             data={testingRequests}
-                            columns={TestingRequestColumn()}
+                            columns={TestingRequestColumn({openPayment: openPaymentProof})}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -84,6 +97,7 @@ const TestingRequestPage = () => {
                     </CardContent>
                 </Card>
             </MainContent>
+            <PaymentProofFormDialog paymentId={selectedPayment} open={dialogs.paymentProof} onOpenChange={closePaymentProof} handleSave={handleStorePaymentProof}/>
         </>
     )
 }

@@ -4,9 +4,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/presentation/components/ui/button";
-import { PaymentStatus } from "@/domain/payment/PaymentStatus";
+import PaymentApproverAction from "../../payment/components/PaymentApproverAction";
 
-export const TestingRequestPaymentColumn = (): ColumnDef<TestingRequestView>[] => [
+interface ColumnProps {
+    openCreatePayment: (id: number) => void;
+    openApproval: (id: number) => void;
+    openRejection: (id: number) => void;
+}
+
+export const TestingRequestPaymentColumn = ({ openCreatePayment, openApproval, openRejection }: ColumnProps): ColumnDef<TestingRequestView>[] => [
     {
         header: 'Tahun Akademik',
         accessorKey: 'academicYear'
@@ -45,64 +51,7 @@ export const TestingRequestPaymentColumn = (): ColumnDef<TestingRequestView>[] =
         header: "Action",
         accessorKey: 'id',
         cell: ({ row }) => {
-            if (row.original.hasPaidItems) {
-                switch (row.original.paymentStatus) {
-                    case PaymentStatus.Draft:
-                        return <Button>Terbitkan Pembayaran</Button>
-
-                    default:
-                        break;
-                }
-            }
+            return <PaymentApproverAction data={row.original} onOpenCreatePayment={openCreatePayment} onOpenApproval={openApproval} onOpenRejection={openRejection}/>
         }
     }
-    // {
-    //     header: "Tanggal Pengajuan",
-    //     accessorKey: 'startTime',
-    //     cell: ({ row }) => (
-    //         <Badge variant={"secondary"}>{row.original.startTime.formatForInformation()} | {row.original.endTime.formatForInformation()}</Badge>
-    //     )
-    // },
-    // {
-    //     header: "Jenis Peminjaman",
-    //     accessorKey: 'bookingType',
-    //     cell: ({ row }) => {
-    //         let type: string = ''
-    //         switch (row.original.bookingType) {
-    //             case BookingType.Room:
-    //                 type = 'Peminjaman Ruangan'
-    //                 break;
-
-    //             case BookingType.RoomNEquipment:
-    //                 type = 'Peminjaman Ruangan dan Alat'
-    //                 break;
-
-    //             case BookingType.Equipment:
-    //                 type = 'Peminjaman Alat'
-    //                 break;
-
-    //             default:
-    //                 break;
-    //         }
-    //         return (
-    //             <Badge variant={"default"}>{type}</Badge>
-    //         )
-    //     }
-    // },
-    // {
-    //     header: "Status Peminjaman",
-    //     accessorKey: 'BookingStatus',
-    //     cell: ({ row }) => {
-    //         return (
-    //             <BookingBadgeStatus status={row.original.status}/>
-    //         )
-    //     }
-    // },
-    // {
-    //     header: "Action",
-    //     accessorKey: 'id',
-    //     cell: ({ row }) => {
-    //         return <BookingReturnAction booking={row.original} openReturnConfirmation={openReturnConfirmation}/>
-    //     }
-    // }
 ];

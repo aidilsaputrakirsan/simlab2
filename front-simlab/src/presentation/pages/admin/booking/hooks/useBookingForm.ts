@@ -18,9 +18,9 @@ export const useBookingForm = () => {
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const { name, type, value } = e.target;
 
-        if (name === 'supporting_file' && (e.target as HTMLInputElement).files) {
+        if (type == 'file') {
             setFormData((prev) => ({ ...prev, supporting_file: (e.target as HTMLInputElement).files ? (e.target as HTMLInputElement).files![0] : null }));
         } else {
             setFormData(prev => ({

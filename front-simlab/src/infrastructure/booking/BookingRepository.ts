@@ -66,8 +66,10 @@ export class BookingRepository implements IBookingRepository {
             end_time: data.end_time ? data.end_time.toISOString() : undefined,
         }
         const bodyFormData = jsonToFormData(formattedData, 'POST')
+        
         const response = await fetchApi(`/bookings`, {
             method: 'POST',
+            
             body: bodyFormData
         });
 

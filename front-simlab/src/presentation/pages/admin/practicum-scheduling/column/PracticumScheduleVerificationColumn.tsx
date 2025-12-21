@@ -34,7 +34,7 @@ export const PracticumScheduleVerificationColumn = ({ openApproval, openRejectio
     },
     {
         header: "Status Pengajuan",
-        accessorKey: 'satus',
+        accessorKey: 'status',
         cell: ({ row }) => {
             return (
                 <PracticumSchedulingBadgeStatus status={row.original.status} />

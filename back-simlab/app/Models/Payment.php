@@ -35,4 +35,12 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function getIsInvoiceHasUploadedAttribute() {
+        return $this->invoice_file ? true : false;
+    }
+
+    public function getIsPaymentProofHasUploadedAttribute() {
+        return $this->payment_proof ? true : false;
+    }
 }

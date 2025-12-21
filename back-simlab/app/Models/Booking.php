@@ -69,6 +69,11 @@ class Booking extends BaseModel
         return $this->hasMany(BookingApproval::class, 'booking_id');
     }
 
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable');
+    }
+
     public function getKepalaLabApprovalAttribute()
     {
         $approval = $this->approvals()

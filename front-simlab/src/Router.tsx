@@ -49,6 +49,7 @@ import TestingRequestVerification from "./presentation/pages/admin/testing-reque
 import TestingRequestDetailPage from "./presentation/pages/admin/testing-request/TestingRequestDetailPage";
 import BaseLayout from "./presentation/layouts/BaseLayout";
 import InstitutionPage from "./presentation/pages/admin/institution/InstitutionPage";
+import AdminPengujianPage from "./presentation/pages/admin/user/admin-pengujian/AdminPengujianPage";
 
 export const router = createBrowserRouter([
     {
@@ -202,6 +203,14 @@ export const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute allowedRoles={[userRole.Admin]}>
                         <AdminPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'admin-pengujian',
+                element: (
+                    <ProtectedRoute allowedRoles={[userRole.Admin]}>
+                        <AdminPengujianPage />
                     </ProtectedRoute>
                 )
             },
@@ -387,7 +396,7 @@ export const router = createBrowserRouter([
                     {
                         path: ':id/detail',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Mahasiswa, userRole.Dosen]}>
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Mahasiswa, userRole.Dosen, userRole.AdminPengujian]}>
                                 <TestingRequestDetailPage />
                             </ProtectedRoute>
                         )
@@ -395,7 +404,7 @@ export const router = createBrowserRouter([
                     {
                         path: 'verif',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminKeuangan]}>
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminPengujian]}>
                                 <TestingRequestVerification />
                             </ProtectedRoute>
                         )
