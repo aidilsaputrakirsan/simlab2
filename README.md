@@ -10,7 +10,7 @@
 
 **Sistem Informasi Manajemen Laboratorium untuk Institusi Pendidikan**
 
-[Teknologi](#-teknologi-stack) • [Instalasi](#-instalasi)
+[Teknologi](#teknologi-stack) • [Instalasi](#backend)
 
 </div>
 
