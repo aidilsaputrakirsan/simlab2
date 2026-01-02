@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PracticumController;
 use App\Http\Controllers\Api\PracticumModuleController;
 use App\Http\Controllers\Api\PracticumSchedulingController;
+use App\Http\Controllers\Api\PublicationCategoryController;
+use App\Http\Controllers\Api\PublicationController;
 use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\TestingCategoryController;
 use App\Http\Controllers\Api\TestingRequestController;
@@ -40,11 +42,13 @@ Route::controller(AuthController::class)->group(function () {
 // Universal Api
 Route::get('/study-programs/select', [StudyProgramController::class, 'getDataForSelect']);
 Route::get('/institutions/select', [InstitutionController::class, 'getDataForSelect']);
+Route::get('publications/content/{slug}', [PublicationController::class, 'getBySlug']);
+Route::resource('publications', PublicationController::class)->only(['index']);
+Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->only(['index']);
+Route::resource('laboratory-materials', LaboratoryMaterialController::class)->only(['index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('laboratory-rooms', LaboratoryRoomController::class)->only(['index']);
-    Route::resource('laboratory-materials', LaboratoryMaterialController::class)->only(['index']);
-    Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->only(['index']);
     Route::resource('practicums', PracticumController::class)->only(['index']);
 
     // Spesific select API
@@ -54,7 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/testing-types/select', [TestingTypeController::class, 'getDataForSelect']);
 
     Route::group(['prefix' => 'payments', 'as' => 'payments'], function () {
-        Route::middleware(['role:admin_pengujian'])->group(function(){
+        Route::middleware(['role:admin_pengujian'])->group(function () {
             Route::put('/{id}/create-payment', [PaymentController::class, 'createPayment']);
             Route::put('/{id}/verif', [PaymentController::class, 'verif']);
         });
@@ -71,6 +75,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // Institution Route
         Route::resource('institutions', InstitutionController::class)->except(['show']);
+
+        // PublicationCategory
+        Route::get('/publication-categories/select', [PublicationCategoryController::class, 'getDataForSelect']);
+        Route::resource('publication-categories', PublicationCategoryController::class)->except(['show']);
+
+        // Publication Route
+        Route::resource('publications', PublicationController::class)->except(['index']);
 
         // Faculty Route
         Route::get('/faculties/select', [FacultyController::class, 'getDataForSelect']);
@@ -108,10 +119,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
-    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_pengujian'], function () {
+    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_pengujian|kepala_lab_jurusan'], function () {
         Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
         Route::get('/{id}/approvals', [TestingRequestController::class, 'getTestingRequestApproval']);
-        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
+        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|koorprodi|kepala_lab_jurusan'], function () {
             Route::get('/', [TestingRequestController::class, 'index']);
             Route::post('/', [TestingRequestController::class, 'store']);
             // Route::get('/have-draft', [BookingController::class, 'isStillHaveDraftBooking']);
@@ -126,11 +137,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // booking (peminjaman)
-    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar'], function () {
+    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
-        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar'], function () {
+        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|admin|kepala_lab_jurusan'], function () {
             Route::get('/', [BookingController::class, 'index']);
             Route::post('/', [BookingController::class, 'store']);
             Route::get('/have-draft', [BookingController::class, 'isStillHaveDraftBooking']);
@@ -138,16 +149,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
 
-        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu'], function () {
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin'], function () {
             Route::get('/verification', [BookingController::class, 'getBookingsForVerification']);
             Route::post('/{id}/verify', [BookingController::class, 'verify']);
+            Route::get('/export', [BookingController::class, 'bookingExport']);
         });
 
         Route::group(['middleware' => 'role:laboran'], function () {
             Route::post('/{id}/verify-return', [BookingController::class, 'bookingReturnVerification']);
         });
 
-        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar'], function () {
+        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar|kepala_lab_jurusan'], function () {
             Route::post('/{id}/confirm-return', [BookingController::class, 'bookingReturnConfirmation']);
         });
     });

@@ -10,32 +10,32 @@ type MenuItem = {
 
 const menuItems: MenuItem[] = [
     { label: "Beranda", href: "/" },
-    { label: "Tentang Kami", href: "/tentang" },
+    // { label: "Tentang Kami", href: "/tentang" },
     { label: "Berita", href: "/berita" },
     {
         label: "Fasilitas",
         children: [
-            { label: "Alat Laboratorium", href: "/alat" },
-            { label: "Ruangan Laboratorium", href: "/ruang" },
+            { label: "Alat Laboratorium", href: "/alat-laboratorium" },
+            { label: "Bahan Laboratorium", href: "/bahan-laboratorium" },
         ],
     },
-    {
-        label: "Jadwal",
-        children: [
-            { label: "Alat Laboratorium", href: "/alat" },
-            { label: "Ruangan Laboratorium", href: "/ruang" },
-        ],
-    },
-    {
-        label: "Layanan",
-        children: [
-            { label: "Penelitian", href: "/alat" },
-            { label: "Pengabdian Masyarakat", href: "/ruang" },
-            { label: "Pengujian", href: "/ruang" },
-        ],
-    },
-    { label: "Unduh", href: "/contacts" },
-    { label: "Kontak", href: "https://example.com/numbers", external: true },
+    // {
+    //     label: "Jadwal",
+    //     children: [
+    //         { label: "Alat Laboratorium", href: "/alat" },
+    //         { label: "Ruangan Laboratorium", href: "/ruang" },
+    //     ],
+    // },
+    // {
+    //     label: "Layanan",
+    //     children: [
+    //         { label: "Penelitian", href: "/alat" },
+    //         { label: "Pengabdian Masyarakat", href: "/ruang" },
+    //         { label: "Pengujian", href: "/ruang" },
+    //     ],
+    // },
+    // { label: "Unduh", href: "/contacts" },
+    // { label: "Kontak", href: "https://example.com/numbers", external: true },
 ];
 
 

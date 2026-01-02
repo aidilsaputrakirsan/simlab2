@@ -36,9 +36,11 @@ export const BookingDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   const backTo =
-    user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu].includes(user.role)
-      ? '/panel/peminjaman/verif'
-      : '/panel/peminjaman';
+    user?.role === userRole.Admin
+      ? '/panel/laporan/peminjaman'
+      : user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu].includes(user.role)
+        ? '/panel/peminjaman/verif'
+        : '/panel/peminjaman';
 
   const getBookingDetailData = async () => {
     try {

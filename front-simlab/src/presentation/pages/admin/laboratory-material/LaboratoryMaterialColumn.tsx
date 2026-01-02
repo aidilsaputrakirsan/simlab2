@@ -33,7 +33,7 @@ export const LaboratoryMaterialColumn = ({ openModal, openConfirm, openModalDeta
                 <Button size={'sm'} variant={'outline'} onClick={() => openModalDetail(row.original)}>
                     Detail
                 </Button>
-                <Button size={'sm'} onClick={() => openModal(row.original)}>
+                <Button size={'sm'} variant={'warning'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
                 <Button size={"sm"} variant={'destructive'} onClick={() => openConfirm(row.original)}>

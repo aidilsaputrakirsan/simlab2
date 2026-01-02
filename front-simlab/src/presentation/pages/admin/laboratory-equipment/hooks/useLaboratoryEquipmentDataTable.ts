@@ -6,10 +6,12 @@ import { useCallback, useEffect, useState } from "react"
 
 interface useLaboratoryEquipmentDataTableProps {
     filter_laboratory_room: number
+    perPage?: number
 }
 
 export const useLaboratoryEquipmentDataTable = ({
-    filter_laboratory_room
+    filter_laboratory_room,
+    perPage: customPerPage
 }: useLaboratoryEquipmentDataTableProps) => {
     const { laboratoryEquipmentService } = useDepedencies()
 
@@ -22,7 +24,15 @@ export const useLaboratoryEquipmentDataTable = ({
         setTotalPages,
         setTotalItems,
         setCurrentPage,
+        setPerPage,
     } = table
+
+    // Set custom perPage if provided
+    useEffect(() => {
+        if (customPerPage) {
+            setPerPage(customPerPage)
+        }
+    }, [customPerPage, setPerPage])
 
     const [laboratoryEquipments, setLaboratoryEquipments] = useState<LaboratoryEquipmentView[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -40,7 +50,7 @@ export const useLaboratoryEquipmentDataTable = ({
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, debounceSearchTerm, filter_laboratory_room])
+    }, [currentPage, perPage, filter_laboratory_room, laboratoryEquipmentService, searchTerm, setTotalItems, setTotalPages])
 
     useEffect(() => {
         getData();
@@ -48,7 +58,7 @@ export const useLaboratoryEquipmentDataTable = ({
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [debounceSearchTerm]);
+    }, [debounceSearchTerm, setCurrentPage]);
 
     const refresh = useCallback(() => {
         getData()

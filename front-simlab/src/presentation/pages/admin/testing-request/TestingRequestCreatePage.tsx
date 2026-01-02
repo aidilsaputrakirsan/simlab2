@@ -301,7 +301,7 @@ const TestingRequestCreatePage = () => {
                                             />
                                         </FormGroup>
                                         {formData.testing_items.length > 1 && (
-                                            <Button type={'button'} className='w-full xl:w-fit md:col-span-2' onClick={() => handleRemoveTestingItem(idx)} variant={'destructive'} size={'sm'}><Trash /></Button>
+                                            <Button type={'button'} className='w-full xl:w-fit md:col-span-2 self-center' onClick={() => handleRemoveTestingItem(idx)} variant={'destructive'} size={'sm'}><Trash /></Button>
                                         )}
                                     </div>
                                 ))}

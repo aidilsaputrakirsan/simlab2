@@ -15,7 +15,7 @@ export const AdminPengujianColumn = ({ openModal, openConfirm }: ColumnProps): C
         accessorKey: 'id',
         cell: ({row}) => (
             <div className='flex gap-2'>
-                <Button size={'sm'} onClick={() => openModal(row.original)}>
+                <Button size={'sm'} variant={'warning'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
                 <Button size={'sm'} variant={'destructive'}  onClick={() => openConfirm(row.original)}>

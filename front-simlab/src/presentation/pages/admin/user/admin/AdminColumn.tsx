@@ -14,7 +14,7 @@ export const AdminColumn = ({ openModal }: ColumnProps): ColumnDef<UserView>[] =
         accessorKey: 'id',
         cell: ({row}) => (
             <>
-                <Button size={'sm'} onClick={() => openModal(row.original.id)}>
+                <Button variant={'warning'} size={'sm'} onClick={() => openModal(row.original.id)}>
                     Edit
                 </Button>
             </>

@@ -11,7 +11,7 @@ export const InstitutionColumn = ({ openModal, openConfirm }: ColumnProps): Colu
     { header: 'Institusi', accessorKey: 'name' as keyof InstitutionView},
     {
       header: 'Jumlah Akun terdaftar',
-      accessorKey: 'id' as keyof InstitutionView,
+      accessorKey: 'account' as keyof InstitutionView,
       cell: ({row}) => (
         <span>{row.original.totalAccount ?? 0}</span>
       )

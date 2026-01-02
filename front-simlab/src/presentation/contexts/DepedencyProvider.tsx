@@ -11,6 +11,8 @@ import { PracticumModuleService } from "@/application/practicum-module/Practicum
 import { PracticumSchedulingService } from "@/application/practicum-scheduling/PracticumSchedulingService"
 import { PracticumService } from "@/application/practicum/PracticumService"
 import { StudyProgramService } from "@/application/study-program/StudyProgramService"
+import { PublicationCategoryService } from "@/application/publication-category/PublicationCategoryService"
+import { PublicationService } from "@/application/publication/PublicationService"
 import { TestingCategoryService } from "@/application/testing-category/TestingCategoryService"
 import { TestingRequestService } from "@/application/testing-request/TestingRequestService"
 import { TestingTypeService } from "@/application/testing-type/TestingTypeService"
@@ -35,6 +37,8 @@ type Services = {
     testingRequestService: TestingRequestService,
     institutionService: InstitutionService,
     paymentService: PaymentService
+    publicationCategoryService: PublicationCategoryService
+    publicationService: PublicationService
 }
 
 const services: Services = {
@@ -54,7 +58,9 @@ const services: Services = {
     testingCategoryService: new TestingCategoryService(),
     testingRequestService: new TestingRequestService(),
     institutionService: new InstitutionService(),
-    paymentService: new PaymentService()
+    paymentService: new PaymentService(),
+    publicationCategoryService: new PublicationCategoryService(),
+    publicationService: new PublicationService()
 }
 
 export const DepedencyContext = createContext<Services>(services)

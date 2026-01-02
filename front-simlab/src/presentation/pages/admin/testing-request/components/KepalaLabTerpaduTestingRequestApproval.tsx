@@ -44,14 +44,14 @@ const KepalaLabTerpaduTestingRequestApproval = () => {
         // action
         handleKepalaLabApproval,
         handleRejection
-    } = useTestingRequestVerification(testingRequests, refresh)
+    } = useTestingRequestVerification(refresh)
     return (
         <>
             <Header title='Menu Pengujian' />
             <MainContent>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Menu Verifikasi Peminjaman</CardTitle>
+                        <CardTitle>Menu Verifikasi Pengujian</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">

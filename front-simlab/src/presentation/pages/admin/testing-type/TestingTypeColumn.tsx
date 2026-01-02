@@ -44,6 +44,7 @@ export const TestingTypeColumn = ({ openModal, openConfirm }: ColumnProps): Colu
       <div className="flex gap-2">
         <Button
           size={'sm'}
+          variant={'warning'}
           onClick={() => openModal(row.original)}
         >
           Edit

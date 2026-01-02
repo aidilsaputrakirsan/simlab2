@@ -21,10 +21,15 @@ use App\Models\BookingEquipment;
 use App\Models\BookingMaterial;
 use App\Models\AcademicYear;
 use App\Models\User;
+use App\Exports\BookingRoomExport;
+use App\Exports\BookingEquipmentExport;
+use App\Exports\BookingMaterialExport;
+use App\Exports\BookingAllExport;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookingController extends BaseController
 {
@@ -37,6 +42,39 @@ class BookingController extends BaseController
         $this->currentKepalaLab = User::where('role', 'kepala_lab_terpadu')->first();
     }
 
+    public function bookingExport(Request $request)
+    {
+        try {
+            $type = $request->input('type', 'all');
+            $format = $request->input('format', 'xlsx'); // xlsx, csv, xls
+
+            $fileName = "booking_{$type}_" . date('Y-m-d_H-i-s');
+
+            switch ($type) {
+                case 'room':
+                    $export = new BookingRoomExport();
+                    $fileName .= '_ruangan';
+                    break;
+                case 'equipment':
+                    $export = new BookingEquipmentExport();
+                    $fileName .= '_alat';
+                    break;
+                case 'material':
+                    $export = new BookingMaterialExport();
+                    $fileName .= '_bahan';
+                    break;
+                default:
+                    $export = new BookingAllExport();
+                    $fileName .= '_semua';
+                    break;
+            }
+
+            return Excel::download($export, "{$fileName}.{$format}");
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to export booking data', [$e->getMessage()], 500);
+        }
+    }
+
     public function index(Request $request)
     {
         try {
@@ -47,10 +85,16 @@ class BookingController extends BaseController
             ]);
 
             $user = auth()->user();
-            $query->where('user_id', $user->id);
+            if ($user->role !== 'admin') {
+                $query->where('user_id', $user->id);
+            }
 
             if ($request->filter_status) {
                 $query->where('status', $request->filter_status);
+            }
+
+            if ($request->filter_academic_year) {
+                $query->where('academic_year_id', $request->filter_academic_year);
             }
 
             if ($request->has('search') && strlen($request->search) > 0) {

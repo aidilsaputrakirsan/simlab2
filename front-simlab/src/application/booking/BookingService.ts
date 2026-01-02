@@ -88,4 +88,8 @@ export class BookingService {
     async confirmBookingReturn(booking_id: number, information: string): Promise<ApiResponse> {
         return await this.bookingRepository.confirmBookingReturn(booking_id, information)
     }
+
+    async exportReport(type: 'room' | 'equipment' | 'material' | 'all', format: 'xlsx' | 'csv' | 'xls' = 'xlsx'): Promise<void> {
+        return await this.bookingRepository.exportReport(type, format);
+    }
 }

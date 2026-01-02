@@ -1,5 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Header from '../components/Header';
+import { usePublicationDataTable } from '../../admin/publication/hooks/usePublicationDataTable';
+import { NavLink } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Pagination from '../components/Pagination';
 
 const NewsPage = () => {
     const contentRef = useRef<HTMLDivElement>(null);
@@ -8,6 +12,30 @@ const NewsPage = () => {
 
         if (!contentRef.current) return;
     }, []);
+
+    const {
+        publications,
+        isLoading,
+        // searchTerm,
+
+        // handleSearch,
+        handlePageChange,
+
+        // totalItems,
+        totalPages,
+        currentPage,
+    } = usePublicationDataTable();
+    const [latestNews, setLatestNews] = useState<typeof publications>([]);
+    const initializedLatestRef = useRef(false);
+
+    useEffect(() => {
+        if (!initializedLatestRef.current && publications.length > 0) {
+            setLatestNews(publications.slice(0, 3));
+            initializedLatestRef.current = true;
+        }
+    }, [publications]);
+
+
     return (
         <>
             <div className='min-h-screen' style={{ fontFamily: 'Montserrat, sans-serif' }}>
@@ -26,68 +54,90 @@ const NewsPage = () => {
 
                     </div>
                     <div className='px-10 xl:px-32 grid grid-cols-1 lg:grid-cols-8 gap-20 py-14'>
-                        <div className='grid grid-cols-3 mx-auto lg:col-span-6 gap-10'>
-                            {[...Array(6)].map((_, idx) => (
-                                <div key={idx} className="min-h-32 w-full md:basis-1/3 lg:basis-1/4 bg-white rounded-lg text-secondary font-medium shadow-xl flex flex-col items-center gap-3">
-                                    <div className='relative w-full rounded-t-lg'>
-                                        <div className="absolute inset-0 bg-black opacity-10 z-0 rounded-t-lg"></div>
-                                        <img src="https://labterpadu.itk.ac.id/images/news/1618455634new3.jpg" className='object-cover rounded-t-lg w-full' alt="" />
-                                    </div>
-                                    <div className='flex flex-col gap-2 p-5'>
-                                        <span className='text-xs'>Friday, 17 May 2024</span>
-                                        <span className='font-semibold text-lg line-clamp-2 text-black'>
-                                            Menteri Keuangan Tandatangani Prasasti Aset (SBSN) Proyek Kalimantan Timur di Gedung Pusat Laboratorirum Terpadu Institut Teknologi Kalimantan
-                                        </span>
-                                        <span className='line-clamp-3 text-sm text-ellipsis overflow-hidden whitespace-nowraptruncate'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse doloribus vel incidunt dolor quo corporis fugiat impedit corrupti, adipisci similique in necessitatibus quae aut cupiditate reprehenderit excepturi possimus nihil voluptatem!</span>
-                                    </div>
+                        <div className='flex flex-col gap-5 w-full lg:col-span-6'>
+
+                            {isLoading ? (
+                                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mx-auto  gap-10 w-full'>
+                                    {
+                                        [...Array(6)].map((_, idx) => (
+                                            <div key={idx} className="animate-pulse min-h-32 w-full bg-gray-200 rounded-lg text-secondary font-medium shadow-xl flex flex-col items-center gap-3">
+                                                <div className='relative w-full rounded-t-lg'>
+                                                    <div className="absolute inset-0 bg-black opacity-10 z-0 rounded-t-lg"></div>
+                                                    <div className='object-cover rounded-t-lg w-full aspect-[4/2]'></div>
+                                                </div>
+                                                <div className='flex flex-col gap-2 p-5 w-full'>
+                                                    <span className='h-2 w-1/2 bg-gray-400 rounded-lg'></span>
+                                                    <span className='h-2 w-full bg-gray-400 rounded-lg'></span>
+                                                    <span className='h-2 w-full bg-gray-400 rounded-lg'></span>
+                                                    <span className='h-2 w-full bg-gray-400 rounded-lg'></span>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
-                            ))}
+
+                            ) : publications.length === 0 ? (
+                                <div className='col-span-3 flex flex-col items-center justify-center text-center p-10 border-gray-300 rounded-lg'>
+                                    <span className='font-semibold text-lg text-black'>Belum ada berita</span>
+                                    <span className='text-sm text-gray-600'>Konten akan muncul ketika publikasi tersedia.</span>
+                                </div>
+                            ) : (
+                                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mx-auto  gap-10 w-full'>
+                                    {
+                                        publications.map((publication, idx) => (
+                                            <NavLink to={`/berita/${publication.slug}`} key={idx} className="min-h-32 w-full md:basis-1/3 lg:basis-1/4 bg-white rounded-lg text-secondary font-medium shadow-xl flex flex-col items-center gap-3">
+                                                <div className='relative w-full rounded-t-lg'>
+                                                    <div className="absolute inset-0 bg-black opacity-10 z-0 rounded-t-lg"></div>
+                                                    <img src={publication.imageUrl()} className='aspect-[4/3] object-cover rounded-t-lg w-full' alt="" />
+                                                </div>
+                                                <div className='flex flex-col gap-2 p-5'>
+                                                    <span className='text-xs'>{publication.createdAt.formatForHeaderSubtitle()}</span>
+                                                    <span className='font-semibold text-lg line-clamp-2 text-black'>
+                                                        {publication.title}
+                                                    </span>
+                                                    <span className='line-clamp-3 text-sm text-ellipsis overflow-hidden'>{publication.shortDescription}</span>
+                                                </div>
+                                            </NavLink>
+                                        ))
+                                    }
+                                </div>
+                            )}
+
+                            {/* Pagination Controls */}
+                            {publications.length > 0 && (
+                                <Pagination
+                                    currentPage={currentPage}
+                                    handlePageChange={handlePageChange}
+                                    totalPages={totalPages}
+                                    className='lg:col-span-6'
+                                />
+                            )}
                         </div>
                         <div className='flex flex-col gap-5 lg:col-span-2'>
                             <div className='p-5 bg-[#e8ad38] rounded-lg'>
                                 <span className='text-white font-bold text-xl'>Berita Terkini</span>
                             </div>
-                            <div className='flex flex-col gap-10'>
-                                {[...Array(3)].map((_, idx) => (
-                                    <div key={idx} className='text-secondary flex flex-col lg:grid lg:grid-cols-3 gap-2'>
-                                        <img src="https://labterpadu.itk.ac.id/images/news/1618455634new3.jpg" className='w-full h-full object-cover rounded-lg' alt="" />
-                                        <div className='col-span-2'>
-                                            <span className='text-xs'>Friday, 17 May 2024</span>
-                                            <span className='font-semibold text-lg line-clamp-2 text-black'>
-                                                Menteri Keuangan Tandatangani Prasasti Aset (SBSN) Proyek Kalimantan Timur di Gedung Pusat Laboratorirum Terpadu Institut Teknologi Kalimantan
-                                            </span>
-                                            <span className='line-clamp-2 text-sm text-ellipsis overflow-hidden whitespace-nowraptruncate'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse doloribus vel incidunt dolor quo corporis fugiat impedit corrupti, adipisci similique in necessitatibus quae aut cupiditate reprehenderit excepturi possimus nihil voluptatem!</span>
-                                        </div>
-                                    </div>
-                                ))}
-
+                            <div className='flex flex-col gap-5'>
+                                {latestNews.length === 0 ? (
+                                    <div className='text-secondary'>Belum ada berita terbaru.</div>
+                                ) : (
+                                    latestNews.map((pub) => (
+                                        <NavLink to={`/berita/${pub.slug}`} key={pub.id} className='text-secondary flex flex-col lg:grid lg:grid-cols-3 gap-2 shadow p-3 rounded-xl'>
+                                            <img src={pub.imageUrl()} className='w-full h-full object-cover rounded-lg' alt={pub.title} />
+                                            <div className='col-span-2'>
+                                                <span className='text-xs'>{pub.createdAt.formatForHeaderSubtitle()}</span>
+                                                <span className='font-semibold text-lg line-clamp-2 text-black'>
+                                                    {pub.title}
+                                                </span>
+                                                <span className='line-clamp-2 text-sm text-ellipsis overflow-hidden'>{pub.shortDescription}</span>
+                                            </div>
+                                        </NavLink>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
-                    <div className='min-h-[420px] bg-[#e8ad38] px-10 xl:px-32 flex flex-col md:flex-row justify-between py-20 gap-10 md:gap-0 md:py-0'>
-                        <img src="https://itk.ac.id/assets/image/Logo_ITK_White.webp" className='w-64 object-contain h-auto' />
-                        <div className='flex flex-col gap-10 text-white py-0 md:py-20'>
-                            <span className='font-semibold text-3xl'>Kontak</span>
-                            <div className=' text-sm flex flex-col gap-2'>
-                                <div className='flex gap-2'>
-                                    <span className='font-semibold'>Email: </span>
-                                    labterpadu@itk.ac.id
-                                </div>
-                                <div className='flex gap-2'>
-                                    <span className='font-semibold'>Alamat: </span>
-                                    Soekarno-Hatta Km.15, Karang Joang, Balikpapan 76127.
-                                </div>
-                                <div className='flex gap-2'>
-                                    <span className='font-semibold'>Telepon: </span>
-                                    0542-8530800
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-10 text-white py-0 md:py-20">
-                            <span className='font-semibold text-3xl'>Alamat</span>
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.0141114578028!2d116.85934571475377!3d-1.15041039916087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df149298f826ab5%3A0x8489d5309f45c0db!2sKalimantan%20Institute%20of%20Technology!5e0!3m2!1sen!2sid!4v1618368109530!5m2!1sen!2sid" width="100%" height="200px" loading="lazy"></iframe>
-                        </div>
-                    </div>
+                    <Footer />
                 </div>
             </div>
         </>

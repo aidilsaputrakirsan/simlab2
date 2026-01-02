@@ -1,5 +1,5 @@
 import { userRole } from "@/domain/User/UserRole";
-import { CalendarClock, CalendarPlus, CalendarRange, Key, LayoutDashboard, SquareTerminal } from "lucide-react"
+import { CalendarClock, CalendarPlus, CalendarRange, Key, LayoutDashboard, Newspaper, SquareTerminal } from "lucide-react"
 
 export const navItems: NavItem[] = [
   {
@@ -48,6 +48,25 @@ export const navItems: NavItem[] = [
     ],
   },
   {
+    title: "Manajemen Publikasi",
+    url: "#",
+    icon: Newspaper,
+    roles: [userRole.Admin],
+    items: [
+      { title: "Kategori Publikasi", url: "/panel/kategori-publikasi", roles: [userRole.Admin] },
+      { title: "Publikasi", url: "/panel/publikasi", roles: [userRole.Admin] },
+    ],
+  },
+  // {
+  //   title: "Laporan",
+  //   url: "#",
+  //   icon: SquareTerminal,
+  //   roles: [userRole.Admin],
+  //   items: [
+  //     { title: "Peminjaman", url: "/panel/laporan/peminjaman", roles: [userRole.Admin] },
+  //   ],
+  // },
+  {
     title: "Penjadwalan Praktikum",
     url: "/panel/penjadwalan-praktikum",
     icon: CalendarPlus,
@@ -57,13 +76,13 @@ export const navItems: NavItem[] = [
     title: "Peminjaman",
     url: "/panel/peminjaman",
     icon: CalendarClock,
-    roles: [userRole.Kooprodi, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
+    roles: [userRole.Kooprodi, userRole.KepalaLabJurusan, userRole.Mahasiswa,userRole.PihakLuar,userRole.Dosen],
   },
   {
     title: "Pengujian",
     url: "/panel/pengujian",
     icon: CalendarPlus,
-    roles: [userRole.Dosen, userRole.Mahasiswa],
+    roles: [userRole.Dosen, userRole.KepalaLabJurusan, userRole.Mahasiswa, userRole.PihakLuar, userRole.Kooprodi],
   },
   {
     title: "Manajemen Penjadwalan Praktikum",

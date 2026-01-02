@@ -20,6 +20,7 @@ export const TestingCategoryColumn = ({ openModal, openConfirm }: ColumnProps): 
       <div className="flex gap-2">
         <Button
           size={'sm'}
+          variant={'warning'}
           onClick={() => openModal(row.original)}
         >
           Edit

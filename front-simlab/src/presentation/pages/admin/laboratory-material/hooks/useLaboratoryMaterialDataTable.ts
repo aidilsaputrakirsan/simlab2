@@ -4,7 +4,13 @@ import { useDepedencies } from "@/presentation/contexts/useDepedencies"
 import { useDebounce } from "@/presentation/hooks/useDebounce"
 import { useCallback, useEffect, useState } from "react"
 
-export const useLaboratoryMaterialDataTable = () => {
+interface useLaboratoryMaterialDataTableProps {
+    perPage?: number
+}
+
+export const useLaboratoryMaterialDataTable = ({
+    perPage: customPerPage
+}: useLaboratoryMaterialDataTableProps = {}) => {
     const { laboratoryMaterialService } = useDepedencies()
 
     const table = useTable()
@@ -16,7 +22,15 @@ export const useLaboratoryMaterialDataTable = () => {
         setTotalPages,
         setTotalItems,
         setCurrentPage,
+        setPerPage,
     } = table
+
+    // Set custom perPage if provided
+    useEffect(() => {
+        if (customPerPage) {
+            setPerPage(customPerPage)
+        }
+    }, [customPerPage, setPerPage])
 
     const [laboratoryMaterials, setLaboratoryMaterials] = useState<LaboratoryMaterialView[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -34,7 +48,7 @@ export const useLaboratoryMaterialDataTable = () => {
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, debounceSearchTerm])
+    }, [currentPage, perPage, laboratoryMaterialService, searchTerm, setTotalItems, setTotalPages])
 
     useEffect(() => {
         getData();
@@ -42,7 +56,7 @@ export const useLaboratoryMaterialDataTable = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [debounceSearchTerm]);
+    }, [debounceSearchTerm, setCurrentPage]);
 
     const refresh = useCallback(() => {
         getData()

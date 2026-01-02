@@ -84,6 +84,7 @@ const BookingCreatePage = () => {
       if (error.errors) {
         processErrors(error.errors);
       }
+      setIsConfirmationOpen(false)
     }
   }
 
@@ -249,9 +250,9 @@ const BookingCreatePage = () => {
               {(formData['booking_type'] === 'room' || formData['booking_type'] === 'room_n_equipment') && (
                 <FormGroup
                   className='md:col-span-2'
-                  id='ruangan_laboratorium_id'
+                  id='laboratory_room_id'
                   label='Ruangan'
-                  error={errors['ruangan_laboratorium_id']}
+                  error={errors['laboratory_room_id']}
                   required>
                   <Combobox
                     options={laboratoryRooms}

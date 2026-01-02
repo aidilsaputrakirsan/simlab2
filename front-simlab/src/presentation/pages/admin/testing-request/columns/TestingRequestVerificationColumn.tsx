@@ -31,7 +31,7 @@ export const TestingRequestVerificationColumn = ({ openApproval, openRejection }
     },
     {
         header: "Status Pengajuan",
-        accessorKey: 'satus',
+        accessorKey: 'satuss',
         cell: ({ row }) => {
             return (
                 <TestingRequestBadgeStatus status={row.original.status} />

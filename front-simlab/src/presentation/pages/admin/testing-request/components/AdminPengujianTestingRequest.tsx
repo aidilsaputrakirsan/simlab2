@@ -1,8 +1,7 @@
 import Header from '@/presentation/components/Header'
 import MainContent from '@/presentation/components/MainContent'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
-import React, { useEffect, useState } from 'react'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select'
+import React from 'react'
 import { useTestingRequestVerificationDataTable } from '../hooks/useTestingRequestVerificationDataTable';
 import Table from '@/presentation/components/Table';
 import { TestingRequestPaymentColumn } from '../columns/TestingRequestPaymentColumn';

@@ -114,6 +114,18 @@ class Booking extends BaseModel
             ->exists();
     }
 
+    public function getBookingTypeFormattedAttribute()
+    {
+        switch ($this->booking_type) {
+            case 'room_n_equipment':
+                return 'Ruangan & Alat';
+            case 'room':
+                return 'Ruangan';
+            case 'equipment':
+                return 'Alat';
+        }
+    }
+
     public function getApprovalStepsAttribute()
     {
         $approvals = [];

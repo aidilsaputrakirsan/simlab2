@@ -31,6 +31,7 @@ const useTable = () => {
         setTotalPages,
         setTotalItems,
         setCurrentPage,
+        setPerPage,
 
         handleSearch,
         handlePerPageChange,
