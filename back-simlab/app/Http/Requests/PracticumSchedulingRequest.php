@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Validator;
+
 class PracticumSchedulingRequest extends ApiRequest
 {
     public function authorize()
@@ -26,6 +28,97 @@ class PracticumSchedulingRequest extends ApiRequest
             'classes.*.sessions.*.start_time' => 'required|date',
             'classes.*.sessions.*.end_time' => 'required|date|after_or_equal:classes.*.sessions.*.start_time',
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $this->validateSessionScheduleConflicts($validator);
+        });
+    }
+
+    protected function validateSessionScheduleConflicts(Validator $validator)
+    {
+        $classes = $this->input('classes', []);
+
+        // Validasi 0: Cek modul praktikum tidak boleh duplikat dalam satu kelas
+        foreach ($classes as $classIndex => $class) {
+            $sessions = $class['sessions'] ?? [];
+            $moduleIds = [];
+
+            foreach ($sessions as $sessionIndex => $session) {
+                $moduleId = $session['practicum_module_id'] ?? null;
+
+                if ($moduleId && in_array($moduleId, $moduleIds)) {
+                    $validator->errors()->add(
+                        "classes.{$classIndex}.sessions.{$sessionIndex}.practicum_module_id",
+                        "Modul praktikum yang sama tidak boleh digunakan lebih dari sekali dalam satu kelas."
+                    );
+                }
+
+                if ($moduleId) {
+                    $moduleIds[] = $moduleId;
+                }
+            }
+        }
+
+        // Validasi 1: Cek tabrakan session dalam satu class
+        foreach ($classes as $classIndex => $class) {
+            $sessions = $class['sessions'] ?? [];
+
+            if (count($sessions) > 1) {
+                for ($i = 0; $i < count($sessions); $i++) {
+                    for ($j = $i + 1; $j < count($sessions); $j++) {
+                        $session1 = $sessions[$i];
+                        $session2 = $sessions[$j];
+
+                        if ($this->sessionsOverlap($session1, $session2)) {
+                            $validator->errors()->add(
+                                "classes.{$classIndex}.sessions",
+                                "Terdapat jadwal sesi yang bertabrakan"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        // Validasi 2: Cek tabrakan session di class berbeda dengan laboratory room yang sama
+        for ($i = 0; $i < count($classes); $i++) {
+            for ($j = $i + 1; $j < count($classes); $j++) {
+                $class1 = $classes[$i];
+                $class2 = $classes[$j];
+
+                // Jika laboratory room sama, cek apakah ada tabrakan session
+                if ($class1['laboratory_room_id'] === $class2['laboratory_room_id']) {
+                    $sessions1 = $class1['sessions'] ?? [];
+                    $sessions2 = $class2['sessions'] ?? [];
+
+                    foreach ($sessions1 as $sessionIndex1 => $session1) {
+                        foreach ($sessions2 as $sessionIndex2 => $session2) {
+                            if ($this->sessionsOverlap($session1, $session2)) {
+                                $validator->errors()->add(
+                                    "classes.{$i}.sessions",
+                                    "Terdapat jadwal sesi kelas {$classes[$i]['name']} yang bertabrakan dengan kelas {$classes[$j]['name']} karena menggunakan ruangan yang sama."
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function sessionsOverlap($session1, $session2): bool
+    {
+        $start1 = strtotime($session1['start_time']);
+        $end1 = strtotime($session1['end_time']);
+        $start2 = strtotime($session2['start_time']);
+        $end2 = strtotime($session2['end_time']);
+
+        // Dua session bertabrakan jika:
+        // start1 < end2 AND start2 < end1
+        return $start1 < $end2 && $start2 < $end1;
     }
 
     public function messages()
@@ -60,6 +153,7 @@ class PracticumSchedulingRequest extends ApiRequest
             'classes.*.sessions.*.end_time.required' => 'Waktu selesai sesi wajib diisi.',
             'classes.*.sessions.*.end_time.date' => 'Waktu selesai sesi harus berupa tanggal yang valid.',
             'classes.*.sessions.*.end_time.after_or_equal' => 'Waktu selesai sesi harus setelah atau sama dengan waktu mulai.',
+            'classes.*.sessions.schedule_conflict' => 'Jadwal session bertabrakan.',
         ];
     }
 }
