@@ -18,7 +18,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange,
   const [endTime, setEndTime] = React.useState<string>(value?.endTime || '17:00');
 
   React.useEffect(() => {
-    if (value?.date) setSelectedDate(value.date);
+    if (value?.date) setSelectedDate(value.date); else setSelectedDate(undefined);
     if (value?.startTime) setStartTime(value.startTime);
     if (value?.endTime) setEndTime(value.endTime);
   }, [value]);
@@ -56,7 +56,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange,
         <PopoverTrigger asChild>
           {selectedDate ? (
             <Button type="button" className='w-full font-normal' variant="outline" onClick={() => setOpen(true)}>
-              {selectedDate.toLocaleDateString() + ` (${startTime} - ${endTime})`}
+              {selectedDate.toLocaleDateString() + ` (${startTime} - ${endTime}) `}
             </Button>
           ) : (
             <Button type="button" className='w-full text-muted-foreground font-normal' variant="outline" onClick={() => setOpen(true)}>

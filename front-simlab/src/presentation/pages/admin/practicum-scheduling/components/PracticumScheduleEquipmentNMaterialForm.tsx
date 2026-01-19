@@ -9,7 +9,6 @@ import { Skeleton } from '@/presentation/components/ui/skeleton'
 import Table from '@/presentation/components/Table'
 import { Button } from '@/presentation/components/ui/button'
 import { Input } from '@/presentation/components/ui/input'
-import { usePracticumScheduling } from '../context/PracticumSchedulingContext'
 import { usePracticumSchedulingEquipmentMaterial } from '../hooks/usePracticumSchedulingEquipmentMaterial'
 import { LaboratoryEquipmentSelectColumn } from '../../laboratory-equipment/LaboratoryEquipmentSelectColumn'
 import { LaboratoryMaterialSelectColumn } from '../../laboratory-material/LaboratoryMaterialSelectColumn'
@@ -65,9 +64,9 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
         ...materialTable
     } = useLaboratoryMaterialDataTable()
 
-    const {practicumSchedulingService} = useDepedencies()
-        const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
-    
+    const { practicumSchedulingService } = useDepedencies()
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
+
     const handleSubmit = async () => {
         if (!practicumScheduling) return;
         try {
@@ -77,6 +76,8 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
         } catch (e: any) {
             toast.error(e?.message || 'Gagal submit');
             processErrors(e.errors);
+        } finally {
+            setIsConfirmationOpen(false)
         }
     }
 
@@ -277,7 +278,7 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
                     {/* === Submit Button === */}
                     <div className='flex justify-end'>
                         <Button type='submit' onClick={() => setIsConfirmationOpen(true)}>Simpan</Button>
-                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan'/>
+                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan' />
                     </div>
                 </div>
             </div >

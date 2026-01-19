@@ -69,7 +69,7 @@ const PracticumSchedulingCreatePage = () => {
     const { practicums } = usePracticumSelect()
     const { users: lecturers } = useUserSelect({ role: userRole.Dosen })
     const { practicumSchedulingService } = useDepedencies()
-    
+
     const [practicumModules, setPracticumModules] = useState<PracticumModuleSelectView[]>([])
     useEffect(() => {
         setPracticumModules(getPracticumModule(practicums))
@@ -96,6 +96,8 @@ const PracticumSchedulingCreatePage = () => {
                 processErrors(error.errors);
             }
             toast.error(error.message)
+        } finally {
+            setIsConfirmationOpen(false)
         }
     }
 
@@ -303,8 +305,13 @@ const PracticumSchedulingCreatePage = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className='md:col-span-2 lg:col-span-3 border rounded-lg overflow-hidden'>
-                                        <Table>
+                                    <div className='md:col-span-2 lg:col-span-3 overflow-hidden'>
+                                        {(errors[`classes.${cidx}.sessions`]) && (
+                                            <span className="text-xs text-red-500 mt-1">
+                                                {errors[`classes.${cidx}.sessions`]}
+                                            </span>
+                                        )}
+                                        <Table className='border rounded-lg'>
                                             <TableHeader className='bg-primary hover:bg-primary/80 group'>
                                                 <TableRow>
                                                     <TableHead className='text-white group-hover:text-secondary'>Pertemuan</TableHead>
@@ -383,7 +390,7 @@ const PracticumSchedulingCreatePage = () => {
                     <div className='flex justify-end gap-3'>
                         <Button type='button' variant={'secondary'} onClick={handleAddClass}>Tambah Kelas <Plus /></Button>
                         <Button type='button' onClick={() => setIsConfirmationOpen(true)}>Simpan & Lanjutkan</Button>
-                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan & Lanjutkan'/>
+                        <ConfirmationDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen} onConfirm={handleSubmit} confirmLabel='Simpan & Lanjutkan' />
                     </div>
                 </div>
             </div>
