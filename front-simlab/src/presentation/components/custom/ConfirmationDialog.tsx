@@ -46,7 +46,7 @@ export default function ConfirmationDialog({ open, onOpenChange, onConfirm, conf
                             Tutup
                         </Button>
                     </DialogClose>
-                    <Button type="button" variant={confirmVariant} disabled={isLoading} onClick={submit}>
+                    <Button type="button" variant={confirmVariant} disabled={isLoading} onClick={submit} data-testid='confirmation'>
                         { isLoading ? 'Memproses...' : ( confirmLabel ?? 'Lanjut') }
                     </Button>
                 </DialogFooter>

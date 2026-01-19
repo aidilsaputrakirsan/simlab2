@@ -24,6 +24,7 @@ type ComboboxProps<T extends Record<string, any>> = {
   optionValueKey?: keyof T
   optionLabelKey?: keyof T,
   isFilter?: boolean
+  testId?: string
 }
 
 export function Combobox<T extends Record<string, any>>({
@@ -33,7 +34,8 @@ export function Combobox<T extends Record<string, any>>({
   placeholder = "Select option...",
   optionValueKey = "value",
   optionLabelKey = "label",
-  isFilter = false
+  isFilter = false,
+  testId
 }: ComboboxProps<T>) {
   const [open, setOpen] = React.useState(false)
 
@@ -44,6 +46,7 @@ export function Combobox<T extends Record<string, any>>({
     <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
+          data-testid={testId}
           variant="outline"
           role="combobox"
           aria-expanded={open}

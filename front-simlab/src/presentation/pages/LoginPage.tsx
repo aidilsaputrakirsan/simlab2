@@ -4,11 +4,12 @@ import { useAuth } from "../../application/hooks/useAuth";
 import { ApiResponse } from "../shared/Types";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
 import { useValidationErrors } from "../hooks/useValidationError";
 import { toast } from "sonner";
 import ItkLogo from '../assets/itk_logo.png'
 import { LoginDTO } from "@/application/auth/AuthDTO";
+import FormGroup from "../components/custom/FormGroup";
+import PasswordInput from "../components/custom/PasswordInput";
 
 export const Login: React.FC = () => {
     // hooks
@@ -66,8 +67,12 @@ export const Login: React.FC = () => {
                         <h4 className=" text-muted-foreground">Silakan masuk ke akun Anda.</h4>
                     </div>
                     <form className="flex flex-col w-full gap-5" onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="email">Email</Label>
+                        <FormGroup
+                            id="email"
+                            label="Email"
+                            error={errors['email']}
+                            required
+                        >
                             <Input
                                 id="email"
                                 type="email"
@@ -76,24 +81,23 @@ export const Login: React.FC = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                             />
-                            {errors['email'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['email']}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
+                        </FormGroup>
+                        <FormGroup
+                            id="password"
+                            label="Password"
+                            error={errors['password']}
+                            required
+                        >
+                            <PasswordInput
                                 id="password"
-                                type="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder="password"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
-                            {errors['password'] && (
-                                <p className="mt-1 text-xs italic text-red-500">{errors['password']}</p>
-                            )}
-                        </div>
+                            
+                        </FormGroup>
+
                         <Button type="submit" disabled={isLoading}>{isLoading ? 'Logging in...' : 'Login'}</Button>
                         <div className="flex gap-2 text-sm">
                             <p>Belum Punya Akun?</p>

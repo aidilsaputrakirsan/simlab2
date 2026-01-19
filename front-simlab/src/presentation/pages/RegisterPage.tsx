@@ -158,7 +158,7 @@ export const RegisterPage: React.FC = () => {
                                         value: value
                                     }
                                 } as React.ChangeEvent<HTMLSelectElement>)}>
-                                <SelectTrigger className="w-full">
+                                <SelectTrigger className="w-full" data-testid='role'>
                                     <SelectValue placeholder="Daftar Sebagai" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -205,6 +205,7 @@ export const RegisterPage: React.FC = () => {
                                             placeholder="Pilih Institusi"
                                             optionLabelKey='name'
                                             optionValueKey='id'
+                                            testId="institution"
                                         />
                                     </FormGroup>
                                 )}

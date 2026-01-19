@@ -99,6 +99,7 @@ const MajorFormDialog: React.FC<MajorFormDialogProps> = ({
                             placeholder="Pilih Fakultas"
                             optionLabelKey='name'
                             optionValueKey='id'
+                            testId='faculties'
                         />
                     </FormGroup>
                     <FormGroup

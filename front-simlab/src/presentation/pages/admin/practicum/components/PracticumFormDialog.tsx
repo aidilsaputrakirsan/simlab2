@@ -130,6 +130,7 @@ const PracticumFormDialog: React.FC<PracticumFormDialogProps> = ({
                             placeholder="Pilih Prodi"
                             optionLabelKey='name'
                             optionValueKey='id'
+                            testId='studyPrograms'
                         />
                     </FormGroup>
                     <FormGroup

@@ -28,7 +28,7 @@ const FormGroup: React.FC<FormGroupProps> = ({
             </div>
 
             {error && (
-                <p className="mt-1 text-xs italic text-red-500">
+                <p className="mt-1 text-xs italic text-red-500 error">
                     {error}
                 </p>
             )}

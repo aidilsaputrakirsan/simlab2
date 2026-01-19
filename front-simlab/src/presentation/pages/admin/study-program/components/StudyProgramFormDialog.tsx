@@ -99,6 +99,7 @@ const StudyProgramFormDialog: React.FC<StudyProgramFormDialogProps> = ({
                             placeholder="Pilih Jurusan"
                             optionLabelKey='name'
                             optionValueKey='id'
+                            testId='majors'
                         />
                     </FormGroup>
                     <FormGroup
