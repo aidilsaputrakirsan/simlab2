@@ -12,11 +12,14 @@ class LaboratoryRoomSeeder extends Seeder
      */
     public function run(): void
     {
+        $laboranId = \App\Models\User::where('role', 'Laboran')->first()->id
+            ?? \App\Models\User::first()->id;
+
         LaboratoryRoom::insert([
             [
                 'name' => 'Lab A',
                 'floor' => 'Lantai 1',
-                'user_id' => 3,
+                'user_id' => $laboranId,
                 'student_price' => 50000,
                 'lecturer_price' => 75000,
                 'external_price' => 100000,
@@ -24,7 +27,7 @@ class LaboratoryRoomSeeder extends Seeder
             [
                 'name' => 'Lab B',
                 'floor' => 'Lantai 2',
-                'user_id' => 3,
+                'user_id' => $laboranId,
                 'student_price' => 60000,
                 'lecturer_price' => 80000,
                 'external_price' => 110000,
@@ -32,7 +35,7 @@ class LaboratoryRoomSeeder extends Seeder
             [
                 'name' => 'Lab C',
                 'floor' => 'Lantai 3',
-                'user_id' => 3,
+                'user_id' => $laboranId,
                 'student_price' => 55000,
                 'lecturer_price' => 78000,
                 'external_price' => 105000,
