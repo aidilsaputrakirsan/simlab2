@@ -22,4 +22,4 @@ Route::get('/', function () {
     return view('welcome');
 })->name('login');
 
-Route::get('/exports/booking', [BookingController::class, 'bookingExport']);
+// Route::get('/exports/booking', [BookingController::class, 'bookingExport']);

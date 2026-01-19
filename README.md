@@ -192,6 +192,7 @@ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 # Start development server
 php artisan serve
 # Backend akan running di http://localhost:8000
+# List Dokumentasi APi dapat diakses pada http://localhost:8000/docs/api
 ```
 
 **Konfigurasi Email (untuk notifikasi):**

@@ -152,7 +152,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin'], function () {
             Route::get('/verification', [BookingController::class, 'getBookingsForVerification']);
             Route::post('/{id}/verify', [BookingController::class, 'verify']);
-            Route::get('/export', [BookingController::class, 'bookingExport']);
+            // Route::get('/export', [BookingController::class, 'bookingExport']);
         });
 
         Route::group(['middleware' => 'role:laboran'], function () {
