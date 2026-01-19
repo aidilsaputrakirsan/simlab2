@@ -54,6 +54,11 @@ class PracticumScheduling extends BaseModel
         return $this->hasMany(PracticumApproval::class, 'practicum_scheduling_id');
     }
 
+    public function event()
+    {
+        return $this->morphMany(Event::class, 'eventable');
+    }
+
     public function getTotalGroupsAttribute()
     {
         // If the relationship is already loaded, sum in-memory to avoid an extra query

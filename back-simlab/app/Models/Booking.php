@@ -74,6 +74,11 @@ class Booking extends BaseModel
         return $this->morphOne(Payment::class, 'payable');
     }
 
+    public function event()
+    {
+        return $this->morphOne(Event::class, 'eventable');
+    }
+
     public function getKepalaLabApprovalAttribute()
     {
         $approval = $this->approvals()

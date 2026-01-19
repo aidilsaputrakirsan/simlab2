@@ -57,6 +57,11 @@ class TestingRequest extends BaseModel
         return $this->morphOne(Payment::class, 'payable');
     }
 
+    public function event()
+    {
+        return $this->morphOne(Event::class, 'eventable');
+    }
+
     public function setTestingTimeAttribute($value)
     {
         $this->attributes['testing_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
