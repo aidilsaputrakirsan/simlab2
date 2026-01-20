@@ -13,6 +13,47 @@ use PhpParser\Node\Expr\FuncCall;
 
 class PaymentController extends BaseController
 {
+    public function index(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            $query = Payment::query()->with(['user', 'payable']);
+
+            // Search functionality
+            if ($request->filled('search')) {
+                $searchTerm = $request->input('search');
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->orWhere('payment_number', 'LIKE', "%{$searchTerm}%")
+                      ->orWhere('va_number', 'LIKE', "%{$searchTerm}%")
+                      ->orWhereHas('user', function ($userQ) use ($searchTerm) {
+                          $userQ->where('name', 'LIKE', "%{$searchTerm}%");
+                      });
+                });
+            }
+
+            // Pagination parameters
+            $perPage = (int) $request->input('per_page', 10);
+            $page = (int) $request->input('page', 1);
+
+            $query->orderBy('created_at', 'desc');
+
+            // Execute pagination
+            $payments = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $response = [
+                'current_page' => $payments->currentPage(),
+                'last_page' => $payments->lastPage(),
+                'per_page' => $payments->perPage(),
+                'total' => $payments->total(),
+                'data' => PaymentResource::collection($payments)
+            ];
+
+            return $this->sendResponse($response, 'Data pembayaran berhasil diambil');
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika mengambil data pembayaran', [$e->getMessage()], 500);
+        }
+    }
+
     public function createPayment(PaymentCreateRequest $request, $id)
     {
         try {

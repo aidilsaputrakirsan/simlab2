@@ -1,5 +1,12 @@
 import { PaymentStatus } from "./PaymentStatus";
 
+export interface PaymentUser {
+    readonly name: string;
+    readonly email: string;
+    readonly studyProgram: string | null;
+    readonly institution: string | null;
+}
+
 export class Payment {
     constructor(
         readonly id: number,
@@ -8,6 +15,10 @@ export class Payment {
         readonly invoiceFile: string,
         readonly paymentProof: string,
         readonly vaNumber: string,
-        readonly status: PaymentStatus
+        readonly status: PaymentStatus,
+        readonly paymentType: string,
+        readonly paymentCategory: string,
+        readonly payableId: number,
+        readonly user: PaymentUser | null,
     ){}
 }

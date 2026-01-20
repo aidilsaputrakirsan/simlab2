@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::group(['prefix' => 'payments', 'as' => 'payments'], function () {
         Route::middleware(['role:admin_pengujian'])->group(function () {
+            Route::get('/', [PaymentController::class, 'index']);
             Route::put('/{id}/create-payment', [PaymentController::class, 'createPayment']);
             Route::put('/{id}/verif', [PaymentController::class, 'verif']);
         });

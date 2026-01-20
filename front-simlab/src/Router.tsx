@@ -55,6 +55,7 @@ import BookingReportPage from "./presentation/pages/admin/report/BookingReport";
 import PublicationCategoryPage from "./presentation/pages/admin/publication-category/PublicationCategoryPage";
 import PublicationPage from "./presentation/pages/admin/publication/PublicationPage";
 import PublicationFormPage from "./presentation/pages/admin/publication/PublicationFormPage";
+import PaymentPage from "./presentation/pages/admin/payment/PaymentPage";
 
 export const router = createBrowserRouter([
     {
@@ -471,6 +472,19 @@ export const router = createBrowserRouter([
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminPengujian]}>
                                 <TestingRequestVerification />
+                            </ProtectedRoute>
+                        )
+                    },
+                ],
+            },
+            {
+                path: 'pembayaran',
+                children: [
+                    {
+                        path: '',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.AdminPengujian]}>
+                                <PaymentPage />
                             </ProtectedRoute>
                         )
                     },

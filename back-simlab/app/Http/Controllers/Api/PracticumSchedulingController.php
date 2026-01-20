@@ -9,16 +9,15 @@ use App\Http\Requests\PracticumSchedulingSessionConductedRequest;
 use App\Http\Requests\PracticumSchedulingVerifyRequest;
 use App\Http\Resources\PracticumScheduling\PracticumSchedulingResource;
 use App\Models\PracticumApproval;
-use App\Models\PracticumGroup;
 use App\Models\PracticumScheduling;
 use App\Models\PracticumSchedulingEquipment;
 use App\Models\PracticumSchedulingMaterial;
 use App\Models\AcademicYear;
+use App\Models\Event;
 use App\Models\LaboratoryEquipment;
 use App\Models\LaboratoryTemporaryEquipment;
 use App\Models\PracticumClass;
 use App\Models\PracticumSession;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -32,7 +31,6 @@ class PracticumSchedulingController extends BaseController
     {
         $this->activeAcademicYear = AcademicYear::where('status', 'Active')->first();
     }
-
 
     // get Practicum Scheduling data for kepala lab jurusan
     public function index(Request $request)
@@ -604,8 +602,29 @@ class PracticumSchedulingController extends BaseController
                 // Final approval (laboran confirms everything)
                 $practicumScheduling->update(['status' => 'approved']);
 
+                // Create event for approved practicum scheduling
+                $this->createPracticumSchedulingEvents($practicumScheduling);
+
                 // Notify applicant
                 return null;
+        }
+    }
+
+    private function createPracticumSchedulingEvents($practicumScheduling)
+    {
+        // Load practicum classes with sessions if not already loaded
+        $practicumScheduling->load('practicumClasses.practicumSessions', 'practicum');
+
+        foreach ($practicumScheduling->practicumClasses as $class) {
+            foreach ($class->practicumSessions as $session) {
+                Event::create([
+                    'eventable_id' => $session->id,
+                    'eventable_type' => PracticumSession::class,
+                    'title' => $practicumScheduling->practicum->name . ' - ' . $class->name,
+                    'start_date' => $session->start_time,
+                    'end_date' => $session->end_time,
+                ]);
+            }
         }
     }
 }
