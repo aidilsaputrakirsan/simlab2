@@ -76,10 +76,21 @@ class TestingRequest extends BaseModel
 
     public function canVerif(User $user)
     {
-        $flows = TestingRequestApproval::approvalFlows();
+        $hasPaidItems = $this->hasPaidItems;
+        $flows = $this->getApprovalFlowsForRequest();
         $roleStep = TestingRequestApproval::roleApprovalFlows();
 
         $action = $roleStep[$user->role] ?? null;
+
+        // For admin_pengujian, only allow verification if request has paid items
+        if ($user->role === 'admin_pengujian' && !$hasPaidItems) {
+            return 2; // Cannot verify non-paid requests
+        }
+
+        // For kepala_lab_terpadu, only allow verification if request has no paid items
+        if ($user->role === 'kepala_lab_terpadu' && $hasPaidItems) {
+            return 2; // Cannot verify paid requests (admin_pengujian handles this)
+        }
 
         // Step index of this role
         $targetIndex = array_search($action, $flows);
@@ -91,7 +102,7 @@ class TestingRequest extends BaseModel
         $existing = $this->testRequestApprovals()->where('action', $action)->first();
         if ($existing) {
             // If it has been verified
-            if ($existing->is_approved) return 0; // sudah div erif
+            if ($existing->is_approved) return 0; // sudah diverif
             if (!$existing->is_approved) return 3; // ditolak
         }
 
@@ -109,13 +120,27 @@ class TestingRequest extends BaseModel
         return 2;
     }
 
+    /**
+     * Get the approval flows based on whether request has paid items
+     * Both paid and non-paid items use the same flow: request_testing -> verified_by_head -> verified_by_laboran
+     * The difference is WHO can do verified_by_head (admin_pengujian for paid, kepala_lab_terpadu for non-paid)
+     */
+    public function getApprovalFlowsForRequest()
+    {
+        return [
+            'request_testing',
+            'verified_by_head',
+            'verified_by_laboran',
+        ];
+    }
+
     public function getApprovalStepsAttribute()
     {
         $approvals = [];
         $allApproved = true;
         $hasBeenRejected = false;
 
-        $approvalFlows = TestingRequestApproval::getFlow();
+        $approvalFlows = $this->getApprovalFlowDefinitions();
         foreach ($approvalFlows as $flow) {
             $approval = $this->testRequestApprovals
                 ->where('action', $flow['action'])
@@ -158,5 +183,34 @@ class TestingRequest extends BaseModel
         ];
 
         return $approvals;
+    }
+
+    /**
+     * Get the approval flow definitions based on whether request has paid items
+     */
+    public function getApprovalFlowDefinitions(): array
+    {
+        $definition = TestingRequestApproval::actionDefinition();
+        $flows = $this->getApprovalFlowsForRequest();
+        $hasPaidItems = $this->hasPaidItems;
+        
+        return collect($flows)->map(function ($action) use ($definition, $hasPaidItems) {
+            $role = $definition[$action]['role'];
+            $description = $definition[$action]['description'];
+            
+            // For verified_by_head action, use admin_pengujian for paid items, kepala_lab_terpadu for free items
+            if ($action === 'verified_by_head') {
+                $role = $hasPaidItems ? 'admin_pengujian' : 'kepala_lab_terpadu';
+                $description = $hasPaidItems 
+                    ? 'Admin Pengujian memverifikasi pengajuan pengujian berbayar'
+                    : 'Kepala Lab Terpadu memverifikasi pengajuan pengujian gratis';
+            }
+            
+            return [
+                'action' => $action,
+                'role' => $role,
+                'description' => $description
+            ];
+        })->toArray();
     }
 }

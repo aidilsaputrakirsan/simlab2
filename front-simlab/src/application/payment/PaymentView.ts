@@ -12,6 +12,7 @@ export interface PaymentUserView {
 export class PaymentView {
     constructor(
         readonly id: number,
+        readonly userId: number,
         readonly paymentNumber: string,
         readonly amount: MoneyView,
         readonly invoiceFile: string,
@@ -21,6 +22,8 @@ export class PaymentView {
         readonly paymentType: string,
         readonly paymentCategory: string,
         readonly payableId: number,
+        readonly payableStatus: string | null,
+        readonly canVerif: number | null,
         readonly user: PaymentUserView | null,
     ) { }
 
@@ -34,6 +37,7 @@ export class PaymentView {
 
         return new PaymentView(
             entity.id,
+            entity.userId,
             entity.paymentNumber,
             MoneyView.toViewModel(entity.amount),
             entity.invoiceFile,
@@ -43,6 +47,8 @@ export class PaymentView {
             entity.paymentType,
             entity.paymentCategory,
             entity.payableId,
+            entity.payableStatus,
+            entity.canVerif,
             userView,
         )
     }

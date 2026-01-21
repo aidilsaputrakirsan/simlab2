@@ -1,22 +1,27 @@
-import React from 'react'
 import { usePaymentDataTable } from './hooks/usePaymentDataTable'
 import Header from '@/presentation/components/Header'
 import MainContent from '@/presentation/components/MainContent'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import Table from '@/presentation/components/Table'
 import PaymentCreateFormDialog from './components/PaymentCreateFormDialog'
-import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import { usePaymentHandler } from './hooks/usePaymentHandler'
 import { PaymentColumn } from './columns/PaymentColumn'
+import { useTestingRequestVerification } from '../testing-request/hooks/useTestingRequestVerification'
+import RejectionDialog from '@/presentation/components/custom/RejectionDialog'
+import ApproveWithLaboranSelectDialog from '@/presentation/components/custom/ApproveWithLaboranSelectDialog'
+import PaymentApprovalDialog from './components/PaymentApprovalDialog'
+import PaymentProofFormDialog from './components/PaymentProofFormDialog'
+import { useAuthContext } from '@/presentation/contexts/AuthContext'
 
 const PaymentPage = () => {
+    const { user } = useAuthContext()
+    
+    // Payment Data Table
     const {
         payments,
         isLoading,
         searchTerm,
         refresh,
-
-        // TableHandler
         perPage,
         handleSearch,
         handlePageChange,
@@ -26,33 +31,56 @@ const PaymentPage = () => {
         currentPage,
     } = usePaymentDataTable()
 
+    // Payment Handler
     const {
-        dialogs,
-        // openers
+        selectedPayment,
+        selectedPaymentData,
+        dialogs: paymentDialogs,
         openCreatePayment,
         openApproval,
         openRejection,
-        // closers
+        openReuploadProof,
         closeCreatePayment,
         closeApproval,
         closeRejection,
-        // action
+        closeReuploadProof,
         handleCreatePayment,
         handleApproval,
-        handleRejection
+        handleRejection,
+        handleReuploadPaymentProof
     } = usePaymentHandler(refresh)
+
+    // Testing Request Verification Handler (for payable verification)
+    const {
+        dialogs: verificationDialogs,
+        openKepalaLabApproval,
+        openRejection: openVerifRejection,
+        closeKepalaLabApproval,
+        closeRejection: closeVerifRejection,
+        handleKepalaLabApproval,
+        handleRejection: handleVerifRejection
+    } = useTestingRequestVerification(refresh)
+
     return (
         <>
-            <Header title='Menu Pengujian' />
+            <Header title='Menu Pembayaran' />
             <MainContent>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Menu Verifikasi Pembayaran Pengujian</CardTitle>
+                        <CardTitle>Manajemen Pembayaran</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Table
                             data={payments}
-                            columns={PaymentColumn({ openCreatePayment, openApproval, openRejection })}
+                            columns={PaymentColumn({ 
+                                openCreatePayment, 
+                                openApproval, 
+                                openRejection,
+                                openVerification: openKepalaLabApproval,
+                                openVerificationRejection: openVerifRejection,
+                                openReuploadProof,
+                                currentUserId: user?.id
+                            })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -66,9 +94,32 @@ const PaymentPage = () => {
                     </CardContent>
                 </Card>
             </MainContent>
-            <PaymentCreateFormDialog open={dialogs.createPayment} onOpenChange={closeCreatePayment} handleSave={handleCreatePayment} />
-            <ConfirmationDialog open={dialogs.approval} onOpenChange={closeApproval} onConfirm={handleApproval} />
-            <ConfirmationDialog open={dialogs.rejection} onOpenChange={closeRejection} onConfirm={handleRejection} />
+            {/* Verification dialogs */}
+            <RejectionDialog open={verificationDialogs.rejection} onOpenChange={closeVerifRejection} handleRejection={handleVerifRejection} />
+            <ApproveWithLaboranSelectDialog open={verificationDialogs.KepalaLabApproval} onOpenChange={closeKepalaLabApproval} handleSave={handleKepalaLabApproval} />
+            
+            {/* Payment dialogs */}
+            <PaymentCreateFormDialog open={paymentDialogs.createPayment} onOpenChange={closeCreatePayment} handleSave={handleCreatePayment} />
+            <PaymentApprovalDialog 
+                open={paymentDialogs.approval} 
+                onOpenChange={closeApproval} 
+                onConfirm={handleApproval}
+                payment={selectedPaymentData}
+                isRejection={false}
+            />
+            <PaymentApprovalDialog 
+                open={paymentDialogs.rejection} 
+                onOpenChange={closeRejection} 
+                onConfirm={handleRejection}
+                payment={selectedPaymentData}
+                isRejection={true}
+            />
+            <PaymentProofFormDialog
+                open={paymentDialogs.reuploadProof}
+                onOpenChange={closeReuploadProof}
+                handleSave={handleReuploadPaymentProof}
+                paymentId={selectedPayment}
+            />
         </>
     )
 }

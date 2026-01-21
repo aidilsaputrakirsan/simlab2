@@ -470,7 +470,7 @@ export const router = createBrowserRouter([
                     {
                         path: 'verif',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminPengujian]}>
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabTerpadu, userRole.Laboran]}>
                                 <TestingRequestVerification />
                             </ProtectedRoute>
                         )

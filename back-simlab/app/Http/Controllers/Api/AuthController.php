@@ -20,7 +20,7 @@ class AuthController extends BaseController
         try {
             $data = $request->validated();
 
-            if (blank($data['institution_id']) && filled($data['institution'])) {
+            if (blank($data['institution_id'] ?? null) && filled($data['institution'] ?? null)) {
                 $institution = Institution::create(['name' => $data['institution']]);
                 $data['institution_id'] = $institution->id;
             }
@@ -32,8 +32,6 @@ class AuthController extends BaseController
             DB::rollBack();
             return $this->sendError('Terjadi kesalahan dalam pendaftaran', [$e->getMessage()], 500);
         }
-
-        dd();
     }
 
     public function login(LoginRequest $request)

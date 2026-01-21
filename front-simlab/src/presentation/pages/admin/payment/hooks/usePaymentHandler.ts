@@ -1,4 +1,5 @@
 import { PaymentInputDTO, PaymentInputProofDTO } from "@/application/payment/dto/PaymentDTO";
+import { PaymentView } from "@/application/payment/PaymentView";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useReducer, useState } from "react";
 import { toast } from "sonner";
@@ -9,14 +10,16 @@ type DialogKey =
     | "paymentProof"
     | "approval"
     | "rejection"
+    | "reuploadProof"
 
 type DialogState = Record<DialogKey, boolean>
 
 const initialDialogState: DialogState = {
     createPayment: false,
-    paymentProof:false,
+    paymentProof: false,
     approval: false,
     rejection: false,
+    reuploadProof: false,
 }
 
 function dialogReducer(
@@ -32,12 +35,16 @@ export const usePaymentHandler = (
     const { paymentService } = useDepedencies()
 
     const [selectedPayment, setSelectedPayment] = useState<number | null>(null)
+    const [selectedPaymentData, setSelectedPaymentData] = useState<PaymentView | null>(null)
 
     const [dialogs, dispatch] = useReducer(dialogReducer, initialDialogState)
 
 
-    const openDialog = (key: DialogKey, id: number) => {
+    const openDialog = (key: DialogKey, id: number, paymentData?: PaymentView) => {
         setSelectedPayment(id)
+        if (paymentData) {
+            setSelectedPaymentData(paymentData)
+        }
         dispatch({ type: "open", key })
     }
 
@@ -47,8 +54,9 @@ export const usePaymentHandler = (
 
     const openCreatePayment = (id: number) => openDialog("createPayment", id)
     const openPaymentProof = (id: number) => openDialog("paymentProof", id)
-    const openApproval = (id: number) => openDialog("approval", id)
-    const openRejection = (id: number) => openDialog("rejection", id)
+    const openApproval = (id: number, paymentData?: PaymentView) => openDialog("approval", id, paymentData)
+    const openRejection = (id: number, paymentData?: PaymentView) => openDialog("rejection", id, paymentData)
+    const openReuploadProof = (id: number) => openDialog("reuploadProof", id)
 
     const handleCreatePayment = async (data: PaymentInputDTO) => {
         if (!selectedPayment) return
@@ -65,6 +73,15 @@ export const usePaymentHandler = (
         const res = await paymentService.storePaymentProof(selectedPayment, data)
         toast.success(res.message)
         closeDialog('paymentProof')
+        refresh?.()
+    }
+
+    const handleReuploadPaymentProof = async (data: PaymentInputProofDTO) => {
+        if (!selectedPayment) return
+
+        const res = await paymentService.storePaymentProof(selectedPayment, data)
+        toast.success(res.message)
+        closeDialog('reuploadProof')
         refresh?.()
     }
 
@@ -93,6 +110,7 @@ export const usePaymentHandler = (
     return {
         // --- state ---
         selectedPayment,
+        selectedPaymentData,
         dialogs,
 
         // --- openers ---
@@ -100,16 +118,19 @@ export const usePaymentHandler = (
         openPaymentProof,
         openApproval,
         openRejection,
+        openReuploadProof,
 
         // --- closers ---
         closeCreatePayment: () => closeDialog("createPayment"),
         closePaymentProof: () => closeDialog("paymentProof"),
         closeApproval: () => closeDialog("approval"),
         closeRejection: () => closeDialog("rejection"),
+        closeReuploadProof: () => closeDialog("reuploadProof"),
 
         // --- actions ---
         handleCreatePayment,
         handleStorePaymentProof,
+        handleReuploadPaymentProof,
         handleApproval,
         handleRejection,
     }

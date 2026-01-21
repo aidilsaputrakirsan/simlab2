@@ -8,11 +8,23 @@ import PaymentAction from "../components/PaymentAction";
 
 interface ColumnProps {
     openCreatePayment: (id: number) => void;
-    openApproval: (id: number) => void;
-    openRejection: (id: number) => void;
+    openApproval: (id: number, paymentData?: PaymentView) => void;
+    openRejection: (id: number, paymentData?: PaymentView) => void;
+    openVerification?: (payableId: number) => void;
+    openVerificationRejection?: (payableId: number) => void;
+    openReuploadProof?: (id: number) => void;
+    currentUserId?: number;
 }
 
-const PaymentStatusBadge = ({ status }: { status: PaymentStatus }) => {
+const PaymentStatusBadge = ({ status, payableStatus }: { status: PaymentStatus, payableStatus?: string | null }) => {
+    // If payable is still pending, show that status instead
+    if (payableStatus === 'pending') {
+        return <Badge variant="outline">Menunggu Verifikasi Pengajuan</Badge>;
+    }
+    if (payableStatus === 'rejected') {
+        return <Badge variant="destructive">Pengajuan Ditolak</Badge>;
+    }
+
     const statusConfig: Record<PaymentStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
         [PaymentStatus.Draft]: { label: "Draft", variant: "secondary" },
         [PaymentStatus.Pending]: { label: "Menunggu Verifikasi", variant: "outline" },
@@ -34,7 +46,7 @@ const getPaymentDetailUrl = (paymentCategory: string, payableId: number): string
     return routes[paymentCategory] || null;
 };
 
-export const PaymentColumn = ({ openCreatePayment, openApproval, openRejection }: ColumnProps): ColumnDef<PaymentView>[] => [
+export const PaymentColumn = ({ openCreatePayment, openApproval, openRejection, openVerification, openVerificationRejection, openReuploadProof, currentUserId }: ColumnProps): ColumnDef<PaymentView>[] => [
     {
         header: "No. Pembayaran",
         accessorKey: "paymentNumber",
@@ -77,13 +89,13 @@ export const PaymentColumn = ({ openCreatePayment, openApproval, openRejection }
     {
         header: "Status",
         accessorKey: "status",
-        cell: ({ row }) => <PaymentStatusBadge status={row.original.status} />
+        cell: ({ row }) => <PaymentStatusBadge status={row.original.status} payableStatus={row.original.payableStatus} />
     },
     {
         header: "Detail",
         accessorKey: "payableId",
         cell: ({ row }) => {
-            const detailUrl = getPaymentDetailUrl(row.original.paymentType, row.original.payableId);
+            const detailUrl = getPaymentDetailUrl(row.original.paymentCategory, row.original.payableId);
             if (!detailUrl) return "-";
             return (
                 <NavLink to={detailUrl}>
@@ -95,13 +107,23 @@ export const PaymentColumn = ({ openCreatePayment, openApproval, openRejection }
     {
         header: "Aksi",
         accessorKey: "id",
-        cell: ({ row }) => (
-            <PaymentAction
-                payment={row.original}
-                onOpenCreatePayment={openCreatePayment}
-                onOpenApproval={openApproval}
-                onOpenRejection={openRejection}
-            />
-        )
+        cell: ({ row }) => {
+            const payment = row.original;
+            // Check if the current user is the owner of this payment
+            const isOwner = currentUserId !== undefined && payment.userId === currentUserId;
+            
+            return (
+                <PaymentAction
+                    payment={payment}
+                    onOpenCreatePayment={openCreatePayment}
+                    onOpenApproval={(id) => openApproval(id, payment)}
+                    onOpenRejection={(id) => openRejection(id, payment)}
+                    onOpenVerification={openVerification}
+                    onOpenVerificationRejection={openVerificationRejection}
+                    onOpenReuploadProof={openReuploadProof}
+                    isOwner={isOwner}
+                />
+            );
+        }
     }
 ];

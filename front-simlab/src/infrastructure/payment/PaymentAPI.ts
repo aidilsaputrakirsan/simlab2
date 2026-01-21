@@ -10,6 +10,7 @@ export type PaymentUserAPI = {
 
 export type PaymentAPI = {
     id: number,
+    user_id: number,
     payment_number: string,
     amount: number,
     invoice_file: string,
@@ -19,6 +20,8 @@ export type PaymentAPI = {
     payment_type: string,
     payment_category: string,
     payable_id: number,
+    payable_status: string | null,
+    can_verif: number | null,
     user: PaymentUserAPI | null,
 }
 
@@ -32,6 +35,7 @@ export function toDomain(api: PaymentAPI): Payment {
 
     return new Payment(
         api.id,
+        api.user_id,
         api.payment_number,
         api.amount,
         api.invoice_file,
@@ -41,6 +45,8 @@ export function toDomain(api: PaymentAPI): Payment {
         api.payment_type,
         api.payment_category,
         api.payable_id,
+        api.payable_status,
+        api.can_verif,
         user,
     )
 }

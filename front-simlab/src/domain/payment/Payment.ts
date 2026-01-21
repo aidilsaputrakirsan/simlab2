@@ -10,6 +10,7 @@ export interface PaymentUser {
 export class Payment {
     constructor(
         readonly id: number,
+        readonly userId: number,
         readonly paymentNumber: string,
         readonly amount: number,
         readonly invoiceFile: string,
@@ -19,6 +20,8 @@ export class Payment {
         readonly paymentType: string,
         readonly paymentCategory: string,
         readonly payableId: number,
+        readonly payableStatus: string | null,
+        readonly canVerif: number | null,
         readonly user: PaymentUser | null,
     ){}
 }

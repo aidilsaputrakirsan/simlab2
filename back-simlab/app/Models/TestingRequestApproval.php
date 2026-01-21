@@ -41,7 +41,7 @@ class TestingRequestApproval extends BaseModel
         }
     }
 
-    protected static function actionDefinition(): array
+    public static function actionDefinition(): array
     {
         return [
             'request_testing' => [
@@ -72,6 +72,7 @@ class TestingRequestApproval extends BaseModel
     {
         return [
             'kepala_lab_terpadu' => 'verified_by_head',
+            'admin_pengujian'    => 'verified_by_head',
             'laboran'            => 'verified_by_laboran',
         ];
     }

@@ -57,7 +57,13 @@ class PaymentController extends BaseController
     public function createPayment(PaymentCreateRequest $request, $id)
     {
         try {
-            $payment = Payment::findOrFail($id);
+            $payment = Payment::with('payable')->findOrFail($id);
+            
+            // Validate that the related testing request is approved
+            if ($payment->payable && $payment->payable->status !== 'approved') {
+                return $this->sendError('Tidak dapat menerbitkan pembayaran sebelum pengajuan pengujian disetujui', [], 400);
+            }
+
             $data = $request->validated();
             $data['invoice_file'] = $this->storeFile($request, 'invoice_file', 'invoice');
 
@@ -79,15 +85,26 @@ class PaymentController extends BaseController
     {
         try {
             $payment = Payment::findOrFail($id);
-            $payment_proof = $this->storeFile($request, 'payment_proof', 'invoice');
 
             if ($payment->user_id !== auth()->user()->id) {
                 return $this->sendError('Tidak diizinkan mengunggah bukti pembayaran ini', [], 403);
             }
 
-            $payment->update([
-                'payment_proof' => $payment_proof,
-            ]);
+            // Only allow re-upload if payment is rejected or pending without proof yet
+            if ($payment->status === 'approved') {
+                return $this->sendError('Pembayaran sudah disetujui, tidak dapat mengubah bukti pembayaran', [], 400);
+            }
+
+            // Delete previous payment proof if exists before uploading new one
+            $payment_proof = $this->storeFile($request, 'payment_proof', 'invoice', $payment->payment_proof);
+
+            // If payment was rejected, reset status to pending for re-review
+            $updateData = ['payment_proof' => $payment_proof];
+            if ($payment->status === 'rejected') {
+                $updateData['status'] = 'pending';
+            }
+
+            $payment->update($updateData);
             return $this->sendResponse([], 'Berhasil mengupload bukti pembayaran');
         } catch (ModelNotFoundException $e) {
             return $this->sendError("Data Pembayaran tidak ditemukan", [], 404);
@@ -115,11 +132,11 @@ class PaymentController extends BaseController
             $payment = Payment::findOrFail($id);
             $payment->update(['status' => $request->action]);
 
-            return $this->sendResponse([], 'Berhasil mengupload bukti pembayaran');
+            return $this->sendResponse([], 'Berhasil memverifikasi pembayaran');
         } catch (ModelNotFoundException $e) {
             return $this->sendError("Data Pembayaran tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Terjadi kesalahan ketika mengupload bukti pembayaran', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika memverifikasi pembayaran', [$e->getMessage()], 500);
         }
     }
 }

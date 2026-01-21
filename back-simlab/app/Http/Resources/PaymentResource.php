@@ -16,6 +16,7 @@ class PaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'payment_number' => $this->payment_number,
             'amount' => $this->amount,
             'invoice_file' => $this->invoice_file,
@@ -25,6 +26,16 @@ class PaymentResource extends JsonResource
             'payment_type' => $this->getPaymentType(),
             'payment_category' => $this->getPaymentCategory(),
             'payable_id' => $this->payable_id,
+            'payable_status' => $this->whenLoaded('payable', function () {
+                return $this->payable->status ?? null;
+            }),
+            'can_verif' => $this->whenLoaded('payable', function () {
+                $user = auth()->user();
+                if ($this->payable && method_exists($this->payable, 'canVerif')) {
+                    return $this->payable->canVerif($user);
+                }
+                return null;
+            }),
             'user' => $this->whenLoaded('user', function () {
                 return [
                     'name' => $this->user->name,
