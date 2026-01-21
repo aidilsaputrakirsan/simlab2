@@ -15,13 +15,20 @@ class PracticumModuleSeeder extends Seeder
         $p2 = $practicums[1] ?? $p1;
         $p3 = $practicums[2] ?? $p1;
 
-        PracticumModule::insert([
+        $modules = [
             ["practicum_id" => $p1, "name" => "Pengantar pemrogramman web", "status" => "active"],
             ["practicum_id" => $p1, "name" => "HTML & CSS", "status" => "active"],
             ["practicum_id" => $p2, "name" => "Pengantar pemrogramman berorientasi objek", "status" => "active"],
             ["practicum_id" => $p2, "name" => "Class & Attribute", "status" => "active"],
             ["practicum_id" => $p3, "name" => "Pengantar cloud computing", "status" => "active"],
             ["practicum_id" => $p3, "name" => "PAAS & SAAS", "status" => "active"],
-        ]);
+        ];
+
+        foreach ($modules as $module) {
+            PracticumModule::firstOrCreate(
+                ['practicum_id' => $module['practicum_id'], 'name' => $module['name']],
+                $module
+            );
+        }
     }
 }

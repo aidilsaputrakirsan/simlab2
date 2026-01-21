@@ -1,0 +1,506 @@
+[
+    {
+        "id_ruangan_laboratorium": "6",
+        "nama_ruangan": "Labter 1 - Lab. Karakterisasi A (R107)",
+        "lantai": "Lantai 1",
+        "id_laboran": "53",
+        "created_at": "2021-06-28 07:44:24",
+        "updated_at": "2024-08-23 02:16:04"
+    },
+    {
+        "id_ruangan_laboratorium": "7",
+        "nama_ruangan": "Labter 1 - Lab. Fisika Dasar A (R202)",
+        "lantai": "Lantai 2",
+        "id_laboran": "2163",
+        "created_at": "2021-06-29 01:39:01",
+        "updated_at": "2024-08-23 02:32:50"
+    },
+    {
+        "id_ruangan_laboratorium": "8",
+        "nama_ruangan": "Labter 1 - Lab. Rekayasa Konstruksi dan Transportasi (103)",
+        "lantai": "Lantai 1",
+        "id_laboran": "63",
+        "created_at": "2021-06-29 02:13:17",
+        "updated_at": "2024-08-23 02:17:44"
+    },
+    {
+        "id_ruangan_laboratorium": "9",
+        "nama_ruangan": "Workshop B - Tuning & Assembly (1.5)",
+        "lantai": "Lantai 1",
+        "id_laboran": "61",
+        "created_at": "2021-06-29 02:18:33",
+        "updated_at": "2021-06-29 02:18:33"
+    },
+    {
+        "id_ruangan_laboratorium": "10",
+        "nama_ruangan": "Labter 1 - Lab. Sistem Tenaga Listrik dan Otomasi (R106)",
+        "lantai": "Lantai 1",
+        "id_laboran": "58",
+        "created_at": "2021-06-29 05:40:39",
+        "updated_at": "2024-08-23 02:18:25"
+    },
+    {
+        "id_ruangan_laboratorium": "13",
+        "nama_ruangan": "Labter 1 - Lab. Karakterisasi B (R108)",
+        "lantai": "Lantai 1",
+        "id_laboran": "66",
+        "created_at": "2021-06-30 00:08:06",
+        "updated_at": "2024-08-23 02:22:08"
+    },
+    {
+        "id_ruangan_laboratorium": "14",
+        "nama_ruangan": "Labter 2 - Lab. Kimia Material (R202)",
+        "lantai": "Lantai 2",
+        "id_laboran": "214",
+        "created_at": "2021-06-30 00:08:55",
+        "updated_at": "2024-08-26 07:46:37"
+    },
+    {
+        "id_ruangan_laboratorium": "15",
+        "nama_ruangan": "Labter 1 - Lab. Teknologi Proses (R105)",
+        "lantai": "Lantai 1",
+        "id_laboran": "2162",
+        "created_at": "2021-06-30 00:09:19",
+        "updated_at": "2024-08-23 02:29:54"
+    },
+    {
+        "id_ruangan_laboratorium": "16",
+        "nama_ruangan": "Labter 1 - Lab. Termal (R109)",
+        "lantai": "Lantai 1",
+        "id_laboran": "52",
+        "created_at": "2021-06-30 00:17:46",
+        "updated_at": "2024-08-23 02:25:32"
+    },
+    {
+        "id_ruangan_laboratorium": "18",
+        "nama_ruangan": "Labter 1 - Lab. Fisika Dasar B (R207)",
+        "lantai": "Lantai 2",
+        "id_laboran": "2163",
+        "created_at": "2021-07-01 15:18:57",
+        "updated_at": "2024-08-23 02:26:26"
+    },
+    {
+        "id_ruangan_laboratorium": "19",
+        "nama_ruangan": "Labter 2 - Studio Perencanaan Tata Ruang (R306)",
+        "lantai": "Lantai 3",
+        "id_laboran": "2164",
+        "created_at": "2021-07-02 01:58:06",
+        "updated_at": "2024-08-23 08:32:12"
+    },
+    {
+        "id_ruangan_laboratorium": "20",
+        "nama_ruangan": "Labter 1 - Lab. Kimia Dasar B (R208)",
+        "lantai": "Lantai 2",
+        "id_laboran": "53",
+        "created_at": "2021-07-02 03:13:10",
+        "updated_at": "2024-08-23 02:35:05"
+    },
+    {
+        "id_ruangan_laboratorium": "21",
+        "nama_ruangan": "Labter 1 - Lab. Komputer A (R301)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2021-07-02 06:23:49",
+        "updated_at": "2024-08-23 02:49:28"
+    },
+    {
+        "id_ruangan_laboratorium": "22",
+        "nama_ruangan": "Labter 1 - Lab. Komputer B (R302)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2021-07-02 06:24:27",
+        "updated_at": "2024-08-23 02:49:45"
+    },
+    {
+        "id_ruangan_laboratorium": "23",
+        "nama_ruangan": "Labter 1 - Lab. Komputer D (R304)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2021-07-02 06:25:01",
+        "updated_at": "2024-08-23 02:50:32"
+    },
+    {
+        "id_ruangan_laboratorium": "24",
+        "nama_ruangan": "Labter 1 - Lab. Komputer E (R305)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2021-07-02 06:25:35",
+        "updated_at": "2024-08-23 02:50:46"
+    },
+    {
+        "id_ruangan_laboratorium": "26",
+        "nama_ruangan": "Labter 1 - Bengkel A - Manufaktur (R101)",
+        "lantai": "Lantai 1",
+        "id_laboran": "74",
+        "created_at": "2021-07-05 01:04:13",
+        "updated_at": "2024-09-19 08:00:56"
+    },
+    {
+        "id_ruangan_laboratorium": "28",
+        "nama_ruangan": "Labter 1 - Lab. Kimia Dasar A (R201)",
+        "lantai": "Lantai 2",
+        "id_laboran": "53",
+        "created_at": "2021-07-06 08:47:31",
+        "updated_at": "2024-08-23 02:33:33"
+    },
+    {
+        "id_ruangan_laboratorium": "30",
+        "nama_ruangan": "Labter 2 - Fisika Lanjut (R301)",
+        "lantai": "Lantai 3",
+        "id_laboran": "71",
+        "created_at": "2021-07-12 13:11:55",
+        "updated_at": "2024-08-23 08:33:43"
+    },
+    {
+        "id_ruangan_laboratorium": "31",
+        "nama_ruangan": "Laboratorium Industri (Lab205)",
+        "lantai": "Lantai 2",
+        "id_laboran": "67",
+        "created_at": "2021-07-13 05:51:03",
+        "updated_at": "2022-01-06 01:05:22"
+    },
+    {
+        "id_ruangan_laboratorium": "32",
+        "nama_ruangan": "Labter 1 - Lab. Uji Destruktif dan Non Destruktif (R104)",
+        "lantai": "Lantai 1",
+        "id_laboran": "52",
+        "created_at": "2021-07-15 23:37:33",
+        "updated_at": "2024-09-23 00:55:29"
+    },
+    {
+        "id_ruangan_laboratorium": "33",
+        "nama_ruangan": "Labter 2 - Lab. Rekayasa Lingkungan & Pengolahan Limbah (R103)",
+        "lantai": "Lantai 1",
+        "id_laboran": "55",
+        "created_at": "2021-07-30 06:48:46",
+        "updated_at": "2024-08-23 05:58:47"
+    },
+    {
+        "id_ruangan_laboratorium": "34",
+        "nama_ruangan": "Labter 1 - Gudang Bahan A (R110)",
+        "lantai": "Lantai 1",
+        "id_laboran": "215",
+        "created_at": "2021-10-26 03:54:48",
+        "updated_at": "2024-08-23 02:31:38"
+    },
+    {
+        "id_ruangan_laboratorium": "36",
+        "nama_ruangan": "Labter 1 - Ruang Kerja Bersama A (R205)",
+        "lantai": "Lantai 2",
+        "id_laboran": "799",
+        "created_at": "2022-08-22 03:50:12",
+        "updated_at": "2024-09-23 07:21:21"
+    },
+    {
+        "id_ruangan_laboratorium": "37",
+        "nama_ruangan": "Labter 1 - Lab. Komputer C (R303)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2022-08-26 02:41:46",
+        "updated_at": "2024-08-23 02:50:11"
+    },
+    {
+        "id_ruangan_laboratorium": "40",
+        "nama_ruangan": "Labter 1 - Lab. Komputer F (R306)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2024-08-23 02:53:21",
+        "updated_at": "2024-08-23 02:53:21"
+    },
+    {
+        "id_ruangan_laboratorium": "41",
+        "nama_ruangan": "Labter 1 - Lab. Komputer G (R307)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2024-08-23 02:53:54",
+        "updated_at": "2024-08-23 02:53:54"
+    },
+    {
+        "id_ruangan_laboratorium": "42",
+        "nama_ruangan": "Labter 2 - Lab. Karakterisasi C (R101)",
+        "lantai": "Lantai 1",
+        "id_laboran": "66",
+        "created_at": "2024-08-23 02:54:33",
+        "updated_at": "2024-08-23 02:54:33"
+    },
+    {
+        "id_ruangan_laboratorium": "43",
+        "nama_ruangan": "Labter 2 - Lab. Operasi Teknologi Kimia (R102)",
+        "lantai": "Lantai 2",
+        "id_laboran": "66",
+        "created_at": "2024-08-23 02:54:56",
+        "updated_at": "2024-08-23 02:54:56"
+    },
+    {
+        "id_ruangan_laboratorium": "45",
+        "nama_ruangan": "Labter 2 - Gudang Bahan B (R104)",
+        "lantai": "Lantai 1",
+        "id_laboran": "215",
+        "created_at": "2024-08-23 02:58:22",
+        "updated_at": "2024-08-23 02:58:22"
+    },
+    {
+        "id_ruangan_laboratorium": "46",
+        "nama_ruangan": "Labter 2 - Gudang Bahan C (R105)",
+        "lantai": "Lantai 1",
+        "id_laboran": "215",
+        "created_at": "2024-08-23 02:58:48",
+        "updated_at": "2024-08-23 02:58:48"
+    },
+    {
+        "id_ruangan_laboratorium": "47",
+        "nama_ruangan": "Labter 2 - Lab. Rekayasa Industri dan Ergonomi (R106)",
+        "lantai": "Lantai 1",
+        "id_laboran": "516",
+        "created_at": "2024-08-23 03:03:08",
+        "updated_at": "2024-08-23 03:03:08"
+    },
+    {
+        "id_ruangan_laboratorium": "48",
+        "nama_ruangan": "Labter 2 - Lab. Rekayasa Keselamatan (R107)",
+        "lantai": "Lantai 1",
+        "id_laboran": "516",
+        "created_at": "2024-08-23 03:04:25",
+        "updated_at": "2024-08-23 03:04:25"
+    },
+    {
+        "id_ruangan_laboratorium": "49",
+        "nama_ruangan": "Labter 2 - Lab. Proses Produksi (R108)-A",
+        "lantai": "Lantai 1",
+        "id_laboran": "74",
+        "created_at": "2024-08-23 03:04:47",
+        "updated_at": "2024-09-23 00:54:35"
+    },
+    {
+        "id_ruangan_laboratorium": "50",
+        "nama_ruangan": "Labter 2 - Lab. Permesinan dan Konversi Energi (R109)",
+        "lantai": "Lantai 1",
+        "id_laboran": "54",
+        "created_at": "2024-08-23 03:05:20",
+        "updated_at": "2024-08-23 03:31:10"
+    },
+    {
+        "id_ruangan_laboratorium": "52",
+        "nama_ruangan": "Labter 2 - Lab. Konstruksi Bangunan Laut (R115)",
+        "lantai": "Lantai 1",
+        "id_laboran": "54",
+        "created_at": "2024-08-23 03:06:37",
+        "updated_at": "2024-08-23 03:06:37"
+    },
+    {
+        "id_ruangan_laboratorium": "53",
+        "nama_ruangan": "Labter 2 - Lab. Geoteknik dan Ukur Tanah (R116)",
+        "lantai": "Lantai 1",
+        "id_laboran": "63",
+        "created_at": "2024-08-23 03:07:01",
+        "updated_at": "2024-08-23 03:07:01"
+    },
+    {
+        "id_ruangan_laboratorium": "54",
+        "nama_ruangan": "Labter 2 - Lab. Hidrodinamika dan Aerodinamika (R118)",
+        "lantai": "Lantai 1",
+        "id_laboran": "54",
+        "created_at": "2024-08-23 03:07:28",
+        "updated_at": "2024-08-23 03:07:28"
+    },
+    {
+        "id_ruangan_laboratorium": "55",
+        "nama_ruangan": "Labter 2 - Lab. Pusat Penelitian Energi (R201)",
+        "lantai": "Lantai 2",
+        "id_laboran": "2378",
+        "created_at": "2024-08-23 03:08:41",
+        "updated_at": "2024-09-24 05:32:15"
+    },
+    {
+        "id_ruangan_laboratorium": "57",
+        "nama_ruangan": "Labter 2 - Lab. Pusat Penelitian Pangan Pertanian (R203)",
+        "lantai": "Lantai 2",
+        "id_laboran": "799",
+        "created_at": "2024-08-23 03:09:23",
+        "updated_at": "2024-08-23 03:09:23"
+    },
+    {
+        "id_ruangan_laboratorium": "58",
+        "nama_ruangan": "Labter 2 - Lab Teknologi Pangan (R204)",
+        "lantai": "Lantai 2",
+        "id_laboran": "799",
+        "created_at": "2024-08-23 03:10:03",
+        "updated_at": "2024-08-23 03:10:03"
+    },
+    {
+        "id_ruangan_laboratorium": "59",
+        "nama_ruangan": "Labter 2 - Kantor Administrasi (R205)",
+        "lantai": "Lantai 2",
+        "id_laboran": "799",
+        "created_at": "2024-08-23 03:10:16",
+        "updated_at": "2024-08-23 03:10:16"
+    },
+    {
+        "id_ruangan_laboratorium": "60",
+        "nama_ruangan": "Labter 2 - Lab Logistik & Manajemen Rantai Pasok (R206)",
+        "lantai": "Lantai 2",
+        "id_laboran": "516",
+        "created_at": "2024-08-23 03:10:30",
+        "updated_at": "2024-08-23 03:10:30"
+    },
+    {
+        "id_ruangan_laboratorium": "61",
+        "nama_ruangan": "Labter 2 - Ruang Seminar (R207)",
+        "lantai": "Lantai 2",
+        "id_laboran": "2165",
+        "created_at": "2024-08-23 03:10:49",
+        "updated_at": "2024-08-23 03:10:49"
+    },
+    {
+        "id_ruangan_laboratorium": "62",
+        "nama_ruangan": "Labter 2 - Lab Fisika Lanjut (R301)",
+        "lantai": "Lantai 3",
+        "id_laboran": "2163",
+        "created_at": "2024-08-23 03:11:26",
+        "updated_at": "2024-08-23 03:11:26"
+    },
+    {
+        "id_ruangan_laboratorium": "63",
+        "nama_ruangan": "Labter 2 - Lab Elektronika dan Robotika (R302)",
+        "lantai": "Lantai 3",
+        "id_laboran": "58",
+        "created_at": "2024-08-23 03:14:38",
+        "updated_at": "2024-08-23 03:14:38"
+    },
+    {
+        "id_ruangan_laboratorium": "64",
+        "nama_ruangan": "Labter 2 - Lab Komputasi Tinggi (R303)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2024-08-23 03:14:56",
+        "updated_at": "2024-08-23 03:14:56"
+    },
+    {
+        "id_ruangan_laboratorium": "65",
+        "nama_ruangan": "Labter 2 - Lab Telekomunikasi dan Jaringan Komputer (R304)",
+        "lantai": "Lantai 3",
+        "id_laboran": "58",
+        "created_at": "2024-08-23 03:15:12",
+        "updated_at": "2024-08-23 03:15:12"
+    },
+    {
+        "id_ruangan_laboratorium": "66",
+        "nama_ruangan": "Labter 2 - Lab Pengembangan Perangkat Lunak (R305)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2024-08-23 03:15:59",
+        "updated_at": "2024-08-23 03:15:59"
+    },
+    {
+        "id_ruangan_laboratorium": "68",
+        "nama_ruangan": "Labter 2 - Studio Arsitektur dan Desain (R307)",
+        "lantai": "Lantai 3",
+        "id_laboran": "2164",
+        "created_at": "2024-08-23 03:16:24",
+        "updated_at": "2024-08-23 03:16:24"
+    },
+    {
+        "id_ruangan_laboratorium": "69",
+        "nama_ruangan": "Labter 2 - Lab Pusat Penelitian Smart City (R308)",
+        "lantai": "Lantai 3",
+        "id_laboran": "194",
+        "created_at": "2024-08-23 03:16:48",
+        "updated_at": "2024-08-23 03:16:48"
+    },
+    {
+        "id_ruangan_laboratorium": "71",
+        "nama_ruangan": "Labter 1 - Bengkel B - Perakitan (R102)",
+        "lantai": "Lantai 1",
+        "id_laboran": "87",
+        "created_at": "2024-08-26 00:37:11",
+        "updated_at": "2024-09-19 08:01:09"
+    },
+    {
+        "id_ruangan_laboratorium": "72",
+        "nama_ruangan": "Labter 2 - Lab. Proses Produksi (R108)-B\/DT-NDT",
+        "lantai": "Lantai 1",
+        "id_laboran": "52",
+        "created_at": "2024-09-23 00:54:18",
+        "updated_at": "2024-09-23 05:12:17"
+    },
+    {
+        "id_ruangan_laboratorium": "74",
+        "nama_ruangan": "Labter 1 - Ruang Kerja Bersama B (R206)",
+        "lantai": "Lantai 2",
+        "id_laboran": "799",
+        "created_at": "2024-09-23 07:20:51",
+        "updated_at": "2024-09-23 07:20:51"
+    },
+    {
+        "id_ruangan_laboratorium": "75",
+        "nama_ruangan": "Labter 2 - Lab Mikrobiologi Pangan",
+        "lantai": "Lantai 2",
+        "id_laboran": "2970",
+        "created_at": "2025-09-29 04:05:40",
+        "updated_at": "2025-09-29 04:05:40"
+    },
+    {
+        "id_ruangan_laboratorium": "76",
+        "nama_ruangan": "Labter 2 - Lab Biokimia Pangan",
+        "lantai": "Lantai 2",
+        "id_laboran": "2970",
+        "created_at": "2025-09-29 06:45:02",
+        "updated_at": "2025-09-29 06:45:02"
+    },
+    {
+        "id_ruangan_laboratorium": "77",
+        "nama_ruangan": "Labter 2 - Lab Sensori Pangan",
+        "lantai": "Lantai 2",
+        "id_laboran": "2970",
+        "created_at": "2025-09-29 06:45:36",
+        "updated_at": "2025-09-29 06:45:36"
+    },
+    {
+        "id_ruangan_laboratorium": "`id_ruangan_laboratorium`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id_ruangan_laboratorium": "`nama_ruangan`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id_ruangan_laboratorium": "`lantai`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id_ruangan_laboratorium": "`id_laboran`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id_ruangan_laboratorium": "`created_at`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id_ruangan_laboratorium": "`updated_at`",
+        "nama_ruangan": null,
+        "lantai": null,
+        "id_laboran": null,
+        "created_at": null,
+        "updated_at": null
+    }
+]

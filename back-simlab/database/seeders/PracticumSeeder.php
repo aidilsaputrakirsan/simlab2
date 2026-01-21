@@ -12,10 +12,17 @@ class PracticumSeeder extends Seeder
     {
         $prodiId = StudyProgram::first()->id ?? 1;
 
-        Practicum::insert([
+        $practicums = [
             ["code" => "IS23123", "name" => "Pemrogramman Web", "study_program_id" => $prodiId, "type" => "compulsory", "sks" => 3],
             ["code" => "IS31231", "name" => "Pemrogramman Beroriantasi Objek", "study_program_id" => $prodiId, "type" => "compulsory", "sks" => 3],
             ["code" => "IS33123", "name" => "Cloud Computing", "study_program_id" => $prodiId, "type" => "compulsory", "sks" => 2],
-        ]);
+        ];
+
+        foreach ($practicums as $practicum) {
+            Practicum::firstOrCreate(
+                ['code' => $practicum['code']],
+                $practicum
+            );
+        }
     }
 }
