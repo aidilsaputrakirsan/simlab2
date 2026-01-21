@@ -20,6 +20,11 @@ use App\Models\BookingApproval;
 use App\Models\BookingEquipment;
 use App\Models\BookingMaterial;
 use App\Models\AcademicYear;
+use App\Models\Event;
+use App\Models\LaboratoryEquipment;
+use App\Models\LaboratoryMaterial;
+use App\Models\Payment;
+use App\Models\PaymentItem;
 use App\Models\User;
 use App\Exports\BookingRoomExport;
 use App\Exports\BookingEquipmentExport;
@@ -143,6 +148,28 @@ class BookingController extends BaseController
             if ($user->role === 'laboran') {
                 $query->where('laboran_id', $user->id);
             }
+
+            // KepalaLabTerpadu can see ALL bookings, but canVerif() will control if they can verify
+            // (canVerif returns 2 for paid bookings, meaning they cannot verify but can still see them)
+
+            // Admin pengujian should only see bookings that have paid items
+            if ($user->role === 'admin_pengujian') {
+                $query->whereHas('equipments', function ($q) {
+                    $q->where('price', '>', 0);
+                })->orWhereHas('materials', function ($q) {
+                    $q->where('price', '>', 0);
+                })->orWhereHas('laboratoryRoom', function ($q) {
+                    $q->where(function ($subQ) {
+                        $subQ->where('student_price', '>', 0)
+                            ->orWhere('lecturer_price', '>', 0)
+                            ->orWhere('external_price', '>', 0);
+                    });
+                });
+                // Re-apply filters after orWhereHas
+                $query->where('academic_year_id', $this->activeAcademicYear->id);
+                $query->where('status', '<>', 'draft');
+            }
+
             // Eager load relations for report context
             $query->with([
                 'user.studyProgram',
@@ -297,6 +324,7 @@ class BookingController extends BaseController
         // Booking is APPROVED
         switch ($user->role) {
             case 'kepala_lab_terpadu':
+            case 'admin_pengujian':
                 // Assign laboran to the booking
                 $booking->update(['laboran_id' => $request->laboran_id]);
 
@@ -319,6 +347,13 @@ class BookingController extends BaseController
                 // Final approval (laboran confirms everything)
                 $booking->update(['status' => 'approved']);
 
+                // Create event only if booking has NO paid items
+                // For paid items, event will be created when payment is approved
+                $booking->load(['equipments', 'materials', 'laboratoryRoom', 'user']);
+                if (!$booking->hasPaidItems) {
+                    $this->createBookingEvent($booking);
+                }
+
                 // Notify applicant that the booking is approved
                 Mail::to($booking->user->email)
                     ->queue(new BookingNotificationLaboranApproved($booking->user, $booking));
@@ -335,11 +370,25 @@ class BookingController extends BaseController
             }
 
             if (!$booking->kepala_lab_approval) {
-                return 'Kepala Lab Terpadu harus verifikasi terlebih dahulu.';
+                return 'Kepala Lab Terpadu atau Admin Pengujian harus verifikasi terlebih dahulu.';
             }
             $kepalaLabApproval = $booking->kepala_lab_approval;
             if ($kepalaLabApproval && isset($kepalaLabApproval['approved']) && $kepalaLabApproval['approved'] === false) {
-                return 'Kepala Lab Terpadu telah menolak, Laboran tidak dapat verifikasi.';
+                return 'Kepala Lab Terpadu atau Admin Pengujian telah menolak, Laboran tidak dapat verifikasi.';
+            }
+        }
+
+        // Admin pengujian can only verify paid bookings
+        if ($user->role === 'admin_pengujian') {
+            if (!$booking->hasPaidItems) {
+                return 'Admin Pengujian hanya dapat memverifikasi peminjaman berbayar.';
+            }
+        }
+
+        // Kepala lab terpadu can only verify non-paid bookings
+        if ($user->role === 'kepala_lab_terpadu') {
+            if ($booking->hasPaidItems) {
+                return 'Peminjaman berbayar diverifikasi oleh Admin Pengujian.';
             }
         }
 
@@ -399,6 +448,9 @@ class BookingController extends BaseController
             if ($isRoom) {
                 // Auto-approve for 'room' bookings
                 $this->recordApproval($booking->id, 'request_booking', $user->id, 1);
+                
+                // Create payment if room has price
+                $this->createBookingPayment($booking);
             }
 
             DB::commit();
@@ -420,7 +472,7 @@ class BookingController extends BaseController
     {
         try {
             // Mendapatkan data booking (peminjaman) berdasarkan id
-            $booking = Booking::with(['user.studyProgram', 'user.institution', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial'])->findOrFail($id);
+            $booking = Booking::with(['user.studyProgram', 'user.institution', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial', 'payment'])->findOrFail($id);
 
             return $this->sendResponse(new BookingResource($booking), 'Booking Retrieved Successfully');
         } catch (ModelNotFoundException $e) {
@@ -446,7 +498,8 @@ class BookingController extends BaseController
     {
         DB::beginTransaction();
         try {
-            $booking = Booking::with(['equipments', 'materials'])->findOrFail($id);
+            $booking = Booking::with(['equipments', 'materials', 'user'])->findOrFail($id);
+            $user = $booking->user;
 
             if (!in_array($booking->status, ['draft'])) {
                 DB::rollBack();
@@ -461,11 +514,11 @@ class BookingController extends BaseController
                 return $this->sendError('Alat atau bahan sudah pernah ditambahkan.', [], 400);
             }
 
-            // 3. Insert equipments
-            $this->storeEquipments($booking->id, $data['laboratoryEquipments']);
+            // 3. Insert equipments with price
+            $this->storeEquipments($booking->id, $data['laboratoryEquipments'], $user);
 
-            // 4. Insert materials
-            $this->storeMaterials($booking->id, $data['laboratoryMaterials']);
+            // 4. Insert materials with price
+            $this->storeMaterials($booking->id, $data['laboratoryMaterials'], $user);
 
             // 5. Update status and approval (any creation moves draft -> pending)
             if ($booking->status === 'draft') {
@@ -474,6 +527,9 @@ class BookingController extends BaseController
             }
 
             $this->recordApproval($booking->id, 'request_booking', auth()->id(), 1);
+
+            // 6. Create payment if booking has paid items
+            $this->createBookingPayment($booking);
 
             DB::commit();
             $booking->load(['user.studyProgram', 'user.institution', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
@@ -492,7 +548,8 @@ class BookingController extends BaseController
     {
         DB::beginTransaction();
         try {
-            $booking = Booking::with(['equipments'])->findOrFail($id);
+            $booking = Booking::with(['equipments', 'user'])->findOrFail($id);
+            $user = $booking->user;
 
             if (!in_array($booking->status, ['draft'])) {
                 DB::rollBack();
@@ -505,12 +562,15 @@ class BookingController extends BaseController
             }
 
             $data = $request->validated();
-            $this->storeEquipments($booking->id, $data['laboratoryEquipments']);
+            $this->storeEquipments($booking->id, $data['laboratoryEquipments'], $user);
 
             $booking->update(['status' => 'pending']);
             Mail::to($this->currentKepalaLab->email)->queue(new BookingNotification());
 
             $this->recordApproval($booking->id, 'request_booking', auth()->id(), 1);
+
+            // Create payment if booking has paid items
+            $this->createBookingPayment($booking);
 
             DB::commit();
             $booking->load(['equipments.laboratoryEquipment', 'user.studyProgram', 'user.institution']);
@@ -545,26 +605,151 @@ class BookingController extends BaseController
         );
     }
 
-    private function storeEquipments($bookingId, array $equipments)
+    private function storeEquipments($bookingId, array $equipments, $user)
     {
+        $userPriceType = $this->getUserPriceType($user);
+        
         foreach ($equipments as $equipment) {
+            $labEquipment = LaboratoryEquipment::find($equipment['id']);
+            $price = $this->getItemPrice($labEquipment, $userPriceType);
+            
             BookingEquipment::create([
                 'booking_id' => $bookingId,
                 'laboratory_equipment_id' => $equipment['id'],
-                'quantity' => $equipment['quantity']
+                'quantity' => $equipment['quantity'],
+                'price' => $price
             ]);
         }
     }
 
-    private function storeMaterials($bookingId, array $materials)
+    private function storeMaterials($bookingId, array $materials, $user)
     {
+        $userPriceType = $this->getUserPriceType($user);
+        
         foreach ($materials as $material) {
+            $labMaterial = LaboratoryMaterial::find($material['id']);
+            $price = $this->getItemPrice($labMaterial, $userPriceType);
+            
             BookingMaterial::create([
                 'booking_id' => $bookingId,
-                'laboratory_material_id' => $material['id'], // TODO: change to bahan_laboratorium_id if schema requires
-                'quantity' => $material['quantity']
+                'laboratory_material_id' => $material['id'],
+                'quantity' => $material['quantity'],
+                'price' => $price
             ]);
         }
+    }
+
+    /**
+     * Get user price type based on their role and institution
+     */
+    private function getUserPriceType($user): string
+    {
+        // If user has study_program_id, they're internal (student or lecturer)
+        if ($user->study_program_id) {
+            return $user->role === 'dosen' ? 'lecturer' : 'student';
+        }
+        
+        // External user
+        return 'external';
+    }
+
+    /**
+     * Get the price for an item based on user type
+     */
+    private function getItemPrice($item, string $userPriceType): float
+    {
+        if (!$item) return 0;
+        
+        return match ($userPriceType) {
+            'student' => $item->student_price ?? 0,
+            'lecturer' => $item->lecturer_price ?? 0,
+            'external' => $item->external_price ?? 0,
+            default => 0
+        };
+    }
+
+    /**
+     * Create initial payment for booking if it has paid items
+     */
+    private function createBookingPayment(Booking $booking)
+    {
+        // Reload to get fresh data with prices
+        $booking->load(['user', 'laboratoryRoom', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
+
+        // Only create payment if there are paid items
+        if (!$booking->hasPaidItems) {
+            return;
+        }
+
+        $user = $booking->user;
+        $payment = $booking->payment()->create([
+            'user_id' => $user->id,
+            'status' => 'draft',
+            'amount' => 0
+        ]);
+
+        $totalAmount = 0;
+
+        // Add room price if applicable
+        if ($booking->room_price > 0 && $booking->laboratoryRoom) {
+            PaymentItem::create([
+                'payment_id' => $payment->id,
+                'name' => 'Ruangan - ' . $booking->laboratoryRoom->name,
+                'quantity' => 1,
+                'unit' => 'ruangan',
+                'price' => $booking->room_price,
+            ]);
+            $totalAmount += $booking->room_price;
+        }
+
+        // Add equipment prices
+        foreach ($booking->equipments as $equipment) {
+            if ($equipment->price > 0) {
+                PaymentItem::create([
+                    'payment_id' => $payment->id,
+                    'name' => 'Alat - ' . $equipment->laboratoryEquipment->equipment_name,
+                    'quantity' => $equipment->quantity,
+                    'unit' => $equipment->laboratoryEquipment->unit ?? 'unit',
+                    'price' => $equipment->price,
+                ]);
+                $totalAmount += ($equipment->price * $equipment->quantity);
+            }
+        }
+
+        // Add material prices
+        foreach ($booking->materials as $material) {
+            if ($material->price > 0) {
+                PaymentItem::create([
+                    'payment_id' => $payment->id,
+                    'name' => 'Bahan - ' . $material->laboratoryMaterial->material_name,
+                    'quantity' => $material->quantity,
+                    'unit' => $material->laboratoryMaterial->unit ?? 'unit',
+                    'price' => $material->price,
+                ]);
+                $totalAmount += ($material->price * $material->quantity);
+            }
+        }
+
+        $payment->update(['amount' => $totalAmount]);
+    }
+
+    /**
+     * Create an event for the booking
+     */
+    private function createBookingEvent(Booking $booking)
+    {
+        // Only create event if it doesn't already exist
+        if ($booking->event) {
+            return;
+        }
+
+        Event::create([
+            'eventable_id' => $booking->id,
+            'eventable_type' => Booking::class,
+            'title' => 'Peminjaman - ' . $booking->activity_name,
+            'start_date' => $booking->start_time,
+            'end_date' => $booking->end_time,
+        ]);
     }
 
     private function sendToSupervisor($booking)

@@ -138,7 +138,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // booking (peminjaman)
-    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan'], function () {
+    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|admin_pengujian'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
@@ -150,7 +150,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
 
-        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin'], function () {
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin|admin_pengujian'], function () {
             Route::get('/verification', [BookingController::class, 'getBookingsForVerification']);
             Route::post('/{id}/verify', [BookingController::class, 'verify']);
             // Route::get('/export', [BookingController::class, 'bookingExport']);

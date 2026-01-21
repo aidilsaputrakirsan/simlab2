@@ -60,7 +60,7 @@ class PaymentResource extends JsonResource
     private function getPaymentType()
     {
         $paymentTypes = [
-            'App\\Models\\Booking' => 'Peminjaman Peralatan',
+            'App\\Models\\Booking' => 'Penyewaan',
             'App\\Models\\TestingRequest' => 'Pengujian',
         ];
 

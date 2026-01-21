@@ -79,6 +79,85 @@ class Booking extends BaseModel
         return $this->morphOne(Event::class, 'eventable');
     }
 
+    /**
+     * Get the total price for room booking based on user type
+     */
+    public function getRoomPriceAttribute()
+    {
+        if (!$this->laboratoryRoom || !$this->user) {
+            return 0;
+        }
+
+        $userType = $this->getUserPriceType();
+        $room = $this->laboratoryRoom;
+
+        return match ($userType) {
+            'student' => $room->student_price ?? 0,
+            'lecturer' => $room->lecturer_price ?? 0,
+            'external' => $room->external_price ?? 0,
+            default => 0
+        };
+    }
+
+    /**
+     * Get the total price for equipment booking
+     */
+    public function getEquipmentTotalPriceAttribute()
+    {
+        return $this->equipments->sum(function ($equipment) {
+            return $equipment->price * $equipment->quantity;
+        });
+    }
+
+    /**
+     * Get the total price for material booking
+     */
+    public function getMaterialTotalPriceAttribute()
+    {
+        return $this->materials->sum(function ($material) {
+            return $material->price * $material->quantity;
+        });
+    }
+
+    /**
+     * Get the grand total price for the booking
+     */
+    public function getTotalPriceAttribute()
+    {
+        return $this->room_price + $this->equipment_total_price + $this->material_total_price;
+    }
+
+    /**
+     * Check if this booking has any paid items (price > 0)
+     */
+    public function getHasPaidItemsAttribute()
+    {
+        if ($this->room_price > 0) {
+            return true;
+        }
+
+        $hasEquipmentWithPrice = $this->equipments->contains(fn($e) => $e->price > 0);
+        $hasMaterialWithPrice = $this->materials->contains(fn($m) => $m->price > 0);
+
+        return $hasEquipmentWithPrice || $hasMaterialWithPrice;
+    }
+
+    /**
+     * Determine user type for pricing (student, lecturer, external)
+     */
+    private function getUserPriceType(): string
+    {
+        $user = $this->user;
+        
+        // If user has study_program_id, they're internal (student or lecturer)
+        if ($user->study_program_id) {
+            return $user->role === 'dosen' ? 'lecturer' : 'student';
+        }
+        
+        // External user
+        return 'external';
+    }
+
     public function getKepalaLabApprovalAttribute()
     {
         $approval = $this->approvals()
@@ -93,6 +172,90 @@ class Booking extends BaseModel
             ->where('action', 'verified_by_laboran')
             ->first();
         return $approval ?: null;
+    }
+
+    /**
+     * Determine if a user can verify this booking
+     * Returns:
+     * - 0: Already approved by this role
+     * - 1: Can verify now
+     * - 2: Waiting for previous step / cannot verify
+     * - 3: Rejected
+     */
+    public function canVerif(User $user)
+    {
+        $hasPaidItems = $this->hasPaidItems;
+        $flows = $this->getApprovalFlowsForBooking();
+        $roleStep = $this->getRoleApprovalFlows();
+
+        $action = $roleStep[$user->role] ?? null;
+
+        // For admin_pengujian, only allow verification if booking has paid items
+        if ($user->role === 'admin_pengujian' && !$hasPaidItems) {
+            return 2; // Cannot verify non-paid bookings
+        }
+
+        // For kepala_lab_terpadu, only allow verification if booking has no paid items
+        if ($user->role === 'kepala_lab_terpadu' && $hasPaidItems) {
+            return 2; // Cannot verify paid bookings (admin_pengujian handles this)
+        }
+
+        // Step index of this role
+        $targetIndex = array_search($action, $flows);
+
+        if ($targetIndex === false) {
+            return 2; // Role not in flow
+        }
+
+        // Steps that have been completed
+        $doneCount = $this->approvals->count();
+
+        // Check whether it has been approved/rejected
+        $existing = $this->approvals()->where('action', $action)->first();
+        if ($existing) {
+            // If it has been verified
+            if ($existing->is_approved) return 0; // already verified
+            if (!$existing->is_approved) return 3; // rejected
+        }
+
+        // If it can't be verified yet because it hasn't reached the sequence yet
+        if ($doneCount < $targetIndex) {
+            return 2; // waiting for the previous stage
+        }
+
+        // If you have reached the step → you can verify
+        if ($doneCount == $targetIndex) {
+            return 1; // can verify now
+        }
+
+        // Default fallback
+        return 2;
+    }
+
+    /**
+     * Get the approval flows for booking
+     * Both paid and non-paid items use the same flow: request_booking -> verified_by_head -> verified_by_laboran
+     * The difference is WHO can do verified_by_head (admin_pengujian for paid, kepala_lab_terpadu for non-paid)
+     */
+    private function getApprovalFlowsForBooking()
+    {
+        return [
+            'request_booking',
+            'verified_by_head',
+            'verified_by_laboran',
+        ];
+    }
+
+    /**
+     * Get role to approval action mapping
+     */
+    private function getRoleApprovalFlows()
+    {
+        return [
+            'kepala_lab_terpadu' => 'verified_by_head',
+            'admin_pengujian' => 'verified_by_head',
+            'laboran' => 'verified_by_laboran',
+        ];
     }
 
     public function getIsRequestorCanReturnAttribute(): bool

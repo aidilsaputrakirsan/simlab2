@@ -16,6 +16,15 @@ export class Booking {
     private bookingMaterial: BookingMaterial[] = []
     private bookingApprovals : BookingApproval[] = []
     private isRequestorCanReturn: boolean = false
+    private roomPrice: number = 0
+    private equipmentTotalPrice: number = 0
+    private materialTotalPrice: number = 0
+    private totalPrice: number = 0
+    private hasPaidItems: boolean = false
+    private paymentId?: number
+    private paymentStatus?: string
+    private isPaymentProofHasUploaded: boolean = false
+    private canVerif: number = 2
 
     constructor(
         readonly id: number,
@@ -70,6 +79,24 @@ export class Booking {
         this.isRequestorCanReturn = can_return
     }
 
+    setPriceInfo(roomPrice: number, equipmentTotalPrice: number, materialTotalPrice: number, totalPrice: number, hasPaidItems: boolean) {
+        this.roomPrice = roomPrice
+        this.equipmentTotalPrice = equipmentTotalPrice
+        this.materialTotalPrice = materialTotalPrice
+        this.totalPrice = totalPrice
+        this.hasPaidItems = hasPaidItems
+    }
+
+    setPaymentInfo(paymentId?: number, paymentStatus?: string, isPaymentProofHasUploaded?: boolean) {
+        this.paymentId = paymentId
+        this.paymentStatus = paymentStatus
+        this.isPaymentProofHasUploaded = isPaymentProofHasUploaded ?? false
+    }
+
+    setCanVerif(canVerif: number) {
+        this.canVerif = canVerif
+    }
+
     // === Getter Methods
 
     getLaboratoryRoomName(): string | undefined {
@@ -102,5 +129,41 @@ export class Booking {
     
     getIsRequestorCanReturn(): boolean {
         return this.isRequestorCanReturn
+    }
+
+    getRoomPrice(): number {
+        return this.roomPrice
+    }
+
+    getEquipmentTotalPrice(): number {
+        return this.equipmentTotalPrice
+    }
+
+    getMaterialTotalPrice(): number {
+        return this.materialTotalPrice
+    }
+
+    getTotalPrice(): number {
+        return this.totalPrice
+    }
+
+    getHasPaidItems(): boolean {
+        return this.hasPaidItems
+    }
+
+    getPaymentId(): number | undefined {
+        return this.paymentId
+    }
+
+    getPaymentStatus(): string | undefined {
+        return this.paymentStatus
+    }
+
+    getIsPaymentProofHasUploaded(): boolean {
+        return this.isPaymentProofHasUploaded
+    }
+
+    getCanVerif(): number {
+        return this.canVerif
     }
 }

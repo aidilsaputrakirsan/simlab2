@@ -7,14 +7,19 @@ import PaymentCreateFormDialog from './components/PaymentCreateFormDialog'
 import { usePaymentHandler } from './hooks/usePaymentHandler'
 import { PaymentColumn } from './columns/PaymentColumn'
 import { useTestingRequestVerification } from '../testing-request/hooks/useTestingRequestVerification'
+import { useBookingVerificationForPayment } from '../booking/hooks/useBookingVerificationForPayment'
 import RejectionDialog from '@/presentation/components/custom/RejectionDialog'
 import ApproveWithLaboranSelectDialog from '@/presentation/components/custom/ApproveWithLaboranSelectDialog'
 import PaymentApprovalDialog from './components/PaymentApprovalDialog'
 import PaymentProofFormDialog from './components/PaymentProofFormDialog'
 import { useAuthContext } from '@/presentation/contexts/AuthContext'
+import { useState } from 'react'
 
 const PaymentPage = () => {
     const { user } = useAuthContext()
+    
+    // Track which type of verification is being performed
+    const [verificationType, setVerificationType] = useState<'testing_request' | 'booking' | null>(null)
     
     // Payment Data Table
     const {
@@ -52,14 +57,86 @@ const PaymentPage = () => {
 
     // Testing Request Verification Handler (for payable verification)
     const {
-        dialogs: verificationDialogs,
-        openKepalaLabApproval,
-        openRejection: openVerifRejection,
-        closeKepalaLabApproval,
-        closeRejection: closeVerifRejection,
-        handleKepalaLabApproval,
-        handleRejection: handleVerifRejection
+        dialogs: testingVerifDialogs,
+        openKepalaLabApproval: openTestingKepalaLabApproval,
+        openRejection: openTestingVerifRejection,
+        closeKepalaLabApproval: closeTestingKepalaLabApproval,
+        closeRejection: closeTestingVerifRejection,
+        handleKepalaLabApproval: handleTestingKepalaLabApproval,
+        handleRejection: handleTestingVerifRejection
     } = useTestingRequestVerification(refresh)
+
+    // Booking Verification Handler (for payable verification)
+    const {
+        dialogs: bookingVerifDialogs,
+        openKepalaLabApproval: openBookingKepalaLabApproval,
+        openRejection: openBookingVerifRejection,
+        closeKepalaLabApproval: closeBookingKepalaLabApproval,
+        closeRejection: closeBookingVerifRejection,
+        handleKepalaLabApproval: handleBookingKepalaLabApproval,
+        handleRejection: handleBookingVerifRejection
+    } = useBookingVerificationForPayment(refresh)
+
+    // Wrapper functions to track verification type
+    const handleOpenVerification = (payableId: number, paymentCategory: string) => {
+        if (paymentCategory === 'testing_request') {
+            setVerificationType('testing_request')
+            openTestingKepalaLabApproval(payableId)
+        } else if (paymentCategory === 'booking') {
+            setVerificationType('booking')
+            openBookingKepalaLabApproval(payableId)
+        }
+    }
+
+    const handleOpenVerificationRejection = (payableId: number, paymentCategory: string) => {
+        if (paymentCategory === 'testing_request') {
+            setVerificationType('testing_request')
+            openTestingVerifRejection(payableId)
+        } else if (paymentCategory === 'booking') {
+            setVerificationType('booking')
+            openBookingVerifRejection(payableId)
+        }
+    }
+
+    // Determine which dialog is open
+    const isApprovalDialogOpen = testingVerifDialogs.KepalaLabApproval || bookingVerifDialogs.KepalaLabApproval
+    const isRejectionDialogOpen = testingVerifDialogs.rejection || bookingVerifDialogs.rejection
+
+    const handleCloseApprovalDialog = () => {
+        if (verificationType === 'testing_request') {
+            closeTestingKepalaLabApproval()
+        } else if (verificationType === 'booking') {
+            closeBookingKepalaLabApproval()
+        }
+        setVerificationType(null)
+    }
+
+    const handleCloseRejectionDialog = () => {
+        if (verificationType === 'testing_request') {
+            closeTestingVerifRejection()
+        } else if (verificationType === 'booking') {
+            closeBookingVerifRejection()
+        }
+        setVerificationType(null)
+    }
+
+    const handleApprovalSubmit = async (laboran_id: number, information: string) => {
+        if (verificationType === 'testing_request') {
+            await handleTestingKepalaLabApproval(laboran_id, information)
+        } else if (verificationType === 'booking') {
+            await handleBookingKepalaLabApproval(laboran_id, information)
+        }
+        setVerificationType(null)
+    }
+
+    const handleRejectionSubmit = async (information: string) => {
+        if (verificationType === 'testing_request') {
+            await handleTestingVerifRejection(information)
+        } else if (verificationType === 'booking') {
+            await handleBookingVerifRejection(information)
+        }
+        setVerificationType(null)
+    }
 
     return (
         <>
@@ -76,8 +153,8 @@ const PaymentPage = () => {
                                 openCreatePayment, 
                                 openApproval, 
                                 openRejection,
-                                openVerification: openKepalaLabApproval,
-                                openVerificationRejection: openVerifRejection,
+                                openVerification: handleOpenVerification,
+                                openVerificationRejection: handleOpenVerificationRejection,
                                 openReuploadProof,
                                 currentUserId: user?.id
                             })}
@@ -95,8 +172,8 @@ const PaymentPage = () => {
                 </Card>
             </MainContent>
             {/* Verification dialogs */}
-            <RejectionDialog open={verificationDialogs.rejection} onOpenChange={closeVerifRejection} handleRejection={handleVerifRejection} />
-            <ApproveWithLaboranSelectDialog open={verificationDialogs.KepalaLabApproval} onOpenChange={closeKepalaLabApproval} handleSave={handleKepalaLabApproval} />
+            <RejectionDialog open={isRejectionDialogOpen} onOpenChange={handleCloseRejectionDialog} handleRejection={handleRejectionSubmit} />
+            <ApproveWithLaboranSelectDialog open={isApprovalDialogOpen} onOpenChange={handleCloseApprovalDialog} handleSave={handleApprovalSubmit} />
             
             {/* Payment dialogs */}
             <PaymentCreateFormDialog open={paymentDialogs.createPayment} onOpenChange={closeCreatePayment} handleSave={handleCreatePayment} />

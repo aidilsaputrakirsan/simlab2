@@ -3,7 +3,10 @@ export class BookingEquipment {
     private unit?: string
     constructor(
         readonly id: number,
+        readonly laboratoryEquipmentId: number,
         readonly quantity: number,
+        readonly price: number,
+        readonly subtotal: number,
     ){}
 
     setUnit(unit: string) {

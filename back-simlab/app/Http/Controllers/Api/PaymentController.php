@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\PaymentCreateRequest;
 use App\Http\Requests\PaymentProofRequest;
 use App\Http\Resources\PaymentResource;
+use App\Models\Booking;
+use App\Models\Event;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -58,7 +60,7 @@ class PaymentController extends BaseController
     {
         try {
             $payment = Payment::with('payable')->findOrFail($id);
-            
+
             // Validate that the related testing request is approved
             if ($payment->payable && $payment->payable->status !== 'approved') {
                 return $this->sendError('Tidak dapat menerbitkan pembayaran sebelum pengajuan pengujian disetujui', [], 400);
@@ -129,8 +131,24 @@ class PaymentController extends BaseController
     public function verif(Request $request, $id)
     {
         try {
-            $payment = Payment::findOrFail($id);
+            $payment = Payment::with('payable')->findOrFail($id);
             $payment->update(['status' => $request->action]);
+
+            // If payment is approved and the payable is a Booking, create the event
+            if ($request->action === 'approved' && $payment->payable instanceof Booking) {
+                $booking = $payment->payable;
+                
+                // Only create event if it doesn't already exist
+                if (!$booking->event) {
+                    Event::create([
+                        'eventable_id' => $booking->id,
+                        'eventable_type' => Booking::class,
+                        'title' => 'Peminjaman - ' . $booking->activity_name,
+                        'start_date' => $booking->start_time,
+                        'end_date' => $booking->end_time,
+                    ]);
+                }
+            }
 
             return $this->sendResponse([], 'Berhasil memverifikasi pembayaran');
         } catch (ModelNotFoundException $e) {

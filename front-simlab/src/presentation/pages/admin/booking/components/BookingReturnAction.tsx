@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 
 interface BookingReturnActionProps {
     booking: BookingView,
-    openReturnConfirmation?: (id: number) => void 
+    openReturnConfirmation?: (id: number) => void
 }
 
 const BookingReturnAction: React.FC<BookingReturnActionProps> = ({
@@ -20,8 +20,9 @@ const BookingReturnAction: React.FC<BookingReturnActionProps> = ({
             </NavLink>
         );
     }
+
     return (
-        <div className='flex gap-2'>
+        <div className='flex gap-2 flex-wrap'>
             {booking.isRequestorCanReturn && (
                 <Button variant={'success'} onClick={() => openReturnConfirmation?.(booking.id)}>Kembalikan Alat</Button>
             )}

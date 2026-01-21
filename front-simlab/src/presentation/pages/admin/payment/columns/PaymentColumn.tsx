@@ -10,8 +10,8 @@ interface ColumnProps {
     openCreatePayment: (id: number) => void;
     openApproval: (id: number, paymentData?: PaymentView) => void;
     openRejection: (id: number, paymentData?: PaymentView) => void;
-    openVerification?: (payableId: number) => void;
-    openVerificationRejection?: (payableId: number) => void;
+    openVerification?: (payableId: number, paymentCategory: string) => void;
+    openVerificationRejection?: (payableId: number, paymentCategory: string) => void;
     openReuploadProof?: (id: number) => void;
     currentUserId?: number;
 }
@@ -118,8 +118,8 @@ export const PaymentColumn = ({ openCreatePayment, openApproval, openRejection, 
                     onOpenCreatePayment={openCreatePayment}
                     onOpenApproval={(id) => openApproval(id, payment)}
                     onOpenRejection={(id) => openRejection(id, payment)}
-                    onOpenVerification={openVerification}
-                    onOpenVerificationRejection={openVerificationRejection}
+                    onOpenVerification={(payableId) => openVerification?.(payableId, payment.paymentCategory)}
+                    onOpenVerificationRejection={(payableId) => openVerificationRejection?.(payableId, payment.paymentCategory)}
                     onOpenReuploadProof={openReuploadProof}
                     isOwner={isOwner}
                 />

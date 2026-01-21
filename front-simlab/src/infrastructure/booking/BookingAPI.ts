@@ -43,6 +43,16 @@ export type BookingAPI = {
     booking_materials: BookingMaterialAPI[];
     approvals: BookingApprovalAPI[];
     is_requestor_can_return: number;
+    // Price fields
+    room_price: number;
+    equipment_total_price: number;
+    material_total_price: number;
+    total_price: number;
+    has_paid_items: boolean;
+    payment_id?: number;
+    payment_status?: string;
+    is_payment_proof_has_uploaded?: boolean;
+    canVerif?: number;
 }
 
 export function toDomain(api: BookingAPI): Booking {
@@ -106,6 +116,23 @@ export function toDomain(api: BookingAPI): Booking {
             (approval) => toBookingApproval(approval)
         )
         booking.setBookingApproval(approvals)
+    }
+
+    // Set price information
+    booking.setPriceInfo(
+        api.room_price ?? 0,
+        api.equipment_total_price ?? 0,
+        api.material_total_price ?? 0,
+        api.total_price ?? 0,
+        api.has_paid_items ?? false
+    );
+
+    // Set payment information
+    booking.setPaymentInfo(api.payment_id, api.payment_status, api.is_payment_proof_has_uploaded);
+
+    // Set canVerif for verification status
+    if (api.canVerif !== undefined) {
+        booking.setCanVerif(api.canVerif);
     }
 
     return booking;

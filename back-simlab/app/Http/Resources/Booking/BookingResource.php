@@ -65,12 +65,27 @@ class BookingResource extends JsonResource
             'created_at' => $this->convertToISO('created_at'),
             'updated_at' => $this->convertToISO('updated_at'),
             $this->mergeWhen(static::$approvals, function () {
-                return ['approvals' => $this->approval_steps];
+                return [
+                    'approvals' => $this->approval_steps,
+                    'canVerif' => $this->canVerif(auth()->user()),
+                ];
             }),
 
             $this->mergeWhen(static::$isRequestor && $this->booking_type === 'equipment', function () {
                 return ['is_requestor_can_return' => $this->is_requestor_can_return];
             }),
+
+            // Price information
+            'room_price' => $this->room_price,
+            'equipment_total_price' => $this->equipment_total_price,
+            'material_total_price' => $this->material_total_price,
+            'total_price' => $this->total_price,
+            'has_paid_items' => $this->hasPaidItems,
+
+            // Payment information
+            'payment_id' => $this->payment?->id,
+            'payment_status' => $this->payment?->status,
+            'is_payment_proof_has_uploaded' => $this->payment?->is_payment_proof_has_uploaded ?? false,
 
             // relasi nested
             'booking_equipments' => BookingEquipmentResource::collection($this->whenLoaded('equipments')),

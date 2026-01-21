@@ -14,6 +14,8 @@ import { useBookingDataTable } from './hooks/useBookingDataTable';
 import { useBooking } from './context/BookingContext';
 import ApproveDialog from '@/presentation/components/custom/ApproveDialog';
 import { useBookingVerification } from './hooks/useBookingVerification';
+import { usePaymentHandler } from '../payment/hooks/usePaymentHandler';
+import PaymentProofFormDialog from '../payment/components/PaymentProofFormDialog';
 
 const BookingPage = () => {
     const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -68,6 +70,15 @@ const BookingPage = () => {
         // actions
         handleReturnConfirmation
     } = useBookingVerification(bookings, refresh)
+
+    // Payment proof handler
+    const {
+        selectedPayment,
+        dialogs: paymentDialogs,
+        openPaymentProof,
+        closePaymentProof,
+        handleStorePaymentProof
+    } = usePaymentHandler(refresh)
 
     return (
         <>
@@ -125,7 +136,7 @@ const BookingPage = () => {
                         </div>
                         <Table
                             data={bookings}
-                            columns={BookingColumn({ openReturnConfirmation })}
+                            columns={BookingColumn({ openReturnConfirmation, openPaymentProof })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -145,6 +156,12 @@ const BookingPage = () => {
                 handleSave={handleReturnConfirmation}
                 title='Konfirmasi Pengembalian'
                 message='Apakah anda yakin ingin melakukan konfirmasi pengembalian?'
+            />
+            <PaymentProofFormDialog
+                open={paymentDialogs.paymentProof}
+                onOpenChange={closePaymentProof}
+                handleSave={handleStorePaymentProof}
+                paymentId={selectedPayment}
             />
         </>
     )

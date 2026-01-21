@@ -13,6 +13,30 @@ import { useBookingEquipmentMaterialForm } from '../hooks/useBookingEquipmentMat
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import { useBooking } from '../context/BookingContext'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
+import { Alert, AlertDescription, AlertTitle } from '@/presentation/components/ui/alert'
+import { Info } from 'lucide-react'
+
+// Helper function to format price to IDR
+const formatPriceToIDR = (amount: number): string => {
+    return new Intl.NumberFormat('id-ID', { 
+        style: 'currency', 
+        currency: 'IDR', 
+        minimumFractionDigits: 0 
+    }).format(amount);
+};
+
+const getPriceLabel = (priceType: 'student' | 'lecturer' | 'external'): string => {
+    switch (priceType) {
+        case 'student':
+            return 'Mahasiswa';
+        case 'lecturer':
+            return 'Dosen/Internal';
+        case 'external':
+            return 'Pihak Luar';
+        default:
+            return '';
+    }
+};
 
 const BookingEquipmentForm = () => {
     const { id } = useParams()
@@ -28,6 +52,9 @@ const BookingEquipmentForm = () => {
         handleChangeItem,
         handleRemoveItem,
         handleSelectItem,
+        getApplicablePrice,
+        priceType,
+        equipmentTotal,
     } = useBookingEquipmentMaterialForm()
 
     const {
@@ -45,7 +72,7 @@ const BookingEquipmentForm = () => {
             return
         }
         try {
-            await bookingService.storeBookingEquipment(bookingId, formData.laboratoryEquipments.map(e => ({ id: e.id, quantity: e.quantity })))
+            await bookingService.storeBookingEquipment(bookingId, formData.laboratoryEquipments.map(e => ({ id: e.id, quantity: e.quantity ?? 0 })))
             toast.success('Alat berhasil diajukan')
             navigate('/panel/peminjaman')
             refreshIsHasDraftBooking()
@@ -95,6 +122,8 @@ const BookingEquipmentForm = () => {
                                 {formData.laboratoryEquipments.length === 0 && <p className='text-sm text-muted-foreground'>Belum ada alat dipilih.</p>}
                                 {formData.laboratoryEquipments.map((eq, index) => {
                                     const rowError = getRowError(index)
+                                    const itemPrice = getApplicablePrice(eq)
+                                    const subtotal = itemPrice * (eq.quantity ?? 0)
                                     return (
                                         <div key={eq.id} className='flex flex-col gap-1 border rounded-md px-4 py-3 bg-background'>
                                             <div className='flex flex-col md:flex-row items-center gap-5'>
@@ -112,11 +141,31 @@ const BookingEquipmentForm = () => {
                                                 </div>
                                                 <Button type='button' variant='destructive' size='sm' className='w-full md:w-fit' onClick={() => handleRemoveItem('laboratory_equipment', eq.id)}>Hapus</Button>
                                             </div>
+                                            {/* Price info */}
+                                            {itemPrice > 0 && (
+                                                <div className='flex justify-between items-center text-xs text-muted-foreground mt-1'>
+                                                    <span>Harga: {formatPriceToIDR(itemPrice)}/{eq.unit}</span>
+                                                    {(eq.quantity ?? 0) > 0 && (
+                                                        <span className='font-semibold text-primary'>Subtotal: {formatPriceToIDR(subtotal)}</span>
+                                                    )}
+                                                </div>
+                                            )}
                                             {rowError && <p className='text-[10px] italic text-red-500'>{rowError}</p>}
                                         </div>
                                     )
                                 })}
                             </div>
+                            
+                            {/* Total Price Display */}
+                            {equipmentTotal > 0 && (
+                                <Alert className="mt-4">
+                                    <Info className="h-4 w-4" />
+                                    <AlertTitle>Estimasi Total Harga ({getPriceLabel(priceType)})</AlertTitle>
+                                    <AlertDescription className="text-primary font-bold text-lg">
+                                        {formatPriceToIDR(equipmentTotal)}
+                                    </AlertDescription>
+                                </Alert>
+                            )}
                         </div>
                     </div>
                     <div className='flex justify-end mt-6'>

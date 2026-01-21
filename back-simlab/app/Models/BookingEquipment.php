@@ -9,7 +9,8 @@ class BookingEquipment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['booking_id', 'laboratory_equipment_id', 'quantity'];
+    protected $table = 'booking_equipment';
+    protected $fillable = ['booking_id', 'laboratory_equipment_id', 'quantity', 'price'];
 
     public function booking()
     {

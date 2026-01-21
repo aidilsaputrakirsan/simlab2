@@ -7,7 +7,7 @@ import { BookingView } from '@/application/booking/BookingView';
 import Header from '@/presentation/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { Button } from '@/presentation/components/ui/button';
-import { ArrowLeft, Eye } from 'lucide-react';
+import { ArrowLeft, Eye, Upload } from 'lucide-react';
 import { useAuth } from '@/application/hooks/useAuth';
 import { Skeleton } from '@/presentation/components/ui/skeleton';
 import Item from '@/presentation/components/Item';
@@ -17,6 +17,13 @@ import BookingMaterialDialog from './components/BookingMaterialDialog';
 import { userRole } from '@/domain/User/UserRole';
 import BookingBadgeStatus from './components/BookingBadgeStatus';
 import { Badge } from '@/presentation/components/ui/badge';
+import BookingPriceDialog from './components/BookingPriceDialog';
+import PaymentDetailDialog from '../payment/components/PaymentDetailDialog';
+import PaymentProofFormDialog from '../payment/components/PaymentProofFormDialog';
+import { PaymentStatus } from '@/domain/payment/PaymentStatus';
+import { PaymentInputProofDTO } from '@/application/payment/dto/PaymentDTO';
+import { useDepedencies } from '@/presentation/contexts/useDepedencies';
+import { toast } from 'sonner';
 
 export const BookingDetailPage: React.FC = () => {
   useGSAP(() => {
@@ -29,10 +36,12 @@ export const BookingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const bookingId = Number(id);
   const { getBookingDetail } = useBooking({});
+  const { paymentService } = useDepedencies();
 
   // Booking Detail State
   const [booking, setBooking] = useState<BookingView>();
   const [bookingLoading, setBookingLoading] = useState<boolean>(false);
+  const [isReuploadDialogOpen, setIsReuploadDialogOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const backTo =
@@ -40,7 +49,9 @@ export const BookingDetailPage: React.FC = () => {
       ? '/panel/laporan/peminjaman'
       : user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu].includes(user.role)
         ? '/panel/peminjaman/verif'
-        : '/panel/peminjaman';
+        : user?.role === userRole.AdminPengujian
+          ? '/panel/pembayaran'
+          : '/panel/peminjaman';
 
   const getBookingDetailData = async () => {
     try {
@@ -56,6 +67,17 @@ export const BookingDetailPage: React.FC = () => {
     } finally {
       setBookingLoading(false);
     }
+  }
+
+  const handleReuploadPaymentProof = async (data: PaymentInputProofDTO) => {
+    if (!booking?.paymentId) return
+    
+    const res = await paymentService.storePaymentProof(booking.paymentId, data)
+    toast.success(res.message)
+    setIsReuploadDialogOpen(false)
+    // Refresh the booking data
+    const refreshedData = await getBookingDetail(bookingId)
+    setBooking(refreshedData.data)
   }
 
   useEffect(() => {
@@ -159,6 +181,43 @@ export const BookingDetailPage: React.FC = () => {
                   {hasMaterial && (
                     <BookingMaterialDialog data={materials} />
                   )}
+                  {/* Price Dialog */}
+                  {(booking.totalPrice !== undefined && booking.totalPrice > 0) && (
+                    <div className="flex flex-col">
+                      <span className='font-semibold'>Rincian Harga</span>
+                      <BookingPriceDialog booking={booking} />
+                    </div>
+                  )}
+                  {/* Payment Status - like testing request */}
+                  {booking.paymentStatus && booking.paymentStatus !== PaymentStatus.Draft && booking.paymentId && (
+                    <div className="flex flex-col">
+                      <span className='font-semibold'>Pembayaran</span>
+                      <div className="flex gap-2 flex-wrap">
+                        <PaymentDetailDialog paymentId={booking.paymentId}/>
+                        {booking.paymentStatus === PaymentStatus.Rejected && 
+                         user?.email === booking.requestor?.email && (
+                          <Button 
+                            variant="outline" 
+                            className="w-full sm:w-fit"
+                            onClick={() => setIsReuploadDialogOpen(true)}
+                          >
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload Ulang Bukti
+                          </Button>
+                        )}
+                      </div>
+                      {booking.paymentStatus === PaymentStatus.Rejected && 
+                       user?.email === booking.requestor?.email && (
+                        <Badge variant="destructive" className="mt-2 w-fit">Pembayaran Ditolak - Silakan upload ulang bukti pembayaran</Badge>
+                      )}
+                    </div>
+                  )}
+                  <PaymentProofFormDialog
+                    open={isReuploadDialogOpen}
+                    onOpenChange={setIsReuploadDialogOpen}
+                    handleSave={handleReuploadPaymentProof}
+                    paymentId={booking.paymentId ?? null}
+                  />
                 </div>
               </div>
             </CardContent>

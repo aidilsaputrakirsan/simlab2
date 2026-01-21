@@ -24,15 +24,41 @@ const BookingVerificationAction: React.FC<BookingVerificationActionProps> = ({
   openReturnConfirmation
 }) => {
   const approvals = booking.bookingApproval
+  const canVerif = booking.canVerif
+
+  // Use canVerif for head verification (KepalaLabTerpadu and AdminPengujian)
+  // canVerif values: 0 = approved, 1 = can verify, 2 = waiting, 3 = rejected
+  if (role === userRole.KepalaLabTerpadu || role === userRole.AdminPengujian) {
+    if (canVerif === 0) return <Badge variant="success">Disetujui</Badge>
+    if (canVerif === 1) {
+      return (
+        <div className="flex gap-2">
+          <Button size="sm" onClick={() => openApproval(booking.id)}>
+            Terima
+          </Button>
+          <Button size="sm" variant="destructive" onClick={() => openRejection(booking.id)}>
+            Tolak
+          </Button>
+        </div>
+      )
+    }
+    if (canVerif === 2) {
+      // For KepalaLabTerpadu viewing paid bookings - show that it's handled via payment
+      if (role === userRole.KepalaLabTerpadu && booking.hasPaidItems) {
+        return <Badge variant="secondary">Diverifikasi via Pembayaran</Badge>
+      }
+      return <Badge variant="default">Menunggu</Badge>
+    }
+    if (canVerif === 3) return <Badge variant="destructive">Ditolak</Badge>
+  }
+
+  // For Laboran, use the original approval-based logic
   const rejectedIndex = approvals.findIndex(a => a.status === BookingApprovalStatus.Rejected)
   const pendingIndex = approvals.findIndex(a => a.status === BookingApprovalStatus.Pending)
 
   // There are those who are REJECTED
   if (rejectedIndex !== -1) {
-    // const rejected = approvals[rejectedIndex]
     const affectedRoles = approvals.slice(rejectedIndex)
-
-    // If the user is among those affected (own role or after)
     if (affectedRoles.some(a => a.role === role)) {
       return <Badge variant="destructive">Ditolak</Badge>
     }
@@ -43,24 +69,7 @@ const BookingVerificationAction: React.FC<BookingVerificationActionProps> = ({
   if (pendingIndex !== -1) {
     const currentPending = approvals[pendingIndex]
 
-    // Check the current pending based on action
     switch (currentPending.action) {
-      case BookingApprovalAction.VerifiedByHead:
-        return (
-          <div className="flex gap-2">
-            <Button size="sm" onClick={() => openApproval(booking.id)}>
-              Terima
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={() => openRejection(booking.id)}
-            >
-              Tolak
-            </Button>
-          </div>
-        )
-
       case BookingApprovalAction.VerifiedByLaboran:
         if (role === userRole.Laboran) {
           return (
@@ -68,11 +77,7 @@ const BookingVerificationAction: React.FC<BookingVerificationActionProps> = ({
               <Button size="sm" onClick={() => openApproval(booking.id)}>
                 Terima
               </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => openRejection(booking.id)}
-              >
+              <Button size="sm" variant="destructive" onClick={() => openRejection(booking.id)}>
                 Tolak
               </Button>
             </div>
