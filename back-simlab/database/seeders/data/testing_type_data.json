@@ -1,0 +1,512 @@
+[
+    {
+        "id_pengujian": "6",
+        "pengujian": "Pengujian SEM",
+        "created_at": "2021-10-06 06:01:18",
+        "updated_at": "2021-10-06 06:01:18"
+    },
+    {
+        "id_pengujian": "7",
+        "pengujian": "Pengujian SEM-EDX\/EDS",
+        "created_at": "2021-10-06 06:01:55",
+        "updated_at": "2021-10-06 06:01:55"
+    },
+    {
+        "id_pengujian": "8",
+        "pengujian": "Pengujian XRD",
+        "created_at": "2021-10-06 06:03:11",
+        "updated_at": "2021-10-06 06:03:11"
+    },
+    {
+        "id_pengujian": "10",
+        "pengujian": "Pengujian XRF",
+        "created_at": "2021-10-06 06:03:40",
+        "updated_at": "2021-10-06 06:03:40"
+    },
+    {
+        "id_pengujian": "11",
+        "pengujian": "Pengujian FTIR",
+        "created_at": "2021-10-06 06:04:15",
+        "updated_at": "2021-10-06 06:04:15"
+    },
+    {
+        "id_pengujian": "12",
+        "pengujian": "Pengujian Mikroskop Optik",
+        "created_at": "2021-10-06 06:05:37",
+        "updated_at": "2021-10-06 06:05:37"
+    },
+    {
+        "id_pengujian": "13",
+        "pengujian": "Pengujian Metalografi",
+        "created_at": "2021-10-06 06:06:01",
+        "updated_at": "2021-10-06 06:06:01"
+    },
+    {
+        "id_pengujian": "14",
+        "pengujian": "Pengujian BET\/SAA",
+        "created_at": "2021-10-06 06:06:22",
+        "updated_at": "2021-10-06 06:06:22"
+    },
+    {
+        "id_pengujian": "15",
+        "pengujian": "Pengujian Spektrofotometer UV-Vis",
+        "created_at": "2021-10-06 06:07:08",
+        "updated_at": "2021-10-06 06:07:08"
+    },
+    {
+        "id_pengujian": "16",
+        "pengujian": "Pengujian Gas Chromatography",
+        "created_at": "2021-10-06 06:07:49",
+        "updated_at": "2021-10-06 06:07:49"
+    },
+    {
+        "id_pengujian": "17",
+        "pengujian": "Pengujian linear polarization test dengan Potensiostat",
+        "created_at": "2021-10-06 06:08:46",
+        "updated_at": "2021-10-06 06:08:46"
+    },
+    {
+        "id_pengujian": "18",
+        "pengujian": "Pengujian Kuat Tekan Beton",
+        "created_at": "2021-10-06 06:17:33",
+        "updated_at": "2021-10-06 06:17:33"
+    },
+    {
+        "id_pengujian": "19",
+        "pengujian": "Pengujian Kuat Tekan Paving",
+        "created_at": "2021-10-06 06:18:05",
+        "updated_at": "2021-10-06 06:18:05"
+    },
+    {
+        "id_pengujian": "20",
+        "pengujian": "Pengujian Kuat Tekan Mortar",
+        "created_at": "2021-10-06 06:18:23",
+        "updated_at": "2021-10-06 06:18:23"
+    },
+    {
+        "id_pengujian": "21",
+        "pengujian": "Pengujian Kuat Tekan Batako",
+        "created_at": "2021-10-06 06:18:40",
+        "updated_at": "2021-10-06 06:18:40"
+    },
+    {
+        "id_pengujian": "22",
+        "pengujian": "Pengujian Kuat Tarik Tulangan",
+        "created_at": "2021-10-06 06:19:02",
+        "updated_at": "2021-10-06 06:19:02"
+    },
+    {
+        "id_pengujian": "23",
+        "pengujian": "Pengujian Topografi",
+        "created_at": "2021-10-06 06:19:29",
+        "updated_at": "2021-10-06 06:19:29"
+    },
+    {
+        "id_pengujian": "24",
+        "pengujian": "Pengujian Poligon",
+        "created_at": "2021-10-06 06:19:42",
+        "updated_at": "2021-10-06 06:19:42"
+    },
+    {
+        "id_pengujian": "25",
+        "pengujian": "Pengujian Long\/Cross Section",
+        "created_at": "2021-10-06 06:20:18",
+        "updated_at": "2021-10-06 06:20:18"
+    },
+    {
+        "id_pengujian": "26",
+        "pengujian": "Uji Tarik",
+        "created_at": "2021-10-06 06:20:50",
+        "updated_at": "2021-10-06 06:20:50"
+    },
+    {
+        "id_pengujian": "27",
+        "pengujian": "Uji Tekan",
+        "created_at": "2021-10-06 06:20:58",
+        "updated_at": "2021-10-06 06:20:58"
+    },
+    {
+        "id_pengujian": "28",
+        "pengujian": "Uji Bending",
+        "created_at": "2021-10-06 06:21:09",
+        "updated_at": "2021-10-14 05:14:20"
+    },
+    {
+        "id_pengujian": "29",
+        "pengujian": "Pengujian Sondir 2 ton - Cone Penetration Test (CPT) (Sondir 2 ton)",
+        "created_at": "2021-10-06 06:31:20",
+        "updated_at": "2021-10-06 06:31:20"
+    },
+    {
+        "id_pengujian": "30",
+        "pengujian": "Pengujian Hand Boring",
+        "created_at": "2021-10-06 06:31:31",
+        "updated_at": "2021-10-06 06:31:31"
+    },
+    {
+        "id_pengujian": "31",
+        "pengujian": "Pengujian Boring (Bor Dalam)",
+        "created_at": "2021-10-06 06:33:38",
+        "updated_at": "2021-10-06 06:33:38"
+    },
+    {
+        "id_pengujian": "32",
+        "pengujian": "Pengujian SPT tes sd 30m",
+        "created_at": "2021-10-06 06:34:07",
+        "updated_at": "2021-10-06 06:34:07"
+    },
+    {
+        "id_pengujian": "33",
+        "pengujian": "Pengujian Dynamic Cone Penetration - Analisis nilai CBR",
+        "created_at": "2021-10-06 06:34:59",
+        "updated_at": "2021-10-06 06:34:59"
+    },
+    {
+        "id_pengujian": "34",
+        "pengujian": "Pengujian Sand Cone - Pemadatan layanan",
+        "created_at": "2021-10-06 06:35:22",
+        "updated_at": "2021-10-06 06:35:36"
+    },
+    {
+        "id_pengujian": "35",
+        "pengujian": "Analisis nilai CBR Lapangan",
+        "created_at": "2021-10-06 06:35:56",
+        "updated_at": "2021-10-06 06:35:56"
+    },
+    {
+        "id_pengujian": "36",
+        "pengujian": "Pengujian Specific Gravity - Berat Jenis",
+        "created_at": "2021-10-06 06:37:54",
+        "updated_at": "2021-10-06 06:37:54"
+    },
+    {
+        "id_pengujian": "37",
+        "pengujian": "Pengujian Kadar Air",
+        "created_at": "2021-10-06 06:38:15",
+        "updated_at": "2021-10-06 06:38:15"
+    },
+    {
+        "id_pengujian": "38",
+        "pengujian": "Pemeriksaan Kadar Lumpur Agregat",
+        "created_at": "2021-10-06 06:38:15",
+        "updated_at": "2021-10-06 06:38:15"
+    },
+    {
+        "id_pengujian": "39",
+        "pengujian": "Pemeriksaan kadar air",
+        "created_at": "2021-10-06 06:38:26",
+        "updated_at": "2021-10-06 06:38:26"
+    },
+    {
+        "id_pengujian": "40",
+        "pengujian": "Pengujian Liquid Limit",
+        "created_at": "2021-10-06 06:38:29",
+        "updated_at": "2021-10-06 06:38:29"
+    },
+    {
+        "id_pengujian": "41",
+        "pengujian": "Periksaan berat jenis agregat",
+        "created_at": "2021-10-06 06:38:40",
+        "updated_at": "2021-10-06 06:38:40"
+    },
+    {
+        "id_pengujian": "42",
+        "pengujian": "Pengujian Plastic Limit",
+        "created_at": "2021-10-06 06:38:45",
+        "updated_at": "2021-10-06 06:38:45"
+    },
+    {
+        "id_pengujian": "43",
+        "pengujian": "Pemeriksaan gradasi agregat",
+        "created_at": "2021-10-06 06:38:56",
+        "updated_at": "2021-10-06 06:38:56"
+    },
+    {
+        "id_pengujian": "44",
+        "pengujian": "Pemeriksaan berat isi \/ satuan",
+        "created_at": "2021-10-06 06:39:14",
+        "updated_at": "2021-10-06 06:39:14"
+    },
+    {
+        "id_pengujian": "45",
+        "pengujian": "Pengujian Shirangke Limit",
+        "created_at": "2021-10-06 06:39:15",
+        "updated_at": "2021-10-06 06:39:15"
+    },
+    {
+        "id_pengujian": "46",
+        "pengujian": "Pemeriksaan kepipihan",
+        "created_at": "2021-10-06 06:39:22",
+        "updated_at": "2021-10-06 06:39:22"
+    },
+    {
+        "id_pengujian": "47",
+        "pengujian": "Pemeriksaan kelapukan",
+        "created_at": "2021-10-06 06:39:32",
+        "updated_at": "2021-10-06 06:39:32"
+    },
+    {
+        "id_pengujian": "48",
+        "pengujian": "Pengujian Pemadatan Standar",
+        "created_at": "2021-10-06 06:39:36",
+        "updated_at": "2021-10-06 06:39:36"
+    },
+    {
+        "id_pengujian": "49",
+        "pengujian": "Pemeriksaan abrasi",
+        "created_at": "2021-10-06 06:39:40",
+        "updated_at": "2021-10-06 06:39:40"
+    },
+    {
+        "id_pengujian": "50",
+        "pengujian": "Pengujian Pemadatan Modifikasi",
+        "created_at": "2021-10-06 06:39:49",
+        "updated_at": "2021-10-06 06:39:49"
+    },
+    {
+        "id_pengujian": "51",
+        "pengujian": "Pemeriksaan permebilitas",
+        "created_at": "2021-10-06 06:39:55",
+        "updated_at": "2021-10-06 06:39:55"
+    },
+    {
+        "id_pengujian": "52",
+        "pengujian": "Pemeriksaan Kompaksi",
+        "created_at": "2021-10-06 06:40:04",
+        "updated_at": "2021-10-06 06:40:04"
+    },
+    {
+        "id_pengujian": "53",
+        "pengujian": "Analisis Gradasi",
+        "created_at": "2021-10-06 06:40:05",
+        "updated_at": "2021-10-06 06:40:05"
+    },
+    {
+        "id_pengujian": "54",
+        "pengujian": "Analisis Butiran Kecil",
+        "created_at": "2021-10-06 06:40:19",
+        "updated_at": "2021-10-06 06:40:19"
+    },
+    {
+        "id_pengujian": "55",
+        "pengujian": "Konsistensi Normal",
+        "created_at": "2021-10-06 06:40:23",
+        "updated_at": "2021-10-06 06:40:23"
+    },
+    {
+        "id_pengujian": "56",
+        "pengujian": "Hammer test (pemeriksaan palu beton  (Minimal 10 titik))",
+        "created_at": "2021-10-06 06:40:49",
+        "updated_at": "2021-10-06 06:40:49"
+    },
+    {
+        "id_pengujian": "57",
+        "pengujian": "Analisis Teknis",
+        "created_at": "2021-10-06 06:40:59",
+        "updated_at": "2021-10-06 06:40:59"
+    },
+    {
+        "id_pengujian": "58",
+        "pengujian": "Pengujian Bulk Density - Berat Volume",
+        "created_at": "2021-10-06 06:41:09",
+        "updated_at": "2021-10-06 06:41:09"
+    },
+    {
+        "id_pengujian": "59",
+        "pengujian": "Laporan pemeriksaan Sipil",
+        "created_at": "2021-10-06 06:41:16",
+        "updated_at": "2021-10-06 06:41:16"
+    },
+    {
+        "id_pengujian": "60",
+        "pengujian": "Pengujian Volumetri",
+        "created_at": "2021-10-06 06:42:00",
+        "updated_at": "2021-10-06 06:42:00"
+    },
+    {
+        "id_pengujian": "61",
+        "pengujian": "Pengujian CBR Unsoaked (Tak Terendam)",
+        "created_at": "2021-10-06 06:43:20",
+        "updated_at": "2021-10-06 06:43:20"
+    },
+    {
+        "id_pengujian": "62",
+        "pengujian": "Survey Lalu Lintas (12 jam)",
+        "created_at": "2021-10-06 06:43:40",
+        "updated_at": "2021-10-06 06:43:40"
+    },
+    {
+        "id_pengujian": "63",
+        "pengujian": "Pengujian CBR Soaked (Terendam)",
+        "created_at": "2021-10-06 06:43:47",
+        "updated_at": "2021-10-06 06:43:47"
+    },
+    {
+        "id_pengujian": "64",
+        "pengujian": "Survey Inventaris Jalan",
+        "created_at": "2021-10-06 06:44:01",
+        "updated_at": "2021-10-06 06:44:01"
+    },
+    {
+        "id_pengujian": "65",
+        "pengujian": "Survey Kecepatan",
+        "created_at": "2021-10-06 06:44:13",
+        "updated_at": "2021-10-06 06:44:13"
+    },
+    {
+        "id_pengujian": "66",
+        "pengujian": "Pengujian Direct Shear - Geser Langsung",
+        "created_at": "2021-10-06 06:44:28",
+        "updated_at": "2021-10-06 06:44:28"
+    },
+    {
+        "id_pengujian": "67",
+        "pengujian": "Survey kecepatan ( Kecepatan rerata ruang) minimal 3 orang",
+        "created_at": "2021-10-06 06:44:42",
+        "updated_at": "2021-10-06 06:44:42"
+    },
+    {
+        "id_pengujian": "68",
+        "pengujian": "Pengujian Konsolidasi - Penurunan",
+        "created_at": "2021-10-06 06:44:54",
+        "updated_at": "2021-10-06 06:44:54"
+    },
+    {
+        "id_pengujian": "69",
+        "pengujian": "Analisa gradasi",
+        "created_at": "2021-10-06 06:44:55",
+        "updated_at": "2021-10-06 06:44:55"
+    },
+    {
+        "id_pengujian": "70",
+        "pengujian": "Pengujian Triaxial - UU",
+        "created_at": "2021-10-06 06:45:12",
+        "updated_at": "2021-10-06 06:45:12"
+    },
+    {
+        "id_pengujian": "71",
+        "pengujian": "Pengujian bahan transportasi Abrasi",
+        "created_at": "2021-10-06 06:45:23",
+        "updated_at": "2021-10-06 06:45:23"
+    },
+    {
+        "id_pengujian": "72",
+        "pengujian": "Pengujian Triaxial - CU",
+        "created_at": "2021-10-06 06:45:27",
+        "updated_at": "2021-10-06 06:45:27"
+    },
+    {
+        "id_pengujian": "73",
+        "pengujian": "Pengujian berat jenis \/Absorsi",
+        "created_at": "2021-10-06 06:45:46",
+        "updated_at": "2021-10-06 06:45:46"
+    },
+    {
+        "id_pengujian": "74",
+        "pengujian": "Pengujian Swelling - Uji Pengembangan",
+        "created_at": "2021-10-06 06:46:00",
+        "updated_at": "2021-10-06 06:46:00"
+    },
+    {
+        "id_pengujian": "75",
+        "pengujian": "Pengujian kelekatan agregat terhadap aspal",
+        "created_at": "2021-10-06 06:46:03",
+        "updated_at": "2021-10-06 06:46:03"
+    },
+    {
+        "id_pengujian": "76",
+        "pengujian": "Pengujian indeks kepipihan",
+        "created_at": "2021-10-06 06:46:17",
+        "updated_at": "2021-10-06 06:46:17"
+    },
+    {
+        "id_pengujian": "77",
+        "pengujian": "Uji Kadar Air",
+        "created_at": "2021-10-06 06:46:18",
+        "updated_at": "2021-10-06 06:46:18"
+    },
+    {
+        "id_pengujian": "78",
+        "pengujian": "Penetrasi aspal ( aspal penetrasi)",
+        "created_at": "2021-10-06 06:46:40",
+        "updated_at": "2021-10-06 06:46:40"
+    },
+    {
+        "id_pengujian": "79",
+        "pengujian": "Penetrasi aspal ( titik nyala dan bakar aspal)",
+        "created_at": "2021-10-06 06:46:59",
+        "updated_at": "2021-10-06 06:46:59"
+    },
+    {
+        "id_pengujian": "80",
+        "pengujian": "Uji Marshall",
+        "created_at": "2021-10-06 06:47:36",
+        "updated_at": "2021-10-06 06:47:36"
+    },
+    {
+        "id_pengujian": "81",
+        "pengujian": "Penetrasi aspal (titik lembek aspal)",
+        "created_at": "2021-10-06 06:47:49",
+        "updated_at": "2021-10-06 06:47:49"
+    },
+    {
+        "id_pengujian": "82",
+        "pengujian": "Duktilitas (Duktilitas aspal)",
+        "created_at": "2021-10-06 06:48:15",
+        "updated_at": "2021-10-06 06:48:15"
+    },
+    {
+        "id_pengujian": "83",
+        "pengujian": "Penyiapan Sampel UTM",
+        "created_at": "2021-10-06 06:48:18",
+        "updated_at": "2021-10-06 06:48:18"
+    },
+    {
+        "id_pengujian": "84",
+        "pengujian": "Uji Impak",
+        "created_at": "2021-10-06 06:48:27",
+        "updated_at": "2021-10-06 06:48:27"
+    },
+    {
+        "id_pengujian": "85",
+        "pengujian": "Duktilitas ( berat jenis asapal)",
+        "created_at": "2021-10-06 06:48:30",
+        "updated_at": "2021-10-06 06:48:30"
+    },
+    {
+        "id_pengujian": "86",
+        "pengujian": "Duktilitas ( Pentrasi)",
+        "created_at": "2021-10-06 06:48:39",
+        "updated_at": "2021-10-06 06:48:39"
+    },
+    {
+        "id_pengujian": "87",
+        "pengujian": "Penyiapan Sampel Impak",
+        "created_at": "2021-10-06 06:48:49",
+        "updated_at": "2021-10-06 06:48:49"
+    },
+    {
+        "id_pengujian": "88",
+        "pengujian": "Duktilitas ( Kehilangan berat)",
+        "created_at": "2021-10-06 06:48:50",
+        "updated_at": "2021-10-06 06:48:50"
+    },
+    {
+        "id_pengujian": "89",
+        "pengujian": "Duktilitas ( Pemadatan aspal)",
+        "created_at": "2021-10-06 06:49:01",
+        "updated_at": "2021-10-06 06:49:01"
+    },
+    {
+        "id_pengujian": "90",
+        "pengujian": "GAS ANALYZER (5GAS GASOLINE LPG CNG EPSG5)",
+        "created_at": "2025-05-15 07:31:42",
+        "updated_at": "2025-05-15 07:31:42"
+    },
+    {
+        "id_pengujian": "91",
+        "pengujian": "Pengujian DSC\/TGA",
+        "created_at": "2025-05-21 07:08:37",
+        "updated_at": "2025-05-21 07:08:37"
+    }
+]

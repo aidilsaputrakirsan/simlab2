@@ -1,0 +1,2706 @@
+[
+    {
+        "id_praktikum_matkul": "9",
+        "nama_praktikum": "Basis Data",
+        "sks": "3",
+        "created_at": "2021-06-28 04:20:54",
+        "updated_at": "2021-10-06 06:21:07",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "10",
+        "nama_praktikum": "Desain Proses Bisnis",
+        "sks": "3",
+        "created_at": "2021-06-28 04:21:06",
+        "updated_at": "2021-10-06 06:21:18",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "12",
+        "nama_praktikum": "Mekanika Fluida dan Hidrolika",
+        "sks": "3",
+        "created_at": "2021-06-29 02:57:04",
+        "updated_at": "2021-06-29 02:57:04",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "13",
+        "nama_praktikum": "Timbunan dan Konstruksi Penahan Tanah",
+        "sks": "3",
+        "created_at": "2021-06-29 02:59:22",
+        "updated_at": "2021-06-29 02:59:22",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "14",
+        "nama_praktikum": "Pengantar Geologi dan Mekanika Tanah",
+        "sks": "3",
+        "created_at": "2021-06-29 03:00:06",
+        "updated_at": "2021-06-29 03:00:06",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "15",
+        "nama_praktikum": "Teknologi Bahan Konstruksi",
+        "sks": "3",
+        "created_at": "2021-06-29 03:00:43",
+        "updated_at": "2021-06-29 03:00:43",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "16",
+        "nama_praktikum": "Rangkaian Elektronika I",
+        "sks": "3",
+        "created_at": "2021-09-28 07:14:19",
+        "updated_at": "2021-10-06 05:52:32",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "17",
+        "nama_praktikum": "Fisika Zat Padat",
+        "sks": "3",
+        "created_at": "2021-09-28 08:17:13",
+        "updated_at": "2021-09-28 08:17:13",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "18",
+        "nama_praktikum": "Fisika Energi",
+        "sks": "2",
+        "created_at": "2021-10-06 05:45:20",
+        "updated_at": "2021-10-06 05:45:20",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "19",
+        "nama_praktikum": "Kerja Praktik",
+        "sks": "2",
+        "created_at": "2021-10-06 05:46:27",
+        "updated_at": "2021-10-06 05:46:27",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "20",
+        "nama_praktikum": "Analisis Material",
+        "sks": "2",
+        "created_at": "2021-10-06 05:47:19",
+        "updated_at": "2021-10-06 05:47:19",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "21",
+        "nama_praktikum": "Pengantar Geofisika",
+        "sks": "2",
+        "created_at": "2021-10-06 05:49:09",
+        "updated_at": "2021-10-06 05:49:09",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "22",
+        "nama_praktikum": "Survei dan Pemetaan",
+        "sks": "2",
+        "created_at": "2021-10-06 05:49:34",
+        "updated_at": "2021-10-06 05:49:34",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "23",
+        "nama_praktikum": "Eksplorasi Kelistrikan",
+        "sks": "2",
+        "created_at": "2021-10-06 05:49:54",
+        "updated_at": "2021-10-06 05:49:54",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "24",
+        "nama_praktikum": "Material Teknik I",
+        "sks": "3",
+        "created_at": "2021-10-06 05:50:18",
+        "updated_at": "2021-10-06 05:50:18",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "25",
+        "nama_praktikum": "Mekanika Fluida I",
+        "sks": "3",
+        "created_at": "2021-10-06 05:50:39",
+        "updated_at": "2021-10-06 05:50:39",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "26",
+        "nama_praktikum": "Proses Manufaktur I",
+        "sks": "3",
+        "created_at": "2021-10-06 05:50:58",
+        "updated_at": "2021-10-06 05:50:58",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "27",
+        "nama_praktikum": "Rangkaian Listrik I",
+        "sks": "3",
+        "created_at": "2021-10-06 05:52:18",
+        "updated_at": "2021-10-06 05:52:18",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "28",
+        "nama_praktikum": "Instrumentasi",
+        "sks": "3",
+        "created_at": "2021-10-06 05:52:45",
+        "updated_at": "2021-10-06 05:52:45",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "29",
+        "nama_praktikum": "Rangkaian Digital",
+        "sks": "3",
+        "created_at": "2021-10-06 05:53:30",
+        "updated_at": "2021-10-06 05:53:30",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "30",
+        "nama_praktikum": "Dasar Sistem Pengaturan",
+        "sks": "4",
+        "created_at": "2021-10-06 05:54:14",
+        "updated_at": "2021-10-06 05:54:14",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "31",
+        "nama_praktikum": "Sistem Tenaga Listrik I",
+        "sks": "3",
+        "created_at": "2021-10-06 05:54:36",
+        "updated_at": "2021-10-06 05:54:36",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "32",
+        "nama_praktikum": "Elektronika Daya",
+        "sks": "3",
+        "created_at": "2021-10-06 05:54:47",
+        "updated_at": "2021-10-06 05:54:47",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "33",
+        "nama_praktikum": "Operasi Pemisahan Bertingkat",
+        "sks": "4",
+        "created_at": "2021-10-06 05:55:38",
+        "updated_at": "2021-10-06 05:55:38",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "34",
+        "nama_praktikum": "Mekanika Fluida",
+        "sks": "4",
+        "created_at": "2021-10-06 06:02:49",
+        "updated_at": "2021-10-06 06:02:49",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "35",
+        "nama_praktikum": "Penelitian",
+        "sks": "4",
+        "created_at": "2021-10-06 06:03:06",
+        "updated_at": "2021-10-06 06:03:06",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "36",
+        "nama_praktikum": "Material Logam",
+        "sks": "3",
+        "created_at": "2021-10-06 06:03:34",
+        "updated_at": "2021-10-06 06:03:34",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "37",
+        "nama_praktikum": "Karakterisasi Material",
+        "sks": "3",
+        "created_at": "2021-10-06 06:03:48",
+        "updated_at": "2021-10-06 06:03:48",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "38",
+        "nama_praktikum": "Pemrosesan Material Polimer",
+        "sks": "3",
+        "created_at": "2021-10-06 06:03:58",
+        "updated_at": "2021-10-06 06:03:58",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "39",
+        "nama_praktikum": "Komputasi dalam Teknik Material",
+        "sks": "3",
+        "created_at": "2021-10-06 06:04:08",
+        "updated_at": "2021-10-06 06:04:08",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "40",
+        "nama_praktikum": "Pemrosesan Logam",
+        "sks": "4",
+        "created_at": "2021-10-06 06:04:19",
+        "updated_at": "2021-10-06 06:04:19",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "41",
+        "nama_praktikum": "Manufaktur Komposit",
+        "sks": "3",
+        "created_at": "2021-10-06 06:04:29",
+        "updated_at": "2021-10-06 06:04:29",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "45",
+        "nama_praktikum": "Teknologi Produksi Kapal",
+        "sks": "3",
+        "created_at": "2021-10-06 06:16:46",
+        "updated_at": "2021-10-06 06:16:46",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "51",
+        "nama_praktikum": "Permesinan Kapal",
+        "sks": "3",
+        "created_at": "2021-10-06 06:20:15",
+        "updated_at": "2021-10-06 06:20:15",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "52",
+        "nama_praktikum": "Teknologi Las dan Korosi",
+        "sks": "4",
+        "created_at": "2021-10-06 06:20:25",
+        "updated_at": "2021-10-06 06:20:25",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "53",
+        "nama_praktikum": "Manajemen Produksi Kapal",
+        "sks": "3",
+        "created_at": "2021-10-06 06:20:35",
+        "updated_at": "2021-10-06 06:20:35",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "54",
+        "nama_praktikum": "Pemrograman Aplikasi Perangkat Bergerak",
+        "sks": "3",
+        "created_at": "2021-10-06 06:22:11",
+        "updated_at": "2021-10-06 06:22:11",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "55",
+        "nama_praktikum": "Penggalian Data",
+        "sks": "3",
+        "created_at": "2021-10-06 06:22:24",
+        "updated_at": "2021-10-06 06:22:24",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "56",
+        "nama_praktikum": "Analisis Kuantitatif",
+        "sks": "3",
+        "created_at": "2021-10-06 06:22:33",
+        "updated_at": "2021-10-06 06:22:33",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "57",
+        "nama_praktikum": "Pemrograman  Berorientasi Objek",
+        "sks": "3",
+        "created_at": "2021-10-06 06:22:44",
+        "updated_at": "2021-10-06 06:22:44",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "58",
+        "nama_praktikum": "Sistem Operasi",
+        "sks": "3",
+        "created_at": "2021-10-06 06:22:55",
+        "updated_at": "2021-10-06 06:22:55",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "59",
+        "nama_praktikum": "Interaksi Antarmuka dan Pengalaman Pengguna",
+        "sks": "3",
+        "created_at": "2021-10-06 06:23:05",
+        "updated_at": "2021-10-06 06:23:05",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "61",
+        "nama_praktikum": "Komputasi Awan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:23:28",
+        "updated_at": "2021-10-06 06:23:28",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "62",
+        "nama_praktikum": "Manajemen Pusat Data",
+        "sks": "3",
+        "created_at": "2021-10-06 06:23:39",
+        "updated_at": "2021-10-06 06:23:39",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "63",
+        "nama_praktikum": "Penggalian Data",
+        "sks": "3",
+        "created_at": "2021-10-06 06:32:05",
+        "updated_at": "2021-10-06 06:32:05",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "64",
+        "nama_praktikum": "Pengembangan Aplikasi Perangkat Bergerak",
+        "sks": "3",
+        "created_at": "2021-10-06 06:32:19",
+        "updated_at": "2021-10-06 06:32:19",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "65",
+        "nama_praktikum": "Desain Web",
+        "sks": "3",
+        "created_at": "2021-10-06 06:32:32",
+        "updated_at": "2021-10-06 06:32:32",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "66",
+        "nama_praktikum": "Pengantar Kecerdasan  Buatan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:32:42",
+        "updated_at": "2021-10-06 06:32:42",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "67",
+        "nama_praktikum": "Manajemen Basis  Data",
+        "sks": "3",
+        "created_at": "2021-10-06 06:32:53",
+        "updated_at": "2021-10-06 06:32:53",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "68",
+        "nama_praktikum": "Implementasi dan Pengujian Perangkat Lunak",
+        "sks": "3",
+        "created_at": "2021-10-06 06:33:05",
+        "updated_at": "2021-10-06 06:33:05",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "69",
+        "nama_praktikum": "Pemograman  Fungsional",
+        "sks": "3",
+        "created_at": "2021-10-06 06:33:19",
+        "updated_at": "2021-10-06 06:33:19",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "70",
+        "nama_praktikum": "Startup Digital",
+        "sks": "2",
+        "created_at": "2021-10-06 06:33:30",
+        "updated_at": "2021-10-06 06:33:30",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "71",
+        "nama_praktikum": "Struktur Data",
+        "sks": "4",
+        "created_at": "2021-10-06 06:33:44",
+        "updated_at": "2021-10-06 06:33:44",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "72",
+        "nama_praktikum": "Proses Manufaktur",
+        "sks": "3",
+        "created_at": "2021-10-06 06:34:26",
+        "updated_at": "2021-10-06 06:34:26",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "73",
+        "nama_praktikum": "Ergonomika Industri",
+        "sks": "3",
+        "created_at": "2021-10-06 06:34:36",
+        "updated_at": "2021-10-06 06:34:36",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "74",
+        "nama_praktikum": "Laboratorium Lingkungan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:35:05",
+        "updated_at": "2021-10-06 06:35:05",
+        "kode_prodi": "13"
+    },
+    {
+        "id_praktikum_matkul": "75",
+        "nama_praktikum": "Mikrobiologi Lingkungan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:35:21",
+        "updated_at": "2021-10-06 06:35:21",
+        "kode_prodi": "13"
+    },
+    {
+        "id_praktikum_matkul": "76",
+        "nama_praktikum": "Teknologi Bahan Bangunan Laut",
+        "sks": "3",
+        "created_at": "2021-10-06 06:36:06",
+        "updated_at": "2021-10-06 06:36:06",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "77",
+        "nama_praktikum": "Mekanika Tanah dan Geoteknik Kelautan",
+        "sks": "4",
+        "created_at": "2021-10-06 06:36:19",
+        "updated_at": "2021-10-06 06:36:19",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "78",
+        "nama_praktikum": "Teknologi Inspeksi Las",
+        "sks": "4",
+        "created_at": "2021-10-06 06:36:31",
+        "updated_at": "2021-10-06 06:36:31",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "79",
+        "nama_praktikum": "Perancangan Bangunan Laut Terpancang",
+        "sks": "3",
+        "created_at": "2021-10-06 06:36:41",
+        "updated_at": "2021-10-06 06:36:41",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "80",
+        "nama_praktikum": "AR201408 Komputasi Desain",
+        "sks": "3",
+        "created_at": "2021-10-06 06:37:39",
+        "updated_at": "2023-08-02 01:58:37",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "81",
+        "nama_praktikum": "AR201405 Perancangan Arsitektur 1 Kelas A",
+        "sks": "6",
+        "created_at": "2021-10-06 06:37:59",
+        "updated_at": "2022-08-16 00:48:38",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "82",
+        "nama_praktikum": "Konstruksi Bangunan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:38:09",
+        "updated_at": "2021-10-06 06:38:09",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "83",
+        "nama_praktikum": "Metode Peramalan",
+        "sks": "3",
+        "created_at": "2021-10-06 06:38:38",
+        "updated_at": "2021-10-06 06:38:38",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "84",
+        "nama_praktikum": "Komputasi Statistika Lanjut",
+        "sks": "3",
+        "created_at": "2021-10-06 06:39:11",
+        "updated_at": "2021-10-06 06:39:11",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "85",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "3",
+        "created_at": "2021-10-06 06:39:20",
+        "updated_at": "2021-10-06 06:39:20",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "86",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "3",
+        "created_at": "2021-10-06 06:39:56",
+        "updated_at": "2021-10-06 06:39:56",
+        "kode_prodi": "18"
+    },
+    {
+        "id_praktikum_matkul": "87",
+        "nama_praktikum": "Algoritma dan Pemrograman",
+        "sks": "3",
+        "created_at": "2021-10-06 06:40:23",
+        "updated_at": "2021-10-06 06:40:23",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "88",
+        "nama_praktikum": "Statistik dan Komputasi Bisnis",
+        "sks": "2",
+        "created_at": "2021-10-06 06:40:33",
+        "updated_at": "2022-08-29 01:33:26",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "89",
+        "nama_praktikum": "Sistem Basis Data",
+        "sks": "3",
+        "created_at": "2021-10-06 06:41:20",
+        "updated_at": "2021-10-06 06:41:20",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "90",
+        "nama_praktikum": "Pemrograman WEB",
+        "sks": "3",
+        "created_at": "2021-10-06 06:41:33",
+        "updated_at": "2021-10-06 06:41:33",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "92",
+        "nama_praktikum": "Desain Kapal Kecil",
+        "sks": "3",
+        "created_at": "2021-10-06 07:22:55",
+        "updated_at": "2021-10-06 07:22:55",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "93",
+        "nama_praktikum": "Pengujian Kapal",
+        "sks": "3",
+        "created_at": "2021-10-06 07:23:04",
+        "updated_at": "2021-10-06 07:23:04",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "94",
+        "nama_praktikum": "Bahan Keramik",
+        "sks": "2",
+        "created_at": "2021-10-25 02:19:47",
+        "updated_at": "2021-10-25 02:19:47",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "95",
+        "nama_praktikum": "Fisika Logam",
+        "sks": "2",
+        "created_at": "2021-10-25 02:19:58",
+        "updated_at": "2021-10-25 02:19:58",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "96",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "3",
+        "created_at": "2021-10-25 02:20:10",
+        "updated_at": "2021-10-25 02:20:10",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "97",
+        "nama_praktikum": "Desain Tapak",
+        "sks": "3",
+        "created_at": "2021-10-26 01:18:14",
+        "updated_at": "2021-10-26 01:18:14",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "98",
+        "nama_praktikum": "Perlakuan Panas",
+        "sks": "2",
+        "created_at": "2021-11-15 06:41:30",
+        "updated_at": "2021-11-15 06:41:30",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "99",
+        "nama_praktikum": "Material Komposit",
+        "sks": "3",
+        "created_at": "2021-11-15 07:57:08",
+        "updated_at": "2021-11-15 07:57:08",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "100",
+        "nama_praktikum": "Kimia Polimer",
+        "sks": "2",
+        "created_at": "2021-11-16 02:27:20",
+        "updated_at": "2021-11-16 02:27:20",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "101",
+        "nama_praktikum": "Kimia Analitik",
+        "sks": "3",
+        "created_at": "2021-11-16 02:27:48",
+        "updated_at": "2021-11-16 02:27:48",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "102",
+        "nama_praktikum": "Material Keramik dan Gelas",
+        "sks": "3",
+        "created_at": "2021-11-16 02:28:27",
+        "updated_at": "2021-11-16 02:28:27",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "103",
+        "nama_praktikum": "Material Polimer",
+        "sks": "3",
+        "created_at": "2021-11-16 02:29:01",
+        "updated_at": "2021-11-16 02:29:01",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "104",
+        "nama_praktikum": "Perilaku Mekanik Material",
+        "sks": "3",
+        "created_at": "2021-11-16 02:29:46",
+        "updated_at": "2021-11-16 02:29:46",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "105",
+        "nama_praktikum": "Elektrokimia",
+        "sks": "3",
+        "created_at": "2021-11-16 02:30:44",
+        "updated_at": "2021-11-16 02:30:44",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "106",
+        "nama_praktikum": "Korosi dan Pencegahan Korosi",
+        "sks": "3",
+        "created_at": "2021-11-16 02:31:31",
+        "updated_at": "2021-11-16 02:31:31",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "107",
+        "nama_praktikum": "Mekanika Patahan dan Fractografi",
+        "sks": "3",
+        "created_at": "2021-11-16 02:31:51",
+        "updated_at": "2021-11-16 02:31:51",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "108",
+        "nama_praktikum": "Metode Inspeksi Material",
+        "sks": "3",
+        "created_at": "2021-11-16 02:32:16",
+        "updated_at": "2021-11-16 02:32:16",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "109",
+        "nama_praktikum": "Teknologi Pemrosesan Keramik",
+        "sks": "3",
+        "created_at": "2021-11-16 02:32:40",
+        "updated_at": "2021-11-16 02:32:40",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "110",
+        "nama_praktikum": "Perancangan Material",
+        "sks": "3",
+        "created_at": "2021-11-16 02:33:20",
+        "updated_at": "2021-11-16 02:33:20",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "111",
+        "nama_praktikum": "Studi Kegagalan Material",
+        "sks": "3",
+        "created_at": "2021-11-16 02:34:19",
+        "updated_at": "2021-11-16 02:34:19",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "112",
+        "nama_praktikum": "Metode Elemen Hingga",
+        "sks": "2",
+        "created_at": "2021-11-16 02:34:38",
+        "updated_at": "2021-11-16 02:34:38",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "113",
+        "nama_praktikum": "Pengolahan Besi dan Baja",
+        "sks": "2",
+        "created_at": "2021-11-16 02:35:12",
+        "updated_at": "2021-11-16 02:35:12",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "114",
+        "nama_praktikum": "Proses Pembentukan Logam",
+        "sks": "2",
+        "created_at": "2021-11-16 02:35:42",
+        "updated_at": "2021-11-16 02:35:42",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "115",
+        "nama_praktikum": "Teknologi Pengecoran",
+        "sks": "2",
+        "created_at": "2021-11-16 02:36:10",
+        "updated_at": "2021-11-16 02:36:10",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "116",
+        "nama_praktikum": "Teknologi Pengelasan",
+        "sks": "2",
+        "created_at": "2021-11-16 02:36:22",
+        "updated_at": "2021-11-16 02:36:22",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "117",
+        "nama_praktikum": "Kimia Lingkungan",
+        "sks": "2",
+        "created_at": "2021-12-20 06:14:54",
+        "updated_at": "2021-12-20 06:14:54",
+        "kode_prodi": "13"
+    },
+    {
+        "id_praktikum_matkul": "118",
+        "nama_praktikum": "AR201403 Estetika Bentuk Kelas A",
+        "sks": "3",
+        "created_at": "2022-02-08 03:52:48",
+        "updated_at": "2023-01-18 01:15:02",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "119",
+        "nama_praktikum": "AR201404 Teknik Gambar Arsitektur Kelas A",
+        "sks": "3",
+        "created_at": "2022-02-08 03:53:41",
+        "updated_at": "2023-01-18 00:47:50",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "121",
+        "nama_praktikum": "AR201412 Struktur Bangunan Kelas A",
+        "sks": "3",
+        "created_at": "2022-02-08 03:54:59",
+        "updated_at": "2023-01-18 00:48:40",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "122",
+        "nama_praktikum": "AR201413 Fisika Bangunan",
+        "sks": "3",
+        "created_at": "2022-02-08 03:55:24",
+        "updated_at": "2022-02-08 03:55:24",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "123",
+        "nama_praktikum": "AR201411 Perancangan Arsitektur 2 Kelas A",
+        "sks": "6",
+        "created_at": "2022-02-08 03:56:03",
+        "updated_at": "2023-01-18 00:49:42",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "124",
+        "nama_praktikum": "AR201415 Sistem Ekologi dan Arsitektur",
+        "sks": "3",
+        "created_at": "2022-02-08 03:56:29",
+        "updated_at": "2022-02-08 03:56:29",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "125",
+        "nama_praktikum": "PW201428 Studio Rancang Kawasan",
+        "sks": "4",
+        "created_at": "2022-02-08 04:11:51",
+        "updated_at": "2022-02-08 04:14:13",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "126",
+        "nama_praktikum": "PW201429 Studio Perencanaan Pesisir",
+        "sks": "4",
+        "created_at": "2022-02-08 04:12:45",
+        "updated_at": "2022-02-08 04:14:20",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "127",
+        "nama_praktikum": "PW201430 Studio Perencanaan Permukiman & Infrastruktur",
+        "sks": "4",
+        "created_at": "2022-02-08 04:13:48",
+        "updated_at": "2022-02-08 04:14:25",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "128",
+        "nama_praktikum": "PW201431 Studio Perencanaan Wilayah",
+        "sks": "4",
+        "created_at": "2022-02-08 04:15:13",
+        "updated_at": "2022-02-08 04:15:13",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "129",
+        "nama_praktikum": "PW201557 Pengolahan Data Spasial dan Penginderaan Jauh",
+        "sks": "2",
+        "created_at": "2022-02-08 04:17:14",
+        "updated_at": "2022-02-08 04:17:14",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "130",
+        "nama_praktikum": "PW201414 Analisis Data Spasial A",
+        "sks": "3",
+        "created_at": "2022-02-08 04:18:50",
+        "updated_at": "2022-02-08 04:18:50",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "131",
+        "nama_praktikum": "PW201414 Analisis Data Spasial B",
+        "sks": "3",
+        "created_at": "2022-02-08 04:19:14",
+        "updated_at": "2022-02-08 04:19:14",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "132",
+        "nama_praktikum": "PW201413 Teknik Analisis Perencanaan A",
+        "sks": "3",
+        "created_at": "2022-02-08 04:21:06",
+        "updated_at": "2022-02-08 04:21:06",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "133",
+        "nama_praktikum": "PW201413 Teknik Analisis Perencanaan B",
+        "sks": "3",
+        "created_at": "2022-02-08 04:21:41",
+        "updated_at": "2022-02-08 04:21:41",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "134",
+        "nama_praktikum": "Kimia Dasar",
+        "sks": "3",
+        "created_at": "2022-02-14 03:20:48",
+        "updated_at": "2022-02-14 03:20:48",
+        "kode_prodi": "21"
+    },
+    {
+        "id_praktikum_matkul": "135",
+        "nama_praktikum": "Fisika Dasar 2",
+        "sks": "3",
+        "created_at": "2022-02-14 03:21:16",
+        "updated_at": "2022-02-14 03:25:21",
+        "kode_prodi": "21"
+    },
+    {
+        "id_praktikum_matkul": "136",
+        "nama_praktikum": "Fisika Umum 2",
+        "sks": "3",
+        "created_at": "2022-02-14 03:25:35",
+        "updated_at": "2022-02-14 03:25:35",
+        "kode_prodi": "21"
+    },
+    {
+        "id_praktikum_matkul": "137",
+        "nama_praktikum": "Operasi Perpindahan Panas",
+        "sks": "3",
+        "created_at": "2022-02-14 03:27:44",
+        "updated_at": "2022-02-14 03:27:44",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "138",
+        "nama_praktikum": "Kimia Fisika + Kimia Analisa",
+        "sks": "3",
+        "created_at": "2022-02-14 03:28:16",
+        "updated_at": "2022-02-14 03:28:16",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "139",
+        "nama_praktikum": "Kimia Organik + Metode Analisis dan Instrumentasi",
+        "sks": "3",
+        "created_at": "2022-02-14 03:29:21",
+        "updated_at": "2022-02-14 03:29:21",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "140",
+        "nama_praktikum": "Teknik Reaksi Kimia Homogen",
+        "sks": "3",
+        "created_at": "2022-02-14 03:29:55",
+        "updated_at": "2022-02-14 03:29:55",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "141",
+        "nama_praktikum": "Teknologi Pewangi",
+        "sks": "2",
+        "created_at": "2022-02-14 03:30:17",
+        "updated_at": "2022-02-14 03:30:17",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "142",
+        "nama_praktikum": "Bioproses",
+        "sks": "3",
+        "created_at": "2022-02-14 03:30:40",
+        "updated_at": "2022-02-14 03:30:40",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "143",
+        "nama_praktikum": "Geomatika dan Sistem Informasi Geografi",
+        "sks": "2",
+        "created_at": "2022-02-14 03:31:51",
+        "updated_at": "2022-02-14 03:31:51",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "144",
+        "nama_praktikum": "Struktur Perkerasan Jalan",
+        "sks": "6",
+        "created_at": "2022-02-14 03:32:24",
+        "updated_at": "2022-02-14 03:32:24",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "145",
+        "nama_praktikum": "Teknologi Lapisan Tipis",
+        "sks": "2",
+        "created_at": "2022-02-14 03:49:54",
+        "updated_at": "2022-02-14 03:49:54",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "146",
+        "nama_praktikum": "Bahan Polimer",
+        "sks": "2",
+        "created_at": "2022-02-14 03:50:18",
+        "updated_at": "2022-02-14 03:50:18",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "147",
+        "nama_praktikum": "Teknologi Nuklir dan Bahan Radioaktif",
+        "sks": "2",
+        "created_at": "2022-02-14 03:51:11",
+        "updated_at": "2022-02-14 03:51:11",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "148",
+        "nama_praktikum": "Teknologi Nuklir Medis",
+        "sks": "2",
+        "created_at": "2022-02-14 03:51:36",
+        "updated_at": "2022-02-14 03:51:36",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "149",
+        "nama_praktikum": "Geologi Dasar",
+        "sks": "2",
+        "created_at": "2022-02-14 03:51:54",
+        "updated_at": "2022-02-14 03:51:54",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "150",
+        "nama_praktikum": "Rangkaian Listrik II",
+        "sks": "3",
+        "created_at": "2022-02-14 03:53:06",
+        "updated_at": "2022-02-14 03:53:06",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "151",
+        "nama_praktikum": "Rangkaian Elektronika II",
+        "sks": "3",
+        "created_at": "2022-02-14 03:53:18",
+        "updated_at": "2022-02-14 03:53:18",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "152",
+        "nama_praktikum": "Sistem Komunikasi",
+        "sks": "4",
+        "created_at": "2022-02-14 03:53:38",
+        "updated_at": "2023-03-29 05:04:59",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "153",
+        "nama_praktikum": "Antena dan Propagasi Gelombang",
+        "sks": "3",
+        "created_at": "2022-02-14 03:54:02",
+        "updated_at": "2022-02-14 03:54:02",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "154",
+        "nama_praktikum": "Desain Sistem Pengaturan",
+        "sks": "3",
+        "created_at": "2022-02-14 03:54:16",
+        "updated_at": "2022-02-14 03:54:16",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "155",
+        "nama_praktikum": "Konversi Energi Listrik",
+        "sks": "3",
+        "created_at": "2022-02-14 03:54:35",
+        "updated_at": "2022-02-14 03:54:35",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "156",
+        "nama_praktikum": "1 ) Dasar Pemrograman  PLC;   2) Otomasi Industri",
+        "sks": "2",
+        "created_at": "2022-02-14 03:54:59",
+        "updated_at": "2022-02-14 03:54:59",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "157",
+        "nama_praktikum": "Material Teknik II",
+        "sks": "3",
+        "created_at": "2022-02-14 04:02:21",
+        "updated_at": "2022-02-14 04:02:21",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "158",
+        "nama_praktikum": "Mekanika Fluida II",
+        "sks": "3",
+        "created_at": "2022-02-14 04:02:38",
+        "updated_at": "2022-02-14 04:02:38",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "159",
+        "nama_praktikum": "Proses Manufaktur II",
+        "sks": "3",
+        "created_at": "2022-02-14 04:02:57",
+        "updated_at": "2022-02-14 04:02:57",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "160",
+        "nama_praktikum": "Mekatronika",
+        "sks": "2",
+        "created_at": "2022-02-14 04:03:16",
+        "updated_at": "2022-02-14 04:03:16",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "161",
+        "nama_praktikum": "Gambar Mesin",
+        "sks": "3",
+        "created_at": "2022-02-14 04:03:32",
+        "updated_at": "2022-02-14 04:03:32",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "162",
+        "nama_praktikum": "Aplikasi Ergonomi",
+        "sks": "3",
+        "created_at": "2022-02-14 04:04:22",
+        "updated_at": "2022-02-14 04:04:22",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "163",
+        "nama_praktikum": "Statistika pengendalian risiko",
+        "sks": "3",
+        "created_at": "2022-02-14 04:05:03",
+        "updated_at": "2022-02-14 04:05:03",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "164",
+        "nama_praktikum": "fisiologi dan toksikologi",
+        "sks": "3",
+        "created_at": "2022-02-14 04:05:18",
+        "updated_at": "2022-02-14 04:05:18",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "165",
+        "nama_praktikum": "Emergancy Response Planning",
+        "sks": "3",
+        "created_at": "2022-02-14 04:05:31",
+        "updated_at": "2022-02-14 04:05:31",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "166",
+        "nama_praktikum": "Higiene industri",
+        "sks": "3",
+        "created_at": "2022-02-14 04:05:45",
+        "updated_at": "2022-02-14 04:05:45",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "167",
+        "nama_praktikum": "PW201415 Perencanaan Tapak",
+        "sks": "3",
+        "created_at": "2022-02-14 04:09:18",
+        "updated_at": "2023-08-02 02:03:34",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "168",
+        "nama_praktikum": "Ilmu Material dan Teknologi Mekanik",
+        "sks": "3",
+        "created_at": "2022-02-14 04:17:00",
+        "updated_at": "2022-02-14 04:17:00",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "169",
+        "nama_praktikum": "Hidrodinamika Kapal",
+        "sks": "3",
+        "created_at": "2022-02-14 04:17:17",
+        "updated_at": "2022-02-14 04:17:17",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "170",
+        "nama_praktikum": "Mekanika Teknik 2",
+        "sks": "3",
+        "created_at": "2022-02-14 04:17:31",
+        "updated_at": "2022-02-14 04:17:31",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "171",
+        "nama_praktikum": "Pemrograman Terstruktur",
+        "sks": "3",
+        "created_at": "2022-02-14 04:20:42",
+        "updated_at": "2022-02-14 04:20:42",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "172",
+        "nama_praktikum": "Desain dan Manajemen Jaringan Komputer A",
+        "sks": "3",
+        "created_at": "2022-02-14 04:20:58",
+        "updated_at": "2022-02-14 04:20:58",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "173",
+        "nama_praktikum": "Rekaya Perangkat Lunak A",
+        "sks": "1",
+        "created_at": "2022-02-14 04:21:39",
+        "updated_at": "2022-02-14 04:21:39",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "174",
+        "nama_praktikum": "Rekayasa Perangkat Lunak B",
+        "sks": "1",
+        "created_at": "2022-02-14 04:21:58",
+        "updated_at": "2022-02-14 04:21:58",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "175",
+        "nama_praktikum": "Desain Antarmuka dan Pengalaman Pengguna A",
+        "sks": "1",
+        "created_at": "2022-02-14 04:22:18",
+        "updated_at": "2022-02-14 04:22:18",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "176",
+        "nama_praktikum": "Desain Antarmuka dan Pengalaman Pengguna B",
+        "sks": "1",
+        "created_at": "2022-02-14 04:22:38",
+        "updated_at": "2022-02-14 04:22:38",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "177",
+        "nama_praktikum": "Animasi Digital",
+        "sks": "3",
+        "created_at": "2022-02-14 04:22:54",
+        "updated_at": "2022-08-29 01:38:23",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "178",
+        "nama_praktikum": "Pengembangan Gim",
+        "sks": "3",
+        "created_at": "2022-02-14 04:24:51",
+        "updated_at": "2022-08-29 01:38:09",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "180",
+        "nama_praktikum": "Pemrograman Berorientasi Objek",
+        "sks": "3",
+        "created_at": "2022-02-14 04:25:54",
+        "updated_at": "2022-02-14 04:25:54",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "181",
+        "nama_praktikum": "Pengolahan Citra Digital",
+        "sks": "3",
+        "created_at": "2022-02-14 04:26:13",
+        "updated_at": "2022-02-14 04:26:13",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "182",
+        "nama_praktikum": "Perancangan Sistem Kerja",
+        "sks": "3",
+        "created_at": "2022-02-14 05:31:44",
+        "updated_at": "2022-02-14 05:31:44",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "183",
+        "nama_praktikum": "Simulasi Sistem",
+        "sks": "3",
+        "created_at": "2022-02-14 05:32:04",
+        "updated_at": "2022-02-14 05:32:04",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "184",
+        "nama_praktikum": "Perancangan Pelabuhan dan Struktur Pantai",
+        "sks": "3",
+        "created_at": "2022-02-14 05:34:06",
+        "updated_at": "2022-02-14 05:34:06",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "185",
+        "nama_praktikum": "Hidrografi dan Akustik Bawah Air  + Praktikum",
+        "sks": "4",
+        "created_at": "2022-02-14 05:35:04",
+        "updated_at": "2022-02-14 05:35:04",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "186",
+        "nama_praktikum": "Pengantar Basis Data",
+        "sks": "2",
+        "created_at": "2022-02-14 05:36:39",
+        "updated_at": "2022-02-14 05:36:39",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "187",
+        "nama_praktikum": "Pengantar Sains Data",
+        "sks": "2",
+        "created_at": "2022-02-14 05:36:54",
+        "updated_at": "2022-02-14 05:37:23",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "188",
+        "nama_praktikum": "Statistika Matematika 2",
+        "sks": "3",
+        "created_at": "2022-02-14 05:37:10",
+        "updated_at": "2022-02-14 05:37:10",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "189",
+        "nama_praktikum": "Pengantar Eksplorasi Data",
+        "sks": "2",
+        "created_at": "2022-02-14 05:38:06",
+        "updated_at": "2022-02-14 05:38:06",
+        "kode_prodi": "18"
+    },
+    {
+        "id_praktikum_matkul": "190",
+        "nama_praktikum": "Sistem Informasi Akuntansi",
+        "sks": "3",
+        "created_at": "2022-02-14 05:38:35",
+        "updated_at": "2022-02-14 05:38:35",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "191",
+        "nama_praktikum": "Kimia Analitik",
+        "sks": "3",
+        "created_at": "2022-02-14 05:39:22",
+        "updated_at": "2022-02-14 05:39:22",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "192",
+        "nama_praktikum": "Mikrobiologi Pangan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:39:37",
+        "updated_at": "2022-02-14 05:39:37",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "193",
+        "nama_praktikum": "Unit Operasi Industri Pangan 2",
+        "sks": "4",
+        "created_at": "2022-02-14 05:40:02",
+        "updated_at": "2022-02-14 05:40:02",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "194",
+        "nama_praktikum": "Teknologi Pengolahan Pangan",
+        "sks": "4",
+        "created_at": "2022-02-14 05:40:18",
+        "updated_at": "2022-02-14 05:40:18",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "195",
+        "nama_praktikum": "Teknologi Hasil Perairan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:41:58",
+        "updated_at": "2022-02-14 05:41:58",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "196",
+        "nama_praktikum": "Mikrobiologi Dasar",
+        "sks": "3",
+        "created_at": "2022-02-14 05:42:36",
+        "updated_at": "2022-02-14 05:42:36",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "197",
+        "nama_praktikum": "Analisa Pangan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:42:53",
+        "updated_at": "2022-02-14 05:42:53",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "198",
+        "nama_praktikum": "Unit Operasi Industri Pangan 1",
+        "sks": "3",
+        "created_at": "2022-02-14 05:43:08",
+        "updated_at": "2022-02-14 05:43:08",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "199",
+        "nama_praktikum": "Analisis Sensori",
+        "sks": "3",
+        "created_at": "2022-02-14 05:43:26",
+        "updated_at": "2022-02-14 05:43:26",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "200",
+        "nama_praktikum": "Teknologi Pengemasan dan Penyimpanan Bahan Pangan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:43:48",
+        "updated_at": "2022-02-14 05:43:48",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "201",
+        "nama_praktikum": "Manajemen Data",
+        "sks": "2",
+        "created_at": "2022-02-14 05:45:14",
+        "updated_at": "2022-02-14 05:45:14",
+        "kode_prodi": "00"
+    },
+    {
+        "id_praktikum_matkul": "202",
+        "nama_praktikum": "Manajemen Data",
+        "sks": "2",
+        "created_at": "2022-02-14 05:45:30",
+        "updated_at": "2022-02-14 05:45:30",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "203",
+        "nama_praktikum": "Pengantar Optimasi",
+        "sks": "3",
+        "created_at": "2022-02-14 05:45:44",
+        "updated_at": "2022-02-14 05:45:44",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "204",
+        "nama_praktikum": "Pemodelan Matematika Sistem",
+        "sks": "3",
+        "created_at": "2022-02-14 05:47:38",
+        "updated_at": "2022-02-14 05:47:38",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "205",
+        "nama_praktikum": "Pengantar Optimasi Dinamis",
+        "sks": "4",
+        "created_at": "2022-02-14 05:48:23",
+        "updated_at": "2022-02-14 05:48:23",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "206",
+        "nama_praktikum": "Persamaan Diferensial Numerik",
+        "sks": "3",
+        "created_at": "2022-02-14 05:48:49",
+        "updated_at": "2022-02-14 05:48:49",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "207",
+        "nama_praktikum": "Komputasi Dinamika Fluida",
+        "sks": "3",
+        "created_at": "2022-02-14 05:49:10",
+        "updated_at": "2022-02-14 05:49:10",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "208",
+        "nama_praktikum": "Kapita Selekta Matematika Terapan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:49:27",
+        "updated_at": "2022-02-14 05:49:27",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "209",
+        "nama_praktikum": "Kecerdasan Buatan",
+        "sks": "3",
+        "created_at": "2022-02-14 05:49:55",
+        "updated_at": "2022-02-14 05:49:55",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "210",
+        "nama_praktikum": "AR201416 Perancangan Arsitektur 3 Kelas A",
+        "sks": "6",
+        "created_at": "2022-08-15 02:31:23",
+        "updated_at": "2023-07-18 06:48:19",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "211",
+        "nama_praktikum": "AR201402 Gambar Arsitektur Dasar Kelas A",
+        "sks": "2",
+        "created_at": "2022-08-15 02:33:02",
+        "updated_at": "2022-08-16 00:49:12",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "212",
+        "nama_praktikum": "DK211401 Nirmana 2D Kelas A",
+        "sks": "4",
+        "created_at": "2022-08-15 02:48:55",
+        "updated_at": "2023-08-02 01:59:58",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "213",
+        "nama_praktikum": "DK211405 Gambar Bentuk Kelas A",
+        "sks": "3",
+        "created_at": "2022-08-15 02:49:37",
+        "updated_at": "2023-08-02 02:00:35",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "214",
+        "nama_praktikum": "PW201410 Pengantar Data Spasial Kelas A",
+        "sks": "2",
+        "created_at": "2022-08-16 00:40:18",
+        "updated_at": "2022-08-16 00:40:51",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "215",
+        "nama_praktikum": "PW201410 Pengantar Data Spasial Kelas B",
+        "sks": "2",
+        "created_at": "2022-08-16 00:42:05",
+        "updated_at": "2022-08-16 00:42:05",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "216",
+        "nama_praktikum": "PW201402 Teknik Komunikasi Perencanaan Kelas A",
+        "sks": "3",
+        "created_at": "2022-08-16 00:43:24",
+        "updated_at": "2022-08-16 00:43:33",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "217",
+        "nama_praktikum": "PW201402 Teknik Komunikasi Perencanaan Kelas B",
+        "sks": "3",
+        "created_at": "2022-08-16 00:43:47",
+        "updated_at": "2022-08-16 00:43:47",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "218",
+        "nama_praktikum": "PW201559 Komputasi Spasial Berbasis Internet dan Web GIS",
+        "sks": "2",
+        "created_at": "2022-08-16 00:45:18",
+        "updated_at": "2022-08-16 00:45:18",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "219",
+        "nama_praktikum": "PW201558 Permodelan Spasial",
+        "sks": "2",
+        "created_at": "2022-08-16 00:47:02",
+        "updated_at": "2023-07-28 07:18:05",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "220",
+        "nama_praktikum": "PW201420 Perencanaan Pesisir",
+        "sks": "3",
+        "created_at": "2022-08-16 00:48:01",
+        "updated_at": "2022-08-16 00:48:01",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "221",
+        "nama_praktikum": "AR201405 Perancangan Arsitektur 1 Kelas B",
+        "sks": "6",
+        "created_at": "2022-08-16 00:48:50",
+        "updated_at": "2022-08-16 00:48:50",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "222",
+        "nama_praktikum": "AR201402 Gambar Arsitektur Dasar Kelas B",
+        "sks": "2",
+        "created_at": "2022-08-16 00:49:30",
+        "updated_at": "2022-08-16 00:49:30",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "223",
+        "nama_praktikum": "AR201420 Arsitektur Digital",
+        "sks": "2",
+        "created_at": "2022-08-16 06:22:08",
+        "updated_at": "2022-08-16 06:23:24",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "224",
+        "nama_praktikum": "Statistika Industri",
+        "sks": "3",
+        "created_at": "2022-08-22 01:36:51",
+        "updated_at": "2022-08-22 01:36:51",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "225",
+        "nama_praktikum": "Riset Operasi 1",
+        "sks": "3",
+        "created_at": "2022-08-22 01:38:43",
+        "updated_at": "2022-08-22 01:38:43",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "226",
+        "nama_praktikum": "Aplikasi Ergonomi",
+        "sks": "3",
+        "created_at": "2022-08-22 01:40:30",
+        "updated_at": "2022-08-22 01:40:30",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "227",
+        "nama_praktikum": "Statistika pengendalian risiko",
+        "sks": "3",
+        "created_at": "2022-08-22 01:40:44",
+        "updated_at": "2022-08-22 01:40:44",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "228",
+        "nama_praktikum": "fisiologi dan toksikologi",
+        "sks": "3",
+        "created_at": "2022-08-22 01:41:01",
+        "updated_at": "2022-08-22 01:41:01",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "229",
+        "nama_praktikum": "Statistika Matematika 1",
+        "sks": "4",
+        "created_at": "2022-08-26 02:54:20",
+        "updated_at": "2022-08-26 02:54:20",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "230",
+        "nama_praktikum": "Pengantar Komputasi Statistika",
+        "sks": "3",
+        "created_at": "2022-08-26 02:54:33",
+        "updated_at": "2022-08-29 01:40:25",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "231",
+        "nama_praktikum": "Komputasi Statistika Lanjut",
+        "sks": "3",
+        "created_at": "2022-08-26 02:54:47",
+        "updated_at": "2022-08-29 01:40:36",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "232",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "3",
+        "created_at": "2022-08-26 02:54:59",
+        "updated_at": "2022-08-26 02:54:59",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "233",
+        "nama_praktikum": "Statistika dan Komputasi Bisnis 2",
+        "sks": "4",
+        "created_at": "2022-08-29 01:33:55",
+        "updated_at": "2022-08-29 01:33:55",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "234",
+        "nama_praktikum": "Visi Komputer",
+        "sks": "3",
+        "created_at": "2022-08-29 01:35:05",
+        "updated_at": "2022-08-29 01:35:05",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "235",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "3",
+        "created_at": "2022-08-29 01:39:17",
+        "updated_at": "2022-08-29 01:39:17",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "236",
+        "nama_praktikum": "Matematika Komputasi",
+        "sks": "2",
+        "created_at": "2022-08-29 01:39:41",
+        "updated_at": "2022-08-29 01:39:41",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "237",
+        "nama_praktikum": "Dinamika Teknik",
+        "sks": "3",
+        "created_at": "2022-08-31 04:53:04",
+        "updated_at": "2022-08-31 04:53:04",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "238",
+        "nama_praktikum": "PW201425 Studio Perencanaan Kota Kelas A",
+        "sks": "4",
+        "created_at": "2022-08-31 07:24:04",
+        "updated_at": "2023-08-02 02:02:03",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "239",
+        "nama_praktikum": "PW201739 Tugas Akhir",
+        "sks": "6",
+        "created_at": "2022-08-31 07:24:55",
+        "updated_at": "2022-08-31 07:24:55",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "240",
+        "nama_praktikum": "Getaran Mekanik",
+        "sks": "3",
+        "created_at": "2022-09-01 01:46:08",
+        "updated_at": "2022-09-01 01:46:08",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "241",
+        "nama_praktikum": "Teknik Tenaga Listrik",
+        "sks": "3",
+        "created_at": "2022-09-01 01:46:28",
+        "updated_at": "2022-09-01 01:46:28",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "242",
+        "nama_praktikum": "Statistika Industri 1",
+        "sks": "3",
+        "created_at": "2022-09-05 07:01:29",
+        "updated_at": "2022-09-05 07:01:29",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "243",
+        "nama_praktikum": "Pemrograman Peralatan",
+        "sks": "3",
+        "created_at": "2022-09-12 07:31:46",
+        "updated_at": "2022-09-12 07:31:46",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "244",
+        "nama_praktikum": "Tata Letak Fasilitas",
+        "sks": "3",
+        "created_at": "2022-09-13 06:38:27",
+        "updated_at": "2022-09-13 06:38:27",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "245",
+        "nama_praktikum": "Sistem Terdistribusi",
+        "sks": "3",
+        "created_at": "2022-09-26 02:58:31",
+        "updated_at": "2022-09-26 02:58:31",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "246",
+        "nama_praktikum": "Elektronika Daya",
+        "sks": "3",
+        "created_at": "2022-09-28 04:35:21",
+        "updated_at": "2022-09-28 04:35:21",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "247",
+        "nama_praktikum": "Simulasi Proses",
+        "sks": "2",
+        "created_at": "2022-10-03 01:25:44",
+        "updated_at": "2022-10-03 01:25:44",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "248",
+        "nama_praktikum": "Desain Kapal Berbasis Komputer",
+        "sks": "3",
+        "created_at": "2022-10-19 03:39:50",
+        "updated_at": "2022-10-19 03:39:50",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "249",
+        "nama_praktikum": "Teknologi IoT",
+        "sks": "3",
+        "created_at": "2022-11-04 00:30:51",
+        "updated_at": "2022-11-04 00:30:51",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "250",
+        "nama_praktikum": "AR201404 Teknik Gambar Arsitektur Kelas B",
+        "sks": "3",
+        "created_at": "2023-01-18 00:48:10",
+        "updated_at": "2023-01-18 00:48:10",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "251",
+        "nama_praktikum": "AR201412 Struktur Bangunan Kelas B",
+        "sks": "3",
+        "created_at": "2023-01-18 00:48:54",
+        "updated_at": "2023-01-18 00:48:54",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "252",
+        "nama_praktikum": "AR201411 Perancangan Arsitektur 2 Kelas B",
+        "sks": "6",
+        "created_at": "2023-01-18 00:49:56",
+        "updated_at": "2023-01-18 00:49:56",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "253",
+        "nama_praktikum": "AR201421 Perancangan Arsitektur 4 Kelas A",
+        "sks": "6",
+        "created_at": "2023-01-18 00:53:20",
+        "updated_at": "2023-01-18 00:53:20",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "254",
+        "nama_praktikum": "AR201421 Perancangan Arsitektur 4 Kelas B",
+        "sks": "6",
+        "created_at": "2023-01-18 00:53:47",
+        "updated_at": "2023-01-18 00:53:47",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "255",
+        "nama_praktikum": "AR201403 Estetika Bentuk Kelas B",
+        "sks": "3",
+        "created_at": "2023-01-18 01:15:59",
+        "updated_at": "2023-01-18 01:15:59",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "256",
+        "nama_praktikum": "DK211411 Nirmana 3D",
+        "sks": "4",
+        "created_at": "2023-01-18 01:18:01",
+        "updated_at": "2023-01-18 01:18:01",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "257",
+        "nama_praktikum": "DK211407 Tipografi",
+        "sks": "3",
+        "created_at": "2023-01-18 01:23:07",
+        "updated_at": "2023-01-18 01:23:07",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "258",
+        "nama_praktikum": "DK211406 Gambar Model",
+        "sks": "3",
+        "created_at": "2023-01-18 01:23:36",
+        "updated_at": "2023-01-18 01:23:36",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "259",
+        "nama_praktikum": "Analisis Material",
+        "sks": "2",
+        "created_at": "2023-01-31 08:16:14",
+        "updated_at": "2023-01-31 08:16:14",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "260",
+        "nama_praktikum": "Teknologi Nuklir dan Bahan Radioaktif",
+        "sks": "2",
+        "created_at": "2023-01-31 08:16:36",
+        "updated_at": "2023-01-31 08:16:36",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "261",
+        "nama_praktikum": "Teknologi Nuklir Medis",
+        "sks": "2",
+        "created_at": "2023-01-31 08:16:53",
+        "updated_at": "2023-01-31 08:16:53",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "262",
+        "nama_praktikum": "Teknologi Baterai",
+        "sks": "2",
+        "created_at": "2023-01-31 08:17:29",
+        "updated_at": "2023-01-31 08:17:29",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "263",
+        "nama_praktikum": "Pengukuran Geofisika",
+        "sks": "2",
+        "created_at": "2023-01-31 08:17:44",
+        "updated_at": "2023-01-31 08:17:44",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "264",
+        "nama_praktikum": "Metode Penelitian dan Analisa Data",
+        "sks": "3",
+        "created_at": "2023-01-31 08:20:14",
+        "updated_at": "2023-01-31 08:20:14",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "265",
+        "nama_praktikum": "Teknopreneurship",
+        "sks": "2",
+        "created_at": "2023-01-31 08:20:25",
+        "updated_at": "2023-01-31 08:20:25",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "266",
+        "nama_praktikum": "Manajemen Rantai Pasok",
+        "sks": "3",
+        "created_at": "2023-03-07 06:27:15",
+        "updated_at": "2023-03-07 06:27:15",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "267",
+        "nama_praktikum": "Sistem Digital",
+        "sks": "3",
+        "created_at": "2023-03-13 08:05:00",
+        "updated_at": "2023-03-13 08:05:00",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "268",
+        "nama_praktikum": "Sistem Basis Data",
+        "sks": "3",
+        "created_at": "2023-03-13 08:05:25",
+        "updated_at": "2023-03-13 08:05:25",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "269",
+        "nama_praktikum": "Gambar Teknik Manual",
+        "sks": "2",
+        "created_at": "2023-03-15 01:32:37",
+        "updated_at": "2023-03-15 01:32:37",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "270",
+        "nama_praktikum": "Kinematika Mekanisme",
+        "sks": "2",
+        "created_at": "2023-03-29 05:02:10",
+        "updated_at": "2023-03-29 05:02:10",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "271",
+        "nama_praktikum": "Perancangan Sistem Mekanikal Bangunan Gedung",
+        "sks": "3",
+        "created_at": "2023-03-29 05:02:34",
+        "updated_at": "2023-03-29 05:02:34",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "272",
+        "nama_praktikum": "Komputasi Dinamika Fluida",
+        "sks": "3",
+        "created_at": "2023-03-29 05:03:46",
+        "updated_at": "2023-03-29 05:03:46",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "273",
+        "nama_praktikum": "Metode Elemen Hingga",
+        "sks": "3",
+        "created_at": "2023-03-29 05:04:13",
+        "updated_at": "2023-03-29 05:04:13",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "274",
+        "nama_praktikum": "Manajemen Proyek",
+        "sks": "2",
+        "created_at": "2023-03-29 05:05:40",
+        "updated_at": "2023-03-29 05:05:40",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "275",
+        "nama_praktikum": "Otomasi Industri",
+        "sks": "2",
+        "created_at": "2023-03-29 05:06:13",
+        "updated_at": "2023-03-29 05:06:13",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "276",
+        "nama_praktikum": "Getaran Kapal",
+        "sks": "3",
+        "created_at": "2023-03-29 05:07:54",
+        "updated_at": "2023-03-29 05:07:54",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "277",
+        "nama_praktikum": "Metode Penelitian",
+        "sks": "2",
+        "created_at": "2023-03-29 05:08:53",
+        "updated_at": "2023-03-29 05:08:53",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "278",
+        "nama_praktikum": "Sistem Informasi",
+        "sks": "3",
+        "created_at": "2023-04-13 04:27:18",
+        "updated_at": "2023-04-13 04:27:18",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "279",
+        "nama_praktikum": "AR201416 Perancangan Arsitektur 3 Kelas B",
+        "sks": "6",
+        "created_at": "2023-07-18 06:48:38",
+        "updated_at": "2023-07-18 06:48:38",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "280",
+        "nama_praktikum": "AR201426 Perancangan Arsitektur 5",
+        "sks": "6",
+        "created_at": "2023-07-18 06:57:46",
+        "updated_at": "2023-07-18 06:57:46",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "281",
+        "nama_praktikum": "DK211414 Ilustrasi Digital",
+        "sks": "3",
+        "created_at": "2023-07-18 07:31:04",
+        "updated_at": "2023-07-18 07:31:04",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "282",
+        "nama_praktikum": "DK211412 Desain Komunikasi Visual Grafis",
+        "sks": "5",
+        "created_at": "2023-07-18 07:32:34",
+        "updated_at": "2023-07-18 07:32:34",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "284",
+        "nama_praktikum": "DK211401 Nirmana 2D Kelas B",
+        "sks": "4",
+        "created_at": "2023-08-02 02:00:18",
+        "updated_at": "2023-08-02 02:00:18",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "285",
+        "nama_praktikum": "DK211405 Gambar Bentuk Kelas B",
+        "sks": "3",
+        "created_at": "2023-08-02 02:00:52",
+        "updated_at": "2023-08-02 02:00:52",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "286",
+        "nama_praktikum": "PW201425 Studio Perencanaan Kota Kelas B",
+        "sks": "4",
+        "created_at": "2023-08-02 02:02:38",
+        "updated_at": "2023-08-02 02:02:38",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "287",
+        "nama_praktikum": "PW201409 Studio Proses Perencanaan Kelas A",
+        "sks": "4",
+        "created_at": "2023-08-02 02:11:44",
+        "updated_at": "2023-08-02 02:11:44",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "288",
+        "nama_praktikum": "PW201409 Studio Proses Perencanaan Kelas B",
+        "sks": "4",
+        "created_at": "2023-08-02 02:12:19",
+        "updated_at": "2023-08-02 02:12:19",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "289",
+        "nama_praktikum": "DK211413 Grafika",
+        "sks": "3",
+        "created_at": "2023-08-08 01:22:01",
+        "updated_at": "2023-08-08 01:22:01",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "290",
+        "nama_praktikum": "Mekanika Fluida II",
+        "sks": "2",
+        "created_at": "2023-09-14 05:53:18",
+        "updated_at": "2023-09-14 05:53:18",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "291",
+        "nama_praktikum": "Proses Manufaktur I",
+        "sks": "2",
+        "created_at": "2023-09-14 05:54:26",
+        "updated_at": "2023-09-14 05:54:26",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "292",
+        "nama_praktikum": "Proses Manufaktur II",
+        "sks": "2",
+        "created_at": "2023-09-14 05:55:02",
+        "updated_at": "2023-09-14 05:55:02",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "293",
+        "nama_praktikum": "Menggambar Teknik",
+        "sks": "2",
+        "created_at": "2023-09-27 04:38:17",
+        "updated_at": "2023-09-27 04:38:17",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "294",
+        "nama_praktikum": "Pengendalian Ledakan dan Bahaya Listrik",
+        "sks": "3",
+        "created_at": "2023-10-16 05:15:46",
+        "updated_at": "2023-10-16 05:15:46",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "295",
+        "nama_praktikum": "Menggambar Teknik & Pengantar CAD",
+        "sks": "3",
+        "created_at": "2023-10-20 02:34:36",
+        "updated_at": "2023-10-20 02:34:36",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "296",
+        "nama_praktikum": "Bahan Komposit",
+        "sks": "2",
+        "created_at": "2024-02-06 01:25:18",
+        "updated_at": "2024-02-06 01:26:39",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "297",
+        "nama_praktikum": "Sistem Pergudangan",
+        "sks": "3",
+        "created_at": "2025-04-28 02:32:12",
+        "updated_at": "2025-04-28 02:32:12",
+        "kode_prodi": "23"
+    },
+    {
+        "id_praktikum_matkul": "298",
+        "nama_praktikum": "Mesin Konversi Energi",
+        "sks": "3",
+        "created_at": "2025-06-04 05:40:11",
+        "updated_at": "2025-06-04 06:05:28",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "299",
+        "nama_praktikum": "Biologi",
+        "sks": "2",
+        "created_at": "2025-09-23 01:15:00",
+        "updated_at": "2025-09-23 02:05:12",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "300",
+        "nama_praktikum": "WSN & IoT",
+        "sks": "2",
+        "created_at": "2025-09-23 01:16:47",
+        "updated_at": "2025-09-23 01:16:47",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "301",
+        "nama_praktikum": "Emergency Respon Planning",
+        "sks": "2",
+        "created_at": "2025-09-23 01:59:50",
+        "updated_at": "2025-09-23 01:59:50",
+        "kode_prodi": "20"
+    },
+    {
+        "id_praktikum_matkul": "302",
+        "nama_praktikum": "Pemodelan dan Simulasi Sistem",
+        "sks": "3",
+        "created_at": "2025-09-23 02:00:26",
+        "updated_at": "2025-09-23 02:00:26",
+        "kode_prodi": "12"
+    },
+    {
+        "id_praktikum_matkul": "303",
+        "nama_praktikum": "Komputasi Numerik Terapan",
+        "sks": "3",
+        "created_at": "2025-09-23 02:01:37",
+        "updated_at": "2025-09-23 02:01:37",
+        "kode_prodi": "05"
+    },
+    {
+        "id_praktikum_matkul": "304",
+        "nama_praktikum": "Gambar Teknik",
+        "sks": "3",
+        "created_at": "2025-09-23 02:02:39",
+        "updated_at": "2025-09-23 02:02:39",
+        "kode_prodi": "23"
+    },
+    {
+        "id_praktikum_matkul": "305",
+        "nama_praktikum": "Pemrosesan Logam dan Pengecoran",
+        "sks": "3",
+        "created_at": "2025-09-23 02:03:33",
+        "updated_at": "2025-09-23 02:03:33",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "306",
+        "nama_praktikum": "Perancangan Proses dan Produk",
+        "sks": "4",
+        "created_at": "2025-09-23 02:03:59",
+        "updated_at": "2025-09-23 02:03:59",
+        "kode_prodi": "06"
+    },
+    {
+        "id_praktikum_matkul": "308",
+        "nama_praktikum": "Analisis dan Visualisasi Data Bisnis",
+        "sks": "2",
+        "created_at": "2025-09-23 02:04:41",
+        "updated_at": "2025-09-23 02:04:41",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "309",
+        "nama_praktikum": "Metode Numerik",
+        "sks": "2",
+        "created_at": "2025-09-23 02:05:39",
+        "updated_at": "2025-09-23 02:05:39",
+        "kode_prodi": "03"
+    },
+    {
+        "id_praktikum_matkul": "310",
+        "nama_praktikum": "Teknologi Pengolahan Hasil Perairan",
+        "sks": "3",
+        "created_at": "2025-09-23 02:06:15",
+        "updated_at": "2025-09-23 02:06:15",
+        "kode_prodi": "16"
+    },
+    {
+        "id_praktikum_matkul": "311",
+        "nama_praktikum": "Statistika Inferensial",
+        "sks": "3",
+        "created_at": "2025-09-23 02:06:30",
+        "updated_at": "2025-09-23 02:06:30",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "312",
+        "nama_praktikum": "Analisis Big Data",
+        "sks": "3",
+        "created_at": "2025-09-23 02:08:04",
+        "updated_at": "2025-09-23 02:08:04",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "313",
+        "nama_praktikum": "Kecerdasan Buatan",
+        "sks": "3",
+        "created_at": "2025-09-23 02:08:35",
+        "updated_at": "2025-09-23 02:08:35",
+        "kode_prodi": "19"
+    },
+    {
+        "id_praktikum_matkul": "314",
+        "nama_praktikum": "Perancangan Dasar 1",
+        "sks": "5",
+        "created_at": "2025-09-23 02:08:49",
+        "updated_at": "2025-09-23 02:08:49",
+        "kode_prodi": "15"
+    },
+    {
+        "id_praktikum_matkul": "315",
+        "nama_praktikum": "Rangkaian dan Piranti Semikonduktor",
+        "sks": "3",
+        "created_at": "2025-09-23 02:09:50",
+        "updated_at": "2025-09-23 02:09:50",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "316",
+        "nama_praktikum": "Rangkaian Listrik DC",
+        "sks": "3",
+        "created_at": "2025-09-23 02:11:11",
+        "updated_at": "2025-09-23 02:11:11",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "317",
+        "nama_praktikum": "Grafik Digital",
+        "sks": "3",
+        "created_at": "2025-09-23 02:11:35",
+        "updated_at": "2025-09-23 02:11:35",
+        "kode_prodi": "22"
+    },
+    {
+        "id_praktikum_matkul": "318",
+        "nama_praktikum": "Sistem Kontrol",
+        "sks": "3",
+        "created_at": "2025-09-23 02:12:17",
+        "updated_at": "2025-09-23 02:12:17",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "319",
+        "nama_praktikum": "Pola Lokasi dan Guna Lahan A",
+        "sks": "3",
+        "created_at": "2025-09-23 02:12:27",
+        "updated_at": "2025-09-23 02:12:27",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "320",
+        "nama_praktikum": "Pola Lokasi dan Guna Lahan B",
+        "sks": "3",
+        "created_at": "2025-09-23 02:12:34",
+        "updated_at": "2025-09-23 02:12:34",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "321",
+        "nama_praktikum": "Pengantar Presentasi dan Data Spasial A",
+        "sks": "3",
+        "created_at": "2025-09-23 02:13:38",
+        "updated_at": "2025-09-23 02:13:38",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "322",
+        "nama_praktikum": "Pengantar Presentasi dan Data Spasial B",
+        "sks": "3",
+        "created_at": "2025-09-23 02:13:43",
+        "updated_at": "2025-09-23 02:13:43",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "323",
+        "nama_praktikum": "Pengantar Presentasi dan Data Spasial C",
+        "sks": "3",
+        "created_at": "2025-09-23 02:13:49",
+        "updated_at": "2025-09-23 02:13:49",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "324",
+        "nama_praktikum": "Pengantar Presentasi dan Data Spasial D",
+        "sks": "3",
+        "created_at": "2025-09-23 02:13:54",
+        "updated_at": "2025-09-23 02:13:54",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "325",
+        "nama_praktikum": "Teknik Analisa Perencanaan A",
+        "sks": "3",
+        "created_at": "2025-09-23 02:14:31",
+        "updated_at": "2025-09-23 02:14:31",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "326",
+        "nama_praktikum": "Teknik Analisa Perencanaan B",
+        "sks": "3",
+        "created_at": "2025-09-23 02:14:37",
+        "updated_at": "2025-09-23 02:14:37",
+        "kode_prodi": "08"
+    },
+    {
+        "id_praktikum_matkul": "327",
+        "nama_praktikum": "Gelombang Air",
+        "sks": "3",
+        "created_at": "2025-09-23 02:15:19",
+        "updated_at": "2025-09-23 02:15:19",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "328",
+        "nama_praktikum": "Teknologi dan Inspeksi Las",
+        "sks": "4",
+        "created_at": "2025-09-23 02:15:39",
+        "updated_at": "2025-09-23 02:15:39",
+        "kode_prodi": "14"
+    },
+    {
+        "id_praktikum_matkul": "329",
+        "nama_praktikum": "Manajemen Proyek dan Keselamatan Kerja",
+        "sks": "3",
+        "created_at": "2025-09-23 02:15:41",
+        "updated_at": "2025-09-23 02:15:41",
+        "kode_prodi": "04"
+    },
+    {
+        "id_praktikum_matkul": "330",
+        "nama_praktikum": "Sistem Benam dan IoT",
+        "sks": "3",
+        "created_at": "2025-09-23 02:16:45",
+        "updated_at": "2025-09-23 02:16:45",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "331",
+        "nama_praktikum": "Perpetaan & SIG",
+        "sks": "3",
+        "created_at": "2025-09-23 02:16:47",
+        "updated_at": "2025-09-23 02:16:47",
+        "kode_prodi": "13"
+    },
+    {
+        "id_praktikum_matkul": "332",
+        "nama_praktikum": "Stabilitas dan Peluncuran Kapal",
+        "sks": "4",
+        "created_at": "2025-09-23 02:17:37",
+        "updated_at": "2025-09-23 02:17:55",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "333",
+        "nama_praktikum": "Sistem Paralel dan Terdistribusi",
+        "sks": "3",
+        "created_at": "2025-09-23 02:18:05",
+        "updated_at": "2025-09-23 02:18:05",
+        "kode_prodi": "11"
+    },
+    {
+        "id_praktikum_matkul": "334",
+        "nama_praktikum": "Stabilitas Kebocoran",
+        "sks": "3",
+        "created_at": "2025-09-23 02:18:22",
+        "updated_at": "2025-09-23 02:18:22",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "335",
+        "nama_praktikum": "Eksperimen Fisika",
+        "sks": "2",
+        "created_at": "2025-09-23 02:18:49",
+        "updated_at": "2025-09-23 02:18:49",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "336",
+        "nama_praktikum": "Desain Rencana Umum Kapal",
+        "sks": "4",
+        "created_at": "2025-09-23 02:19:22",
+        "updated_at": "2025-09-23 02:19:22",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "337",
+        "nama_praktikum": "Semikonduktor",
+        "sks": "2",
+        "created_at": "2025-09-23 02:19:51",
+        "updated_at": "2025-09-23 02:19:51",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "338",
+        "nama_praktikum": "Desain Konstruksi Kapal 1",
+        "sks": "3",
+        "created_at": "2025-09-23 02:19:55",
+        "updated_at": "2025-09-23 02:19:55",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "339",
+        "nama_praktikum": "Hidrostatika Kapal",
+        "sks": "3",
+        "created_at": "2025-09-23 02:20:08",
+        "updated_at": "2025-09-23 02:20:08",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "340",
+        "nama_praktikum": "Analisa Struktur",
+        "sks": "3",
+        "created_at": "2025-09-23 02:20:18",
+        "updated_at": "2025-09-23 02:20:18",
+        "kode_prodi": "09"
+    },
+    {
+        "id_praktikum_matkul": "341",
+        "nama_praktikum": "Mikrokontroler",
+        "sks": "2",
+        "created_at": "2025-09-23 02:20:43",
+        "updated_at": "2025-09-23 02:20:43",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "342",
+        "nama_praktikum": "Menggambar Bangunan Sipil",
+        "sks": "2",
+        "created_at": "2025-09-23 02:20:46",
+        "updated_at": "2025-09-23 02:20:46",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "343",
+        "nama_praktikum": "Mekanika Tanah 2",
+        "sks": "2",
+        "created_at": "2025-09-23 02:20:56",
+        "updated_at": "2025-09-23 02:20:56",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "344",
+        "nama_praktikum": "Elektronika",
+        "sks": "3",
+        "created_at": "2025-09-23 02:21:07",
+        "updated_at": "2025-09-23 02:21:07",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "345",
+        "nama_praktikum": "Mekanika Fluida dan Hidraulika",
+        "sks": "3",
+        "created_at": "2025-09-23 02:21:07",
+        "updated_at": "2025-09-23 02:21:07",
+        "kode_prodi": "07"
+    },
+    {
+        "id_praktikum_matkul": "346",
+        "nama_praktikum": "Fisika Instrumentasi",
+        "sks": "3",
+        "created_at": "2025-09-23 02:21:32",
+        "updated_at": "2025-09-23 02:21:32",
+        "kode_prodi": "01"
+    },
+    {
+        "id_praktikum_matkul": "347",
+        "nama_praktikum": "Pemrograman Lanjut",
+        "sks": "3",
+        "created_at": "2025-09-23 02:24:05",
+        "updated_at": "2025-09-23 02:24:05",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "348",
+        "nama_praktikum": "Administrasi Basis Data",
+        "sks": "3",
+        "created_at": "2025-09-23 02:24:32",
+        "updated_at": "2025-09-23 02:24:32",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "349",
+        "nama_praktikum": "Statistika Sistem Informasi",
+        "sks": "3",
+        "created_at": "2025-09-23 02:25:07",
+        "updated_at": "2025-09-23 02:25:07",
+        "kode_prodi": "10"
+    },
+    {
+        "id_praktikum_matkul": "350",
+        "nama_praktikum": "Komputasi Statistika",
+        "sks": "3",
+        "created_at": "2025-09-23 02:26:08",
+        "updated_at": "2025-09-23 02:26:08",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "351",
+        "nama_praktikum": "Data Mining",
+        "sks": "3",
+        "created_at": "2025-09-23 02:26:50",
+        "updated_at": "2025-09-23 02:26:50",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "352",
+        "nama_praktikum": "Teknik Simulasi",
+        "sks": "3",
+        "created_at": "2025-09-23 02:27:14",
+        "updated_at": "2025-09-23 02:27:14",
+        "kode_prodi": "17"
+    },
+    {
+        "id_praktikum_matkul": "353",
+        "nama_praktikum": "Ilmu Data",
+        "sks": "3",
+        "created_at": "2025-09-23 02:27:54",
+        "updated_at": "2025-09-23 02:27:54",
+        "kode_prodi": "18"
+    },
+    {
+        "id_praktikum_matkul": "354",
+        "nama_praktikum": "Riset Operasi",
+        "sks": "3",
+        "created_at": "2025-09-23 02:28:26",
+        "updated_at": "2025-09-23 02:28:26",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "355",
+        "nama_praktikum": "Persamaan Diferensial Biasa",
+        "sks": "4",
+        "created_at": "2025-09-23 02:28:55",
+        "updated_at": "2025-09-23 02:28:55",
+        "kode_prodi": "02"
+    },
+    {
+        "id_praktikum_matkul": "`id_praktikum_matkul`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    },
+    {
+        "id_praktikum_matkul": "`nama_praktikum`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    },
+    {
+        "id_praktikum_matkul": "`sks`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    },
+    {
+        "id_praktikum_matkul": "`created_at`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    },
+    {
+        "id_praktikum_matkul": "`updated_at`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    },
+    {
+        "id_praktikum_matkul": "`kode_prodi`",
+        "nama_praktikum": null,
+        "sks": null,
+        "created_at": null,
+        "updated_at": null,
+        "kode_prodi": null
+    }
+]

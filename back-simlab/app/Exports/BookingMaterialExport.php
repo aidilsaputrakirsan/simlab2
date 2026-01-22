@@ -23,7 +23,7 @@ class BookingMaterialExport implements FromCollection, WithHeadings, WithColumnW
             ->get()
             ->map(function ($booking) {
                 $materials = $booking->materials
-                    ->map(fn($mat) => "{$mat->laboratoryMaterial?->name ?? '-'} ({$mat->quantity})")
+                    ->map(fn($mat) => ($mat->laboratoryMaterial?->name ?? '-') . " ({$mat->quantity})")
                     ->implode(', ');
 
                 $approvalText = '';

@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             LaboratoryRoomSeeder::class,
             LaboratoryEquipmentSeeder::class,
             LaboratoryMaterialSeeder::class,
+            TestingTypeSeeder::class,
             PracticumSeeder::class,
             PracticumModuleSeeder::class
         ]);
