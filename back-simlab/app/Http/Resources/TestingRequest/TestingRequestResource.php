@@ -36,6 +36,7 @@ class TestingRequestResource extends JsonResource
             }),
             'laboran' => $this->whenLoaded('laboran', function () {
                 return [
+                    'id' => $this->laboran->id,
                     'name' => $this->laboran->name,
                     'email' => $this->laboran->email,
                 ];

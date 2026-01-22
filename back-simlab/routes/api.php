@@ -135,6 +135,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/verification', [TestingRequestController::class, 'getTestingRequestForVerification']);
             Route::post('/{id}/verify', [TestingRequestController::class, 'verify']);
         });
+
+        Route::group(['middleware' => 'role:laboran'], function () {
+            Route::post('/{id}/upload-report', [TestingRequestController::class, 'uploadReport']);
+        });
     });
 
     // booking (peminjaman)

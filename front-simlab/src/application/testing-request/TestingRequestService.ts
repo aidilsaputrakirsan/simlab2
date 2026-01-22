@@ -54,4 +54,10 @@ export class TestingRequestService {
             data: testingRequestApprovals.data ? testingRequestApprovals.data.map(TestingRequestApprovalView.fromDomain) : []
         };
     }
+
+    async uploadReport(id: number, file: File): Promise<ApiResponse> {
+        const formData = new FormData();
+        formData.append('result_file', file);
+        return await this.testingRequestRepository.uploadReport(id, formData);
+    }
 }

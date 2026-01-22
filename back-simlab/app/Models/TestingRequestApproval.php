@@ -56,6 +56,22 @@ class TestingRequestApproval extends BaseModel
                 'role' => 'laboran',
                 'description' => 'Menerima tugas dari Kepala Laboratorium Terpadu dan selanjutnya melakukan pengecekkan terhadap permohonan pengujian.',
             ],
+            'payment_created' => [
+                'role' => 'admin_pengujian',
+                'description' => 'Admin Pengujian membuat invoice dan virtual account untuk pembayaran',
+            ],
+            'payment_uploaded' => [
+                'role' => 'pemohon',
+                'description' => 'Pemohon mengupload bukti pembayaran',
+            ],
+            'payment_verified' => [
+                'role' => 'admin_pengujian',
+                'description' => 'Admin Pengujian memverifikasi bukti pembayaran',
+            ],
+            'report_uploaded' => [
+                'role' => 'laboran',
+                'description' => 'Laboran mengupload hasil pengujian (PDF)',
+            ],
         ];
     }
 
@@ -72,8 +88,8 @@ class TestingRequestApproval extends BaseModel
     {
         return [
             'kepala_lab_terpadu' => 'verified_by_head',
-            'admin_pengujian'    => 'verified_by_head',
-            'laboran'            => 'verified_by_laboran',
+            'admin_pengujian' => 'verified_by_head',
+            'laboran' => 'verified_by_laboran',
         ];
     }
 

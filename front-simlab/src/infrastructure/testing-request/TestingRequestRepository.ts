@@ -112,4 +112,18 @@ export class TestingRequestRepository implements ITestingRequestRepository {
         }
         throw json;
     }
+
+    async uploadReport(id: number, data: FormData): Promise<ApiResponse> {
+        const response = await fetchApi(`/testing-requests/${id}/upload-report`, {
+            method: 'POST',
+            body: data
+            // Content-Type header not needed for FormData, browser sets it automatically with boundary
+        });
+
+        const json = await response.json();
+        if (response.ok) {
+            return json;
+        }
+        throw json;
+    }
 }

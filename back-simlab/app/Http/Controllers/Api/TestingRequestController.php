@@ -323,4 +323,55 @@ class TestingRequestController extends BaseController
             ]);
         }
     }
+
+    public function uploadReport(Request $request, $id)
+    {
+        $request->validate([
+            'result_file' => 'required|mimes:pdf|max:10240' // Max 10MB
+        ]);
+
+        try {
+            $testingRequest = TestingRequest::findOrFail($id);
+            $user = auth()->user();
+
+            // Only laboran assigned to this request can upload
+            if ($user->role !== 'laboran') {
+                if ($testingRequest->laboran_id !== $user->id) {
+                    return $this->sendError('Hanya laboran penanggung jawab yang dapat mengupload hasil pengujian', [], 403);
+                }
+            }
+
+            //Testing request must be approved first
+            if ($testingRequest->status !== 'approved') {
+                return $this->sendError('Hasil pengujian hanya dapat diupload setelah pengajuan disetujui', [], 400);
+            }
+
+            // For paid items, payment must be verified first
+            if ($testingRequest->has_paid_items) {
+                if (!$testingRequest->payment || !in_array($testingRequest->payment->status, ['paid', 'verified', 'approved'])) {
+                    return $this->sendError('Hasil pengujian baru dapat diupload setelah pembayaran terverifikasi', [], 400);
+                }
+            }
+
+            // Delete old file if exists
+            if ($testingRequest->result_file) {
+                // Storage::disk('public')->delete($testingRequest->result_file);
+            }
+
+            // Store new file
+            $file = $request->file('result_file');
+            $filename = 'testing-results/' . time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public', $filename);
+            // remove public/ prefix for storage link access
+            $path = str_replace('public/', '', $path);
+
+            $testingRequest->update(['result_file' => $path]);
+
+            return $this->sendResponse(new TestingRequestResource($testingRequest), 'Berhasil mengupload hasil pengujian');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError('Data pengujian tidak ditemukan', [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Gagal mengupload hasil pengujian', [$e->getMessage()], 500);
+        }
+    }
 }

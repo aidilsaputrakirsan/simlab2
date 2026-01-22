@@ -70,7 +70,7 @@ class TestingRequest extends BaseModel
     public function getHasPaidItemsAttribute()
     {
         return collect($this->testRequestItems)
-                ->contains(fn($item) => $item['price'] > 0);
+            ->contains(fn($item) => $item['price'] > 0);
     }
 
 
@@ -102,8 +102,10 @@ class TestingRequest extends BaseModel
         $existing = $this->testRequestApprovals()->where('action', $action)->first();
         if ($existing) {
             // If it has been verified
-            if ($existing->is_approved) return 0; // sudah diverif
-            if (!$existing->is_approved) return 3; // ditolak
+            if ($existing->is_approved)
+                return 0; // sudah diverif
+            if (!$existing->is_approved)
+                return 3; // ditolak
         }
 
         // If it can't be verified yet because it hasn't reached the sequence yet
@@ -142,18 +144,30 @@ class TestingRequest extends BaseModel
 
         $approvalFlows = $this->getApprovalFlowDefinitions();
         foreach ($approvalFlows as $flow) {
-            $approval = $this->testRequestApprovals
-                ->where('action', $flow['action'])
-                ->sortByDesc('created_at')
-                ->first();
+            $action = $flow['action'];
 
-            if ($approval) {
-                if (!$approval->is_approved) {
-                    $hasBeenRejected = true;
-                }
-                $status = $approval->approval_status_label;
+            // Check if this is a payment/report action
+            $isPaymentAction = in_array($action, ['payment_created', 'payment_uploaded', 'payment_verified', 'report_uploaded']);
+
+            if ($isPaymentAction) {
+                // Get status from Payment model or TestingRequest model
+                $status = $this->getPaymentStepStatus($action);
+                $approval = null; // Payment/report steps don't have approval records
             } else {
-                $status = $hasBeenRejected ? 'rejected' : 'pending';
+                // Get status from TestingRequestApproval
+                $approval = $this->testRequestApprovals
+                    ->where('action', $action)
+                    ->sortByDesc('created_at')
+                    ->first();
+
+                if ($approval) {
+                    if (!$approval->is_approved) {
+                        $hasBeenRejected = true;
+                    }
+                    $status = $approval->approval_status_label;
+                } else {
+                    $status = $hasBeenRejected ? 'rejected' : 'pending';
+                }
             }
 
             $approvals[] = [
@@ -194,7 +208,7 @@ class TestingRequest extends BaseModel
         $flows = $this->getApprovalFlowsForRequest();
         $hasPaidItems = $this->hasPaidItems;
 
-        return collect($flows)->map(function ($action) use ($definition, $hasPaidItems) {
+        $result = collect($flows)->map(function ($action) use ($definition, $hasPaidItems) {
             $role = $definition[$action]['role'];
             $description = $definition[$action]['description'];
 
@@ -212,5 +226,66 @@ class TestingRequest extends BaseModel
                 'description' => $description
             ];
         })->toArray();
+
+        // Add payment steps ONLY if has paid items
+        if ($hasPaidItems) {
+            $result[] = [
+                'action' => 'payment_created',
+                'role' => 'admin_pengujian',
+                'description' => $definition['payment_created']['description']
+            ];
+            $result[] = [
+                'action' => 'payment_uploaded',
+                'role' => 'pemohon',
+                'description' => $definition['payment_uploaded']['description']
+            ];
+            $result[] = [
+                'action' => 'payment_verified',
+                'role' => 'admin_pengujian',
+                'description' => $definition['payment_verified']['description']
+            ];
+        }
+
+        // Add report upload step (for BOTH paid and free items)
+        $result[] = [
+            'action' => 'report_uploaded',
+            'role' => 'laboran',
+            'description' => $definition['report_uploaded']['description']
+        ];
+
+        return $result;
+    }
+
+    /**
+     * Get payment/report step status based on Payment model and TestingRequest
+     */
+    private function getPaymentStepStatus(string $action): string
+    {
+        switch ($action) {
+            case 'payment_created':
+                if (!$this->payment)
+                    return 'pending';
+                // Payment created if payment exists and has invoice_file or va_number
+                return ($this->payment->invoice_file || $this->payment->va_number) ? 'approved' : 'pending';
+
+            case 'payment_uploaded':
+                if (!$this->payment)
+                    return 'pending';
+                // Payment uploaded if user has uploaded payment_proof
+                return $this->payment->payment_proof ? 'approved' : 'pending';
+
+            case 'payment_verified':
+                if (!$this->payment)
+                    return 'pending';
+                // Payment verified if admin has verified (status = 'paid' or 'verified')
+                return in_array($this->payment->status, ['paid', 'verified', 'approved']) ? 'approved' : 'pending';
+
+            case 'report_uploaded':
+                // Report uploaded if laboran has uploaded result_file (PDF)
+                return $this->result_file ? 'approved' : 'pending';
+
+            default:
+                return 'pending';
+        }
     }
 }
