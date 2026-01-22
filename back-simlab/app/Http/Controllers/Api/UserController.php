@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AsignRoleRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -15,10 +17,10 @@ class UserController extends BaseController
     {
         try {
             // Start with a base query
-            $query = User::query()->with('studyProgram');
+            $query = User::query()->with(['studyProgram', 'institution']);
 
-            if ($request->filter_prodi) {
-                $query->where('prodi_id', $request->filter_prodi);
+            if ($request->filter_study_program) {
+                $query->where('study_program_id', $request->filter_study_program);
             }
 
             // Add search functionality
@@ -34,39 +36,40 @@ class UserController extends BaseController
             // get user seected role
             $query->where('role', $request->role);
 
-            // Add sorting functionality
-            $sortField = $request->input('sort_by', 'created_at');
-            $sortDirection = $request->input('sort_direction', 'desc');
-            $allowedSortFields = ['id', 'name', 'created_at', 'updated_at'];
-
-            if (in_array($sortField, $allowedSortFields)) {
-                $query->orderBy($sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
-            }
-
             // Get pagination parameters with defaults
             $perPage = $request->input('per_page', 10);
             $page = $request->input('page', 1);
 
             // Execute pagination
             $users = $query->paginate($perPage, ['*'], 'page', $page);
-            return $this->sendResponse($users, 'User Retrieved Successfully');
+            return $this->sendResponse($users, 'Data pengguna berhasil diambil');
         } catch (\Exception $e) {
-            return $this->sendError('Failed to retrieve User', [$e->getMessage()], 500);
+            return $this->sendError('Gagal mengambil data pengguna', [$e->getMessage()], 500);
         }
     }
 
     public function store(UserRequest $request)
     {
         try {
-            if ($this->checkIsSingleRoleExist($request->role, $request->prodi_id)) {
-                return $this->sendError('Sudah ada user dengan prodi ini di role tersebut.', [], 400);
+            if ($request->role !== 'laboran' && $request->role !== 'admin_pengujian') {
+                $studyProgram = StudyProgram::find($request->study_program_id);
+
+                // Validate role for new user
+                $validationError = $this->validateRoleAssignment(
+                    role: $request->role,
+                    studyProgramId: $studyProgram->id,
+                    majorId: $studyProgram->major_id
+                );
+                if ($validationError) {
+                    return $this->sendError($validationError['message'], [], $validationError['code'] ?? 422);
+                }
             }
 
             $user = User::create($request->validated());
 
-            return $this->sendResponse($user, 'User Created Successfully', 201);
+            return $this->sendResponse($user, 'Berhasil menambah data pengguna', 201);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to create User', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika menambah data pengguna', [$e->getMessage()], 500);
         }
     }
 
@@ -81,32 +84,24 @@ class UserController extends BaseController
                 unset($data['password']);
             }
 
-            if ($this->checkIsSingleRoleExist($request->role, $request->prodi_id, $user)) {
-                return $this->sendError('Sudah ada user dengan prodi ini di role tersebut.', [], 422);
+            $validationError = $this->validateRoleAssignment(
+                role: $user->role,
+                studyProgramId: $user->study_program_id,
+                majorId: $user->studyProgram?->major_id,
+                excludeUserId: $user->id
+            );
+            if ($validationError) {
+                return $this->sendError($validationError['message'], [], 422);
             }
 
             $user->update($data);
 
-            return $this->sendResponse($user, "User Updated Successfully");
+            return $this->sendResponse($user, "Behasil mengubah data pengguna");
         } catch (ModelNotFoundException $e) {
-            return $this->sendError("User Not Found", [], 404);
+            return $this->sendError("Pengguna tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to update User', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika mengubah data pengguna', [$e->getMessage()], 500);
         }
-    }
-
-    // for checking person have koorprodi & kepala lab is exists
-    private function checkIsSingleRoleExist($role, $prodi_id, $selected_user = null)
-    {
-        if ($role == 'Koorprodi' || $role == 'Kepala Lab Unit') {
-            $user = User::where('role', $role)->where('prodi_id', $prodi_id)->first();
-            if ($selected_user && $user) {
-                return $user->id != $selected_user->id ? true : false;
-            }
-            return $user ? true : false;
-        }
-
-        return false;
     }
 
     public function restoreToDosen($id)
@@ -114,13 +109,13 @@ class UserController extends BaseController
         try {
             $user = User::findOrFail($id);
 
-            $user->update(['role' => 'Dosen']);
+            $user->update(['role' => 'dosen']);
 
-            return $this->sendResponse($user, "User Updated Successfully");
+            return $this->sendResponse($user, "Berhasil memulihkan role pengguna ke Dosen");
         } catch (ModelNotFoundException $e) {
-            return $this->sendError("User Not Found", [], 404);
+            return $this->sendError("Pengguna tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to update User', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika mengubah data pengguna', [$e->getMessage()], 500);
         }
     }
 
@@ -130,11 +125,80 @@ class UserController extends BaseController
             $user = User::findOrFail($id);
             $user->delete();
 
-            return $this->sendResponse([], 'User Deleted Successfully');
+            return $this->sendResponse([], 'Berhasil menghapus data pengguna');
         } catch (ModelNotFoundException $e) {
-            return $this->sendError("User Not Found", [], 404);
+            return $this->sendError("Pengguna tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Failed to delete User', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika menghapus data pengguna', [$e->getMessage()], 500);
         }
+    }
+
+    public function toggleManager($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if ($user->role !== 'laboran') {
+                return $this->sendError('Hanya laboran yang dapat melakukan aksi ini', [], 422);
+            }
+
+            $user->update(['is_manager' => !$user->is_manager]);
+
+            return $this->sendResponse($user, 'Berhasil mengubah data laboran');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError("Laboran tidak ditemukan", [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika menghapus data laboran', [$e->getMessage()], 500);
+        }
+    }
+
+    public function getDataForSelect(Request $request)
+    {
+        try {
+            $query = User::query()->select('id', 'name');
+            $query->where('role', $request->role);
+            $users = $query->get();
+            return $this->sendResponse($users, 'Data pengguna berhasil diambil');
+        } catch (\Exception $e) {
+            return $this->sendError("Gagal mengambil data pengguna", [$e->getMessage()], 500);
+        }
+    }
+
+    private function validateRoleAssignment($role, $studyProgramId, $majorId, $excludeUserId = null)
+    {
+        $query = User::where('role', $role);
+
+        if ($excludeUserId) {
+            $query->where('id', '!=', $excludeUserId);
+        }
+
+        switch ($role) {
+            case 'kepala_lab_terpadu':
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan role Kepala Laboratorium Terpadu.', 'code' => 422];
+                }
+                break;
+
+            case 'kepala_lab_jurusan':
+                $query->whereHas(
+                    'studyProgram',
+                    fn($q) =>
+                    $q->where('major_id', $majorId)
+                );
+
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan jurusan yang sama di role Kepala Lab Jurusan.', 'code' => 422];
+                }
+                break;
+
+            case 'koorprodi':
+                $query->where('study_program_id', $studyProgramId);
+
+                if ($query->exists()) {
+                    return ['message' => 'Sudah ada user dengan prodi ini di role Koorprodi.', 'code' => 422];
+                }
+                break;
+        }
+
+        return null;
     }
 }

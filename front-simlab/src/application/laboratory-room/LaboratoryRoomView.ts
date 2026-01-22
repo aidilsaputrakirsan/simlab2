@@ -1,5 +1,6 @@
 import { LaboratoryRoom } from "@/domain/laboratory-room/LaboratoryRoom";
 import { UserView } from "../user/UserView";
+import { MoneyView } from "../money/MoneyView";
 
 export class LaboratoryRoomView {
     private constructor(
@@ -7,8 +8,9 @@ export class LaboratoryRoomView {
         readonly name: string,
         readonly floor: string,
         readonly userId: string,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
+        readonly studentPrice: MoneyView,
+        readonly lecturerPrice: MoneyView,
+        readonly externalPrice: MoneyView,
         readonly user?: UserView
     ) { }
 
@@ -18,8 +20,9 @@ export class LaboratoryRoomView {
             entity.name,
             entity.floor,
             entity.userId,
-            entity.createdAt,
-            entity.updatedAt,
+            MoneyView.toViewModel(entity.studentPrice),
+            MoneyView.toViewModel(entity.lecturerPrice),
+            MoneyView.toViewModel(entity.externalPrice),
             entity.user ? UserView.fromDomain(entity.user) : undefined
         )
     }

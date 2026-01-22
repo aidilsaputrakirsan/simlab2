@@ -1,0 +1,190 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Booking extends BaseModel
+{
+    use HasFactory;
+    protected $fillable = ['academic_year_id', 'user_id', 'phone_number', 'purpose', 'supporting_file', 'activity_name', 'supervisor', 'supervisor_email', 'start_time', 'end_time', 'status', 'booking_type', 'total_participant', 'participant_list', 'laboratory_room_id', 'laboran_id', 'is_allowed_offsite'];
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time'   => 'datetime',
+    ];
+
+    public function setStartTimeAttribute($value)
+    {
+        $this->attributes['start_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+    }
+
+    public function setEndTimeAttribute($value)
+    {
+        $this->attributes['end_time'] = Carbon::parse($value)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+    }
+
+    public function getCreatedAtApiAttribute()
+    {
+        return $this->created_at ? $this->created_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function getUpdatedAtApiAttribute()
+    {
+        return $this->updated_at ? $this->updated_at->setTimezone(config('app.timezone'))->toIso8601String() : null;
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function laboran()
+    {
+        return $this->belongsTo(User::class, 'laboran_id');
+    }
+
+    public function laboratoryRoom()
+    {
+        return $this->belongsTo(LaboratoryRoom::class, 'laboratory_room_id');
+    }
+
+    public function equipments()
+    {
+        return $this->hasMany(BookingEquipment::class, 'booking_id');
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(BookingMaterial::class, 'booking_id');
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(BookingApproval::class, 'booking_id');
+    }
+
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable');
+    }
+
+    public function event()
+    {
+        return $this->morphOne(Event::class, 'eventable');
+    }
+
+    public function getKepalaLabApprovalAttribute()
+    {
+        $approval = $this->approvals()
+            ->where('action', 'verified_by_head')
+            ->first();
+        return $approval ?: null;
+    }
+
+    public function getLaboranApprovalAttribute()
+    {
+        $approval = $this->approvals()
+            ->where('action', 'verified_by_laboran')
+            ->first();
+        return $approval ?: null;
+    }
+
+    public function getIsRequestorCanReturnAttribute(): bool
+    {
+        if ($this->status !== 'approved') {
+            return false;
+        }
+
+        // Return true only if there is NO approved 'return_by_requestor' record
+        $hasApprovedReturn = $this->approvals()
+            ->where('action', 'returned_by_requestor')
+            ->where('is_approved', true)
+            ->exists();
+
+        return !$hasApprovedReturn;
+    }
+
+    public function getLaboranOffsiteApprovedAttribute()
+    {
+        return $this->approvals()
+            ->where('role', 'laboran')
+            ->where('approved', 1)
+            ->where('is_allowed_offsite', 1)
+            ->exists();
+    }
+
+    public function getBookingTypeFormattedAttribute()
+    {
+        switch ($this->booking_type) {
+            case 'room_n_equipment':
+                return 'Ruangan & Alat';
+            case 'room':
+                return 'Ruangan';
+            case 'equipment':
+                return 'Alat';
+        }
+    }
+
+    public function getApprovalStepsAttribute()
+    {
+        $approvals = [];
+        $allApproved = true;
+        $hasBeenRejected = false;
+
+        // Pastikan booking_type tersedia
+        if (!$this->booking_type) {
+            return [];
+        }
+
+        $approvalFlows = BookingApproval::getFlow($this->booking_type);
+
+        foreach ($approvalFlows as $flow) {
+            $approval = $this->approvals
+                ->where('action', $flow['action'])
+                ->sortByDesc('created_at')
+                ->first();
+
+            if ($approval) {
+                if (!$approval->is_approved) {
+                    $hasBeenRejected = true;
+                }
+                $status = $approval->approval_status_label;
+            } else {
+                $status = $hasBeenRejected ? 'rejected' : 'pending';
+            }
+
+            $approvals[] = [
+                'action' => $flow['action'],
+                'description' => $flow['description'],
+                'role' => $flow['role'],
+                'status' => $status,
+                'information' => $approval?->information,
+                'approved_at' => $approval?->created_at_api,
+                'approver' => $approval?->approver?->name,
+            ];
+
+            if ($status !== 'approved') {
+                $allApproved = false;
+            }
+        }
+
+        // Add finish step
+        $approvals[] = [
+            'action' => 'finish',
+            'description' => '',
+            'role' => 'selesai',
+            'status' => $allApproved ? 'approved' : ($hasBeenRejected ? 'rejected' : 'pending'),
+            'information' => null,
+            'approved_at' => null,
+            'approver' => null,
+        ];
+
+        return $approvals;
+    }
+}

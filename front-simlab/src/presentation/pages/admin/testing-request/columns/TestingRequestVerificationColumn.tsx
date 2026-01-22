@@ -1,0 +1,71 @@
+import { TestingRequestView } from "@/application/testing-request/TestingRequestView";
+import { Badge } from "@/presentation/components/ui/badge";
+import { ColumnDef } from "@tanstack/react-table";
+import TestingRequestBadgeStatus from "../components/TestingRequestBadgeStatus";
+import TestingRequestVerificationAction from "../components/TestingRequestVerificationAction";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/presentation/components/ui/button";
+import PaymentBadgeStatus from "../../payment/components/PaymentBadgeStatus";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
+
+interface ColumnProps {
+    openApproval: (id: number) => void;
+    openRejection: (id: number) => void;
+}
+
+export const TestingRequestVerificationColumn = ({ openApproval, openRejection }: ColumnProps): ColumnDef<TestingRequestView>[] => [
+    {
+        header: 'Tahun Akademik',
+        accessorKey: 'academicYear'
+    },
+    {
+        header: "Judul Proyek / Penelitian",
+        accessorKey: 'activityName',
+    },
+    {
+        header: "Tanggal Pengajuan",
+        accessorKey: 'testingTime',
+        cell: ({ row }) => (
+            <Badge variant={"secondary"}>{row.original.testingTime.formatForInformation()}</Badge>
+        )
+    },
+    {
+        header: "Status Pengajuan",
+        accessorKey: 'satuss',
+        cell: ({ row }) => {
+            return (
+                <TestingRequestBadgeStatus status={row.original.status} />
+            )
+        }
+    },
+    {
+        header: "Status Pembayaran",
+        accessorKey: 'satus',
+        cell: ({ row }) => {
+            if (row.original.hasPaidItems) {
+                if (row.original.paymentStatus === PaymentStatus.Draft) {
+                    return <Badge variant={"outline"}>Menunggu Penerbitan Pembayaran</Badge>
+                }
+                return <PaymentBadgeStatus status={row.original.paymentStatus}/>
+            }
+            return <span>-</span>
+        }
+    },
+    {
+        header: "Informasi Pengajuan",
+        cell: ({ row }) => {
+            return (
+                <NavLink to={`/panel/pengujian/${row.original.id}/detail`}>
+                    <Button variant="secondary" size="sm">Detail</Button>
+                </NavLink>
+            )
+        }
+    },
+    {
+        header: "Action",
+        accessorKey: 'id',
+        cell: ({ row }) => {
+            return <TestingRequestVerificationAction testingRequest={row.original} openApproval={openApproval} openRejection={openRejection} />
+        }
+    }
+];

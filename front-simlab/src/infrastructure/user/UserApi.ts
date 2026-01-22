@@ -1,17 +1,21 @@
-import { StudyProgram } from "../../domain/study-program/StudyProgram";
+import { userRole } from "@/domain/User/UserRole";
 import { User } from "../../domain/User/User";
-import { StudyProgramAPI } from "../study-program/StudyProgramAPI";
+import { StudyProgramAPI, toDomain as toStudyProgram } from "../study-program/StudyProgramAPI";
+import { InstitutionAPI, toDomain as toInstitution } from "../institution/InstitutionAPI";
+import { Time } from "@/domain/time/Time";
 
 export type UserApi = {
     id: number,
     name: string,
     email: string,
     role: string,
-    prodi_id: number,
     identity_num: string,
-    created_at: Date,
-    updated_at: Date
-    study_program?: StudyProgramAPI
+    is_manager: boolean,
+    is_active: string,
+    created_at: string | null,
+    updated_at: string | null,
+    institution?: InstitutionAPI
+    study_program?: StudyProgramAPI,
 }
 
 export function toDomain(api: UserApi): User {
@@ -19,18 +23,13 @@ export function toDomain(api: UserApi): User {
         api.id,
         api.name,
         api.email,
-        api.role,
-        api.prodi_id,
+        api.role as userRole,
         api.identity_num,
-        api.created_at,
-        api.updated_at,
-        api.study_program ?
-        new StudyProgram(
-            api.study_program.id,
-            api.study_program.jurusan_id,
-            api.study_program.name,
-            api.study_program.created_at,
-            api.study_program.updated_at
-        ) : undefined
+        api.is_manager,
+        api.is_active as 'Active' | 'Deactive',
+        api.created_at ? new Time(api.created_at) : null,
+        api.updated_at ? new Time(api.updated_at) : null,
+        api.institution ? toInstitution(api.institution) : undefined,
+        api.study_program ? toStudyProgram(api.study_program) : undefined,
     )
 }

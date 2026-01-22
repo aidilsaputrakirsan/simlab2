@@ -3,14 +3,23 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends BaseModel implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,8 +31,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'prodi_id',
-        'identity_num'
+        'study_program_id',
+        'institution_id',
+        'is_manager',
+        'identity_num',
+        'is_active'
     ];
 
     /**
@@ -46,13 +58,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function institution()
+    {
+        return $this->belongsTo(Institution::class, 'institution_id');
+    }
+
     public function studyProgram()
     {
-        return $this->belongsTo(Prodi::class, 'prodi_id');
+        return $this->belongsTo(StudyProgram::class, 'study_program_id');
     }
 
     public function ruanganLaboratorium()
     {
-        return $this->hasMany(RuanganLaboratorium::class, 'user_id');
+        return $this->hasMany(LaboratoryRoom::class, 'user_id');
     }
 }

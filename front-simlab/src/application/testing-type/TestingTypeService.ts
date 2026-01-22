@@ -1,6 +1,7 @@
 import { TestingTypeRepository } from "../../infrastructure/testing-type/TestingTypeRepository";
-import { PaginatedResponse } from "../../shared/Types";
+import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { TestingTypeInputDTO, TestingTypeTableParam } from "./dtos/TestingTypeDTO";
+import { TestingTypeSelectView } from "./TestingTypeSelectView";
 import { TestingTypeView } from "./TestingTypeView";
 
 export class TestingTypeService {
@@ -15,15 +16,24 @@ export class TestingTypeService {
         }
     }
 
-    async createData(data: TestingTypeInputDTO) {
+    async createData(data: TestingTypeInputDTO): Promise<ApiResponse> {
         return await this.testingTypeRepository.createData(data)
     }
 
-    async updateData(id: number, data: TestingTypeInputDTO) {
+    async updateData(id: number, data: TestingTypeInputDTO): Promise<ApiResponse> {
         return await this.testingTypeRepository.updateData(id, data)
     }
 
-    async deleteData(id: number) {
+    async deleteData(id: number): Promise<ApiResponse> {
         return await this.testingTypeRepository.deleteData(id)
+    }
+
+    async getDataForSelect(): Promise<ApiResponse<TestingTypeSelectView[]>> {
+        const studyPrograms = await this.testingTypeRepository.getDataForSelect()
+
+        return {
+            ...studyPrograms,
+            data: studyPrograms.data ? studyPrograms.data.map(TestingTypeSelectView.fromDomain) : undefined
+        }
     }
 }   

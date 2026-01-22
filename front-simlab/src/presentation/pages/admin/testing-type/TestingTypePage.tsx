@@ -1,144 +1,117 @@
-import { useEffect, useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useEffect, useState } from "react"
 import Table from "../../../components/Table";
 import { TestingTypeColumn } from "./TestingTypeColumn";
-import useTable from "../../../../application/hooks/useTable";
-import { ModalType } from "../../../../shared/Types";
 import { TestingTypeInputDTO } from "../../../../application/testing-type/dtos/TestingTypeDTO";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
 import { Plus } from "lucide-react";
-import { useTestingType } from "@/application/testing-type/hooks/useTestingType";
 import { toast } from "sonner";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
 import TestingTypeFormDialog from "./components/TestingTypeFormDialog";
+import { useTestingTypeDataTable } from "./hooks/useTestingTypeDataTable";
+import { useDepedencies } from "@/presentation/contexts/useDepedencies";
+import { useTestingCategorySelect } from "../testing-category/hooks/useTestingCategorySelect";
+import { Combobox } from "@/presentation/components/custom/combobox";
+import MainContent from "@/presentation/components/MainContent";
+import { TestingTypeView } from "@/application/testing-type/TestingTypeView";
 
 const TestingTypePage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
+    const { testingCategories, selectedTestingCategory, setSelectedTestingCategory } = useTestingCategorySelect()
 
-    useGSAP(() => {
-        if (!sectionRef.current) return
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedTestingCategory])
 
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
+    const { testingTypeService } = useDepedencies()
     const {
-        currentPage,
-        perPage,
-        totalPages,
-        totalItems,
-        searchTerm,
-
-        setTotalPages,
-        setTotalItems,
-        setCurrentPage,
-
-        handleSearch,
-        handlePerPageChange,
-        handlePageChange,
-    } = useTable()
-
-    const {
-        testingType,
+        testingTypes,
         isLoading,
-        getData,
-        create,
-        update,
-        remove,
-    } = useTestingType({
-        currentPage,
-        perPage,
         searchTerm,
-        setTotalPages,
-        setTotalItems
-    })
+        refresh,
+
+        // TableHandler
+        perPage,
+        handleSearch,
+        handlePageChange,
+        handlePerPageChange,
+        totalItems,
+        totalPages,
+        currentPage,
+        setCurrentPage
+    } = useTestingTypeDataTable({ filter_testing_category: selectedTestingCategory })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
-
+    const [selectedTestingType, setSelectedTestingType] = useState<TestingTypeView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    useEffect(() => {
-        getData()
-    }, [currentPage, perPage])
+    const isEdit = !!selectedTestingType
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (currentPage === 1) {
-                getData()
-            } else {
-                setCurrentPage(1)
-            }
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [searchTerm])
-
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setId(null)
-        setType(modalType)
-        setId(id)
+    const openAdd = () => {
+        setSelectedTestingType(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (testingType: TestingTypeView) => {
+        setSelectedTestingType(testingType)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (testingType: TestingTypeView) => {
+        setSelectedTestingType(testingType)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: TestingTypeInputDTO): Promise<void> => {
-        if (id) {
-            const res = await update(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await create(formData)
-            toast.success(res.message)
-        }
-        getData()
+        const res = selectedTestingType
+            ? await testingTypeService.updateData(selectedTestingType.id, formData)
+            : await testingTypeService.createData(formData)
+        
+        toast.success(res.message)
+        refresh()
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await remove(id)
+        if (!selectedTestingType) return
+        const res = await testingTypeService.deleteData(selectedTestingType.id)
         toast.success(res.message)
 
-        getData()
+        refresh()
         setConfirmOpen(false)
     }
 
     return (
         <>
             <Header title="Menu Jenis Pengujian" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Jenis Pengujian</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
                         </CardAction>
                     </CardHeader>
                     <CardContent>
+                        <div className="w-full mb-3 md:w-1/3">
+                            <div className="relative">
+                                <Combobox
+                                    options={testingCategories}
+                                    value={selectedTestingCategory?.toString() || ''}
+                                    onChange={(val) => setSelectedTestingCategory(Number(val))}
+                                    placeholder="Pilih Kategori Pengujian"
+                                    optionLabelKey='name'
+                                    optionValueKey='id'
+                                    isFilter
+                                />
+                            </div>
+                        </div>
                         <Table
-                            data={testingType}
-                            columns={TestingTypeColumn({ openModal, openConfirm })}
+                            data={testingTypes}
+                            columns={TestingTypeColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -147,18 +120,19 @@ const TestingTypePage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <TestingTypeFormDialog
                 open={isOpen}
+                testingCategories={testingCategories}
                 onOpenChange={setIsOpen}
-                data={testingType}
-                dataId={id}
+                testingType={selectedTestingType}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah tahun akademik' : 'Edit tahun akademik'}
+                title={!isEdit ? 'Tambah jenis pengujian' : 'Edit jenis pengujian'}
             />
         </>
     )

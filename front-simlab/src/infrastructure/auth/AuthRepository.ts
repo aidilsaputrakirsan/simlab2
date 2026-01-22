@@ -1,7 +1,7 @@
 import { LoginCredentials, RegisterCredentials } from "../../domain/Auth/Auth";
 import { IAuthRepository } from "../../domain/Auth/IAuthRepository";
 import { User } from "../../domain/User/User";
-import { ApiResponse } from "../../shared/Types";
+import { ApiResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { StorageManager } from "../StorageManager";
 import { toDomain, UserApi } from "../user/UserApi";
@@ -14,12 +14,16 @@ export class AuthRepository implements IAuthRepository {
           token
         });
 
-        const json = await response.json() as ApiResponse<UserApi>
+        const json = await response.json()
         if (response.ok) {
-            if (json.data) {
-                return toDomain(json.data)
-            }
+            const data = json['data'] as UserApi
+            return toDomain(data)
         }
+
+        if (response.status == 401) {
+            StorageManager.clear()
+        }
+        
         throw json
     }
     async login(credentials: LoginCredentials): Promise<User> {

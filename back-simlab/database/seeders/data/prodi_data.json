@@ -1,0 +1,205 @@
+[
+    {
+        "kode_prodi": "00",
+        "nama_prodi": "Pihak Luar\/Eksternal",
+        "kode_jurusan": "PLE0",
+        "created_at": "2021-10-15 07:20:38",
+        "updated_at": "2021-10-15 07:20:38"
+    },
+    {
+        "kode_prodi": "01",
+        "nama_prodi": "Fisika",
+        "kode_jurusan": "JTSPK",
+        "created_at": "2021-01-26 08:15:25",
+        "updated_at": "2021-06-23 18:09:42"
+    },
+    {
+        "kode_prodi": "02",
+        "nama_prodi": "Matematika",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-01-26 08:15:43",
+        "updated_at": "2021-01-26 08:15:43"
+    },
+    {
+        "kode_prodi": "03",
+        "nama_prodi": "Teknik Mesin",
+        "kode_jurusan": "JTIP",
+        "created_at": "2021-01-26 08:16:23",
+        "updated_at": "2021-01-26 08:16:23"
+    },
+    {
+        "kode_prodi": "04",
+        "nama_prodi": "Teknik Elektro",
+        "kode_jurusan": "JTIP",
+        "created_at": "2021-01-26 08:16:36",
+        "updated_at": "2021-01-26 08:16:36"
+    },
+    {
+        "kode_prodi": "05",
+        "nama_prodi": "Teknik Kimia",
+        "kode_jurusan": "JTIP",
+        "created_at": "2021-01-26 08:16:51",
+        "updated_at": "2021-01-26 08:16:51"
+    },
+    {
+        "kode_prodi": "06",
+        "nama_prodi": "Teknik Material dan Metalurgi",
+        "kode_jurusan": "JIKL",
+        "created_at": "2021-01-26 08:17:14",
+        "updated_at": "2021-01-26 08:17:14"
+    },
+    {
+        "kode_prodi": "07",
+        "nama_prodi": "Teknik Sipil",
+        "kode_jurusan": "JTSP",
+        "created_at": "2021-01-26 08:17:30",
+        "updated_at": "2021-02-10 09:14:16"
+    },
+    {
+        "kode_prodi": "08",
+        "nama_prodi": "Perencanaan Wilayah Kota",
+        "kode_jurusan": "JTSP",
+        "created_at": "2021-01-26 08:17:43",
+        "updated_at": "2021-01-26 08:17:43"
+    },
+    {
+        "kode_prodi": "09",
+        "nama_prodi": "Teknik Perkapalan",
+        "kode_jurusan": "JTSPK",
+        "created_at": "2021-01-26 08:17:57",
+        "updated_at": "2021-01-26 08:17:57"
+    },
+    {
+        "kode_prodi": "10",
+        "nama_prodi": "Sistem Informasi",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-01-26 08:18:06",
+        "updated_at": "2021-02-11 00:15:20"
+    },
+    {
+        "kode_prodi": "11",
+        "nama_prodi": "Informatika",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-01-26 08:18:14",
+        "updated_at": "2021-01-26 08:18:35"
+    },
+    {
+        "kode_prodi": "12",
+        "nama_prodi": "Teknik Industri",
+        "kode_jurusan": "JTIP",
+        "created_at": "2021-01-26 08:19:38",
+        "updated_at": "2021-01-26 08:19:38"
+    },
+    {
+        "kode_prodi": "13",
+        "nama_prodi": "Teknik Lingkungan",
+        "kode_jurusan": "JIKL",
+        "created_at": "2021-01-26 08:19:52",
+        "updated_at": "2021-01-26 08:19:52"
+    },
+    {
+        "kode_prodi": "14",
+        "nama_prodi": "Teknik Kelautan",
+        "kode_jurusan": "JTSPK",
+        "created_at": "2021-01-26 08:20:15",
+        "updated_at": "2021-01-26 08:20:15"
+    },
+    {
+        "kode_prodi": "15",
+        "nama_prodi": "Arsitektur",
+        "kode_jurusan": "JTSP",
+        "created_at": "2021-03-25 00:09:34",
+        "updated_at": "2021-03-25 00:09:34"
+    },
+    {
+        "kode_prodi": "16",
+        "nama_prodi": "Teknologi Pangan",
+        "kode_jurusan": "JTSPK",
+        "created_at": "2021-06-28 07:47:50",
+        "updated_at": "2021-06-28 07:47:50"
+    },
+    {
+        "kode_prodi": "17",
+        "nama_prodi": "Statistika",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-07-02 02:58:39",
+        "updated_at": "2021-07-02 02:58:39"
+    },
+    {
+        "kode_prodi": "18",
+        "nama_prodi": "Ilmu Aktuaria",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-07-02 02:59:13",
+        "updated_at": "2021-07-02 02:59:13"
+    },
+    {
+        "kode_prodi": "19",
+        "nama_prodi": "Bisnis Digital",
+        "kode_jurusan": "JMTI",
+        "created_at": "2021-07-02 02:59:48",
+        "updated_at": "2021-07-02 02:59:48"
+    },
+    {
+        "kode_prodi": "20",
+        "nama_prodi": "Rekayasa Keselamatan",
+        "kode_jurusan": "JTIP",
+        "created_at": "2021-07-02 03:01:28",
+        "updated_at": "2021-07-02 03:01:28"
+    },
+    {
+        "kode_prodi": "21",
+        "nama_prodi": "Tahap Persiapan Bersama",
+        "kode_jurusan": "TPB.",
+        "created_at": "2022-02-14 03:19:30",
+        "updated_at": "2022-02-14 03:19:30"
+    },
+    {
+        "kode_prodi": "22",
+        "nama_prodi": "Desain Komunikasi Visual",
+        "kode_jurusan": "JTSP",
+        "created_at": "2022-07-14 07:48:48",
+        "updated_at": "2022-07-14 07:48:48"
+    },
+    {
+        "kode_prodi": "23",
+        "nama_prodi": "Teknik Logistik",
+        "kode_jurusan": "JTIP",
+        "created_at": "2022-10-17 03:31:41",
+        "updated_at": "2022-10-17 03:31:41"
+    },
+    {
+        "kode_prodi": "`kode_prodi`",
+        "nama_prodi": null,
+        "kode_jurusan": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "kode_prodi": "`nama_prodi`",
+        "nama_prodi": null,
+        "kode_jurusan": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "kode_prodi": "`kode_jurusan`",
+        "nama_prodi": null,
+        "kode_jurusan": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "kode_prodi": "`created_at`",
+        "nama_prodi": null,
+        "kode_jurusan": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "kode_prodi": "`updated_at`",
+        "nama_prodi": null,
+        "kode_jurusan": null,
+        "created_at": null,
+        "updated_at": null
+    }
+]

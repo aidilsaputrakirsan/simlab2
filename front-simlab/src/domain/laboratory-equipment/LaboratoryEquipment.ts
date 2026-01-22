@@ -4,7 +4,6 @@ export class LaboratoryEquipment {
     constructor(
         readonly id: number,
         readonly equipmentName: string,
-        readonly ruanganLaboratoriumId: number,
         readonly quantity: number,
         readonly unit: string,
         readonly equipmentFunction: string,
@@ -15,8 +14,9 @@ export class LaboratoryEquipment {
         readonly condition: string,
         readonly conditionDescription: string,
         readonly assetCode: string,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null,
-        readonly ruanganLaboratorium?: LaboratoryRoom
+        readonly studentPrice: number,
+        readonly lecturerPrice: number,
+        readonly externalPrice: number,
+        readonly laboratoryRoom?: LaboratoryRoom
     ) {}
 }

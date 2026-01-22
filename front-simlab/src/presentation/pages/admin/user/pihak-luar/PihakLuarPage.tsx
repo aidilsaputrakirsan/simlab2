@@ -1,84 +1,35 @@
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Table from '../../../../components/Table'
 import { PihakLuarColumn } from './PihakLuarColumn'
-import useTable from '@/application/hooks/useTable'
-import { useUser } from '@/application/user/hooks/useUser'
 import { toast } from 'sonner'
 import Header from '@/presentation/components/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
+import MainContent from '@/presentation/components/MainContent'
+import { useDepedencies } from '@/presentation/contexts/useDepedencies'
+import { userRole } from '@/domain/User/UserRole'
+import { useUserDataTable } from '../hooks/useUserDataTable'
 
 const PihakLuarPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
+    const { userService } = useDepedencies()
     const {
-        currentPage,
-        perPage,
-        totalPages,
-        totalItems,
-        searchTerm,
-
-        setTotalPages,
-        setTotalItems,
-        setCurrentPage,
-
-        handleSearch,
-        handlePerPageChange,
-        handlePageChange,
-    } = useTable()
-
-    const {
-        user,
+        users,
         isLoading,
-        getData,
-        remove
-    } = useUser({
-        currentPage,
-        perPage,
-        role: 'Pihak Luar',
-        filter_study_program: 0,
         searchTerm,
-        setTotalPages,
-        setTotalItems
-    })
+        refresh,
+
+        // TableHandler
+        perPage,
+        handleSearch,
+        handlePageChange,
+        handlePerPageChange,
+        totalItems,
+        totalPages,
+        currentPage,
+    } = useUserDataTable({ filter_study_program: 0, role: userRole.PihakLuar })
 
     const [id, setId] = useState<number | null>(null)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
-
-    useEffect(() => {
-        getData()
-    }, [currentPage, perPage])
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (currentPage === 1) {
-                getData()
-            } else {
-                setCurrentPage(1)
-            }
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [searchTerm])
 
     const openConfirm = (id: number) => {
         setId(id)
@@ -87,24 +38,24 @@ const PihakLuarPage = () => {
 
     const handleDelete = async () => {
         if (!id) return
-        const res = await remove(id)
+        const res = await userService.deleteData(id)
         toast.success(res.message)
 
-        getData()
+        refresh()
         setConfirmOpen(false)
     }
 
     return (
         <>
             <Header title='Menu Pihak Luar' />
-            <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Pihak Luar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Table
-                            data={user}
+                            data={users}
                             columns={PihakLuarColumn({ openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
@@ -114,11 +65,12 @@ const PihakLuarPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange} 
+                            handleRefresh={refresh}/>
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
-            </div>
+            </MainContent>
         </>
     )
 }

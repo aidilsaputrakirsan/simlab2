@@ -3,8 +3,8 @@ import { StudyProgram } from "../../../../domain/study-program/StudyProgram";
 import { Button } from "@/presentation/components/ui/button";
 
 interface ColumnProps {
-    openModal: (type: 'Add' | 'Edit', id?: number) => void;
-    openConfirm: (id: number) => void;
+    openModal: (studyProgram: StudyProgram) => void;
+    openConfirm: (studyProgram: StudyProgram) => void;
 }
 
 export const StudyProgramColumn = ({ openModal, openConfirm }: ColumnProps): ColumnDef<StudyProgram>[] => [
@@ -19,10 +19,10 @@ export const StudyProgramColumn = ({ openModal, openConfirm }: ColumnProps): Col
         accessorKey: 'id' as keyof StudyProgram,
         cell: ({ row }) => (
             <div className="flex gap-2">
-                <Button size={"sm"} onClick={() => openModal('Edit',row.original.id)}>
+                <Button size={"sm"} variant={'warning'} onClick={() => openModal(row.original)}>
                     Edit
                 </Button>
-                <Button size={"sm"} variant={"destructive"} onClick={() => openConfirm(row.original.id)}>
+                <Button size={"sm"} variant={"destructive"} onClick={() => openConfirm(row.original)}>
                     Delete
                 </Button>
             </div>

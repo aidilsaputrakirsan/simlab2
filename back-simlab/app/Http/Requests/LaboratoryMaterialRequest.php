@@ -19,16 +19,19 @@ class LaboratoryMaterialRequest extends ApiRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id'); // useful for update
+        $maxInt = 2147483647; // batas maksimum integer signed 32-bit
+        $id = $this->route('laboratory_material'); // useful for update
         $rules = [
-            'code' => "required|string|max:50|unique:bahan_laboratoria,code," . ($id ?? 'NULL') . ",id",
-            'ruangan_laboratorium_id' => 'required',
+            'code' => "required|string|max:50|unique:laboratory_materials,code," . ($id ?? 'NULL') . ",id",
             'material_name' => 'required|string|max:100',
             'brand' => 'nullable|string|max:100',
             'stock' => 'required|integer|min:0',
             'unit' => 'required|string|max:100',
             'purchase_date' => 'required|date',
             'description' => 'nullable|string|max:1000',
+            'student_price' => 'required|integer|min:0|max:' . $maxInt,
+            'lecturer_price' => 'required|integer|min:0|max:' . $maxInt,
+            'external_price' => 'required|integer|min:0|max:' . $maxInt,
         ];
 
         if ($this->input('expiry_date') !== null && $this->input('expiry_date') !== 'null') {
@@ -45,8 +48,6 @@ class LaboratoryMaterialRequest extends ApiRequest
             'code.string' => 'Kode bahan harus berupa teks.',
             'code.max' => 'Kode bahan maksimal 50 karakter.',
             'code.unique' => 'Kode bahan sudah terdaftar.',
-
-            'ruangan_laboratorium_id.required' => 'Ruangan laboratorium wajib dipilih.',
 
             'material_name.required' => 'Nama bahan wajib diisi.',
             'material_name.string' => 'Nama bahan harus berupa teks.',
@@ -71,6 +72,18 @@ class LaboratoryMaterialRequest extends ApiRequest
 
             'expiry_date.date' => 'Tanggal kadaluarsa tidak valid.',
             'expiry_date.after_or_equal' => 'Tanggal kadaluarsa harus sama atau setelah tanggal pembelian.',
+            'student_price.required' => 'Harga mahasiswa wajib diisi',
+            'student_price.integer' => 'Harga mahasiswa harus berupa angka',
+            'student_price.min' => 'Harga mahasiswa minimal 0',
+            'student_price.max' => 'Harga mahasiswa maksimal 2.147.483.647',
+            'lecturer_price.required' => 'Harga dosen wajib diisi',
+            'lecturer_price.integer' => 'Harga dosen harus berupa angka',
+            'lecturer_price.min' => 'Harga dosen minimal 0',
+            'lecturer_price.max' => 'Harga dosen maksimal 2.147.483.647',
+            'external_price.required' => 'Harga eksternal wajib diisi',
+            'external_price.integer' => 'Harga eksternal harus berupa angka',
+            'external_price.min' => 'Harga eksternal minimal 0',
+            'external_price.max' => 'Harga eksternal maksimal 2.147.483.647',
         ];
     }
 }

@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react"
 import { UserView } from "../UserView"
 import { UserService } from "../UserService"
-import { Role } from "@/shared/Types"
-import { UserInputDTO } from "../dto/UserDTO"
+import { UserInputDTO } from "../UserDTO"
+import { userRole } from "@/domain/User/UserRole"
 
 export const useUser = ({
     currentPage,
@@ -17,7 +17,7 @@ export const useUser = ({
     perPage: number
     searchTerm: string,
     filter_study_program?: number,
-    role: Role,
+    role: userRole,
     setTotalPages: (v: number) => void
     setTotalItems: (v: number) => void
 }) => {
@@ -31,7 +31,7 @@ export const useUser = ({
             page: currentPage,
             per_page: perPage,
             search: searchTerm,
-            filter_prodi: filter_study_program,
+            filter_study_program: filter_study_program,
             role: role
         })
         setUser(response.data ?? [])
@@ -40,10 +40,10 @@ export const useUser = ({
         setIsLoading(false)
     }, [currentPage, perPage, searchTerm, filter_study_program, role])
 
-    const create = (dto: UserInputDTO) => service.createData(dto)
-    const update = (id: number, dto: UserInputDTO) => service.updateData(id, dto)
-    const remove = (id: number) => service.deleteData(id)
-    const restoreToDosen = (id: number) => service.restoreToDosen(id)
+    const create = async (dto: UserInputDTO) => await service.createData(dto)
+    const update = async (id: number, dto: UserInputDTO) => await service.updateData(id, dto)
+    const remove = async (id: number) => await service.deleteData(id)
+    const restoreToDosen = async (id: number) => await service.restoreToDosen(id)
 
     return {
         user,

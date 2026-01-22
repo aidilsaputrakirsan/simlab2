@@ -1,10 +1,8 @@
 import { LaboratoryMaterial } from "../../domain/laboratory-material/LaboratoryMaterial";
-import { LaboratoryRoomAPI, toDomain as toLaboratoryRoom } from "../laboratory-room/LaboratoryRoomAPI";
 
 export type LaboratoryMaterialAPI = {
     id: number;
     code: string;
-    ruangan_laboratorium_id: number;
     material_name: string;
     brand: string;
     stock: number;
@@ -13,16 +11,15 @@ export type LaboratoryMaterialAPI = {
     expiry_date: Date;
     description: string;
     refill_date: Date;
-    created_at: Date | null;
-    updated_at: Date | null;
-    ruangan_laboratorium: LaboratoryRoomAPI
+    student_price: number;
+    lecturer_price: number;
+    external_price: number;
 }
 
 export function toDomain(api: LaboratoryMaterialAPI): LaboratoryMaterial {
     return new LaboratoryMaterial(
         api.id,
         api.code,
-        api.ruangan_laboratorium_id,
         api.material_name,
         api.brand,
         api.stock,
@@ -31,8 +28,8 @@ export function toDomain(api: LaboratoryMaterialAPI): LaboratoryMaterial {
         api.expiry_date,
         api.description,
         api.refill_date,
-        api.created_at,
-        api.updated_at,
-        api.ruangan_laboratorium ? toLaboratoryRoom(api.ruangan_laboratorium) : undefined
+        api.student_price,
+        api.lecturer_price,
+        api.external_price,
     );
 }

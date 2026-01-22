@@ -1,145 +1,115 @@
-import { useEffect, useRef, useState } from "react"
-import { gsap } from 'gsap';
-import { useGSAP } from "@gsap/react"
+import { useEffect, useState } from "react"
 import Table from "../../../components/Table";
 import { MajorColumn } from "./MajorColumn";
-import useTable from "../../../../application/hooks/useTable";
-import { ModalType } from "../../../../shared/Types";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
 import { Plus } from "lucide-react";
-import { useMajor } from "@/application/major/hooks/useMajor";
 import { toast } from "sonner";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
 import MajorFormDialog from "./components/MajorFormDialog";
-import { MajorInputDTO } from "@/application/dto/MajorDTO";
+import { MajorInputDTO } from "@/application/major/MajorDTO";
+import { Combobox } from "@/presentation/components/custom/combobox";
+import { useFacultySelect } from "../faculty/hooks/useFacultySelect";
+import { useDepedencies } from "@/presentation/contexts/useDepedencies";
+import { useMajorDataTable } from "./hooks/useMajorDataTable";
+import { MajorView } from "@/application/major/MajorView";
+import MainContent from "@/presentation/components/MainContent";
 
 const MajorPage = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
+    const { faculties, selectedFaculty, setSelectedFaculty } = useFacultySelect()
 
-    useGSAP(() => {
-        if (!sectionRef.current) return
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedFaculty])
 
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
+    const { majorService } = useDepedencies()
     const {
-        currentPage,
-        perPage,
-        totalPages,
-        totalItems,
-        searchTerm,
-
-        setTotalPages,
-        setTotalItems,
-        setCurrentPage,
-
-        handleSearch,
-        handlePerPageChange,
-        handlePageChange,
-    } = useTable()
-
-    const {
-        major,
+        majors,
         isLoading,
-        getData,
-        create,
-        update,
-        remove,
-    } = useMajor({
-        currentPage,
-        perPage,
         searchTerm,
-        setTotalPages,
-        setTotalItems
-    })
+        refresh,
+
+        // TableHandler
+        perPage,
+        handleSearch,
+        handlePageChange,
+        handlePerPageChange,
+        totalItems,
+        totalPages,
+        currentPage,
+        setCurrentPage
+    } = useMajorDataTable({ filter_faculty: selectedFaculty })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
-
+    const [selectedMajor, setSelectedMajor] = useState<MajorView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
+    const isEdit = !!selectedMajor
 
-    useEffect(() => {
-        getData()
-    }, [currentPage, perPage])
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (currentPage === 1) {
-                getData()
-            } else {
-                setCurrentPage(1)
-            }
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [searchTerm])
-
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setId(null)
-        setType(modalType)
-        setId(id)
+    const openAdd = () => {
+        setSelectedMajor(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (major: MajorView) => {
+        setSelectedMajor(major)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (major: MajorView) => {
+        setSelectedMajor(major)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: MajorInputDTO): Promise<void> => {
-        if (id) {
-            const res = await update(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await create(formData)
-            toast.success(res.message)
-        }
-        getData()
+        const res = selectedMajor
+            ? await majorService.updateData(selectedMajor.id, formData)
+            : await majorService.createData(formData)
+
+        toast.success(res.message)
+        refresh()
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await remove(id)
+        if (!selectedMajor) return
+        const res = await majorService.deleteData(selectedMajor.id)
         toast.success(res.message)
 
-        getData()
+        refresh()
         setConfirmOpen(false)
     }
 
     return (
         <>
             <Header title="Menu Jurusan" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Jurusan</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
                         </CardAction>
                     </CardHeader>
                     <CardContent>
+                        <div className="w-full mb-3 md:w-1/3">
+                            <Combobox
+                                options={faculties}
+                                value={selectedFaculty?.toString() || ''}
+                                onChange={(value) => setSelectedFaculty(Number(value))}
+                                placeholder="Pilih Fakultas"
+                                optionLabelKey='name'
+                                optionValueKey='id'
+                                isFilter
+                            />
+                        </div>
                         <Table
-                            data={major}
-                            columns={MajorColumn({ openModal, openConfirm })}
+                            data={majors}
+                            columns={MajorColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -151,15 +121,15 @@ const MajorPage = () => {
                             handlePageChange={handlePageChange} />
                     </CardContent>
                 </Card>
-            </div>
+            </MainContent>
             <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
             <MajorFormDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                data={major}
-                dataId={id}
+                major={selectedMajor}
+                faculties={faculties}
                 handleSave={handleSave}
-                title={type == 'Add' ? 'Tambah tahun akademik' : 'Edit tahun akademik'}
+                title={!isEdit ? 'Tambah Jurusan' : 'Edit Jurusan'}
             />
         </>
     )

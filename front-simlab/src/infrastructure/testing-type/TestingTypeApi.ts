@@ -2,16 +2,30 @@ import { TestingType } from "../../domain/testing-type/TestingType"
 
 export type TestingTypeApi = {
     id: number;
-    testing_type: string;
-    created_at: Date | null;
-    updated_at: Date | null;
+    name: string;
+    unit: string;
+    student_price: number;
+    lecturer_price: number;
+    external_price: number;
+    testing_category: {
+        id: number,
+        name: string
+    }
 }
 
 export function toDomain(api: TestingTypeApi): TestingType {
-    return new TestingType(
+    const testingType = new TestingType(
         api.id,
-        api.testing_type,
-        api.created_at,
-        api.updated_at
+        api.name,
+        api.unit,
+        api.student_price,
+        api.lecturer_price,
+        api.external_price,
     )
+
+    if (api.testing_category) {
+        testingType.setTestingCategory(api.testing_category)
+    }
+
+    return testingType
 }

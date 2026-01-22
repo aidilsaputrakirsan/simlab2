@@ -7,8 +7,9 @@ export type LaboratoryRoomAPI = {
     name: string,
     floor: string,
     user_id: string,
-    created_at: Date | null,
-    updated_at: Date | null,
+    student_price: number,
+    lecturer_price: number,
+    external_price: number,
     user?: UserApi
 }
 
@@ -18,8 +19,9 @@ export function toDomain(api: LaboratoryRoomAPI): LaboratoryRoom {
         api.name,
         api.floor,
         api.user_id,
-        api.created_at,
-        api.updated_at,
+        api.student_price,
+        api.lecturer_price,
+        api.external_price,
         api.user
             ? toUser(api.user)
             : undefined

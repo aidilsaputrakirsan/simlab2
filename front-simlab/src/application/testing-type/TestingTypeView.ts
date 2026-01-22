@@ -1,19 +1,29 @@
 import { TestingType } from "../../domain/testing-type/TestingType";
+import { MoneyView } from "../money/MoneyView";
 
 export class TestingTypeView {
     private constructor(
         readonly id: number,
-        readonly testingType: string,
-        readonly createdAt: Date | null,
-        readonly updatedAt: Date | null
+        readonly name: string,
+        readonly unit: string,
+        readonly studentPrice: MoneyView,
+        readonly lecturerPrice: MoneyView,
+        readonly externalPrice: MoneyView,
+        readonly testingCategory?: {
+            id: number
+            name: string
+        }
     ){}
 
     static fromDomain(entity: TestingType) {
         return new TestingTypeView(
             entity.id,
-            entity.testingType,
-            entity.createdAt,
-            entity.updatedAt
+            entity.name,
+            entity.unit,
+            MoneyView.toViewModel(entity.studentPrice),
+            MoneyView.toViewModel(entity.lecturerPrice),
+            MoneyView.toViewModel(entity.externalPrice),
+            entity.getTestingCategory()
         )
     }
 }

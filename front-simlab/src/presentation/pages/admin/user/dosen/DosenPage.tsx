@@ -1,162 +1,91 @@
-import useTable from '@/application/hooks/useTable'
-import { gsap } from 'gsap';
-import { useStudyProgram } from '@/application/study-program/hooks/useStudyProgram'
-import { useUser } from '@/application/user/hooks/useUser'
 import Header from '@/presentation/components/Header'
 import Table from '@/presentation/components/Table'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/presentation/components/ui/select'
-import { useGSAP } from '@gsap/react'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { DosenColumn } from './DosenColumn'
-import { ModalType } from '@/shared/Types'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
 import { toast } from 'sonner';
-import { UserInputDTO } from '@/application/user/dto/UserDTO';
+import { UserInputDTO } from '@/application/user/UserDTO';
 import { Button } from '@/presentation/components/ui/button';
 import { Plus } from 'lucide-react';
-import DosenFormDialog from './components/DosenFormDialog';
+import { Combobox } from '@/presentation/components/custom/combobox';
+import { userRole } from '@/domain/User/UserRole';
+import { useDepedencies } from '@/presentation/contexts/useDepedencies';
+import { useStudyProgramSelect } from '../../study-program/hooks/useStudyProgramSelect';
+import { useUserDataTable } from '../hooks/useUserDataTable';
+import MainContent from '@/presentation/components/MainContent';
+import { UserView } from '@/application/user/UserView'
+import UserFormDialog from '../components/UserFormDialog'
 
 const DosenPage = () => {
-    const sectionRef = useRef(null)
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        const tl = gsap.timeline()
-        tl.fromTo(sectionRef.current,
-            {
-                opacity: 0,
-                y: 100
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1
-            },
-        )
-    }, [])
-
+    const { userService } = useDepedencies()
+    const { studyPrograms, selectedStudyProgram, setSelectedStudyProgram } = useStudyProgramSelect()
     const {
-        currentPage,
-        perPage,
-        totalPages,
-        totalItems,
-        searchTerm,
-
-        setTotalPages,
-        setTotalItems,
-        setCurrentPage,
-
-        handleSearch,
-        handlePerPageChange,
-        handlePageChange,
-    } = useTable()
-
-    const {
-        studyProgram,
-        getData: getStudyProgramData,
-    } = useStudyProgram({
-        currentPage: 1,
-        perPage: 9999,
-        searchTerm: '',
-        setTotalPages() { },
-        setTotalItems() { }
-    })
-
-    const [selectedStudyProgram, setSelectedStudyProgram] = useState<number>(0)
-
-    const handleFilterStudyProgram = (e: ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-
-        setSelectedStudyProgram(value ? Number(value) : 0);
-        setCurrentPage(1);
-    }
-
-    const {
-        user,
+        users,
         isLoading,
-        getData,
-        create,
-        update,
-        remove
-    } = useUser({
-        currentPage,
-        perPage,
-        role: 'Dosen',
-        filter_study_program: selectedStudyProgram,
         searchTerm,
-        setTotalPages,
-        setTotalItems
-    })
+        refresh,
+
+        // TableHandler
+        perPage,
+        handleSearch,
+        handlePageChange,
+        handlePerPageChange,
+        totalItems,
+        totalPages,
+        currentPage,
+        setCurrentPage
+    } = useUserDataTable({ filter_study_program: selectedStudyProgram, role: userRole.Dosen })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [id, setId] = useState<number | null>(null)
-    const [type, setType] = useState<ModalType>('Add')
+    const [selectedDosen, setSelectedDosen] = useState<UserView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
-    useEffect(() => {
-        getStudyProgramData()
-    }, [])
+    const isEdit = !!selectedDosen
 
-    useEffect(() => {
-        getData()
-    }, [currentPage, perPage, selectedStudyProgram])
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (currentPage === 1) {
-                getData()
-            } else {
-                setCurrentPage(1)
-            }
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [searchTerm])
-
-    const openModal = (modalType: ModalType, id: number | null = null) => {
-        setId(null)
-        setType(modalType)
-        setId(id)
+    const openAdd = () => {
+        setSelectedDosen(undefined)
         setIsOpen(true)
     }
 
-    const openConfirm = (id: number) => {
-        setId(id)
+    const openEdit = (dosen: UserView) => {
+        setSelectedDosen(dosen)
+        setIsOpen(true)
+    }
+
+    const openConfirm = (dosen: UserView) => {
+        setSelectedDosen(dosen)
         setConfirmOpen(true)
     }
 
     const handleSave = async (formData: UserInputDTO): Promise<void> => {
-        if (id) {
-            const res = await update(id, formData)
-            toast.success(res.message)
-        } else {
-            const res = await create(formData)
-            toast.success(res.message)
-        }
-        getData()
+        const res = selectedDosen
+            ? await userService.updateData(selectedDosen.id, formData)
+            : await userService.createData(formData)
+
+        toast.success(res.message)
+        refresh()
         setIsOpen(false)
     }
 
     const handleDelete = async () => {
-        if (!id) return
-        const res = await remove(id)
+        if (!selectedDosen) return
+        const res = await userService.deleteData(selectedDosen.id)
         toast.success(res.message)
 
-        getData()
+        refresh()
         setConfirmOpen(false)
     }
 
     return (
         <>
             <Header title='Menu Dosen' />
-            <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
+            <MainContent>
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Dosen</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openModal('Add')}>
+                            <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
                             </Button>
@@ -164,32 +93,22 @@ const DosenPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="w-full mb-3 md:w-1/3">
-                            <div className="relative">
-                                <Select name='filter_prodi' onValueChange={(value) =>
-                                    handleFilterStudyProgram({
-                                        target: {
-                                            name: 'filter_prodi',
-                                            value: value
-                                        }
-                                    } as React.ChangeEvent<HTMLSelectElement>)}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Pilih Program Studi" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Program Studi</SelectLabel>
-                                            <SelectItem value=" ">All</SelectItem>
-                                            {studyProgram?.map((option) => (
-                                                <SelectItem key={option.id} value={option.id.toString()}>{option.name}</SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            <Combobox
+                                options={studyPrograms}
+                                value={selectedStudyProgram?.toString() || ''}
+                                onChange={(val) => {
+                                    setSelectedStudyProgram(val ? Number(val) : 0)
+                                    setCurrentPage(1)
+                                }}
+                                placeholder="Pilih Prodi"
+                                optionLabelKey='name'
+                                optionValueKey='id'
+                                isFilter
+                            />
                         </div>
                         <Table
-                            data={user}
-                            columns={DosenColumn({ openModal, openConfirm })}
+                            data={users}
+                            columns={DosenColumn({ openModal: openEdit, openConfirm })}
                             loading={isLoading}
                             searchTerm={searchTerm}
                             handleSearch={(e) => handleSearch(e)}
@@ -198,20 +117,21 @@ const DosenPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} />
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
                 <ConfirmationDialog open={confirmOpen} onOpenChange={setConfirmOpen} onConfirm={handleDelete} />
-                <DosenFormDialog
+                <UserFormDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    data={user}
-                    studyProgram={studyProgram}
-                    dataId={id}
+                    studyPrograms={studyPrograms}
                     handleSave={handleSave}
-                    title={type == 'Add' ? 'Tambah Dosen' : 'Edit Dosen'}
+                    user={selectedDosen}
+                    role={userRole.Dosen}
+                    title={!isEdit ? 'Tambah Dosen' : 'Edit Dosen'}
                 />
-            </div>
+            </MainContent>
         </>
     )
 }
