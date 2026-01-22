@@ -13,37 +13,19 @@ class MajorSeeder extends Seeder
      */
     public function run(): void
     {
-        Major::insert([
-            [
-                'code' => null,
-                'name' => 'Jurusan Sains dan Analitika Data',
-                'faculty_id' => 1
-            ],
-            [
-                'code' => null,
-                'name' => 'Jurusan Teknik Elektro, Informatika, dan Bisnis',
-                'faculty_id' => 1
-            ],
-            [
-                'code' => null,
-                'name' => 'Jurusan Teknologi Kemaritiman',
-                'faculty_id' => 2
-            ],
-            [
-                'code' => null,
-                'name' => 'Jurusan Teknik Sipil dan Perencanaan',
-                'faculty_id' => 2
-            ],
-            [
-                'code' => null,
-                'name' => 'Jurusan Teknologi Industri',
-                'faculty_id' => 3
-            ],
-            [
-                'code' => null,
-                'name' => 'Jurusan Rekayasa Industri',
-                'faculty_id' => 3
-            ]
-        ]);
+        $faculties = \App\Models\Faculty::pluck('id', 'code')->toArray();
+
+        $majors = [
+            ['code' => null, 'name' => 'Jurusan Sains dan Analitika Data', 'faculty_id' => $faculties['FSTI'] ?? 1],
+            ['code' => null, 'name' => 'Jurusan Teknik Elektro, Informatika, dan Bisnis', 'faculty_id' => $faculties['FSTI'] ?? 1],
+            ['code' => null, 'name' => 'Jurusan Teknologi Kemaritiman', 'faculty_id' => $faculties['FPB'] ?? 2],
+            ['code' => null, 'name' => 'Jurusan Teknik Sipil dan Perencanaan', 'faculty_id' => $faculties['FPB'] ?? 2],
+            ['code' => null, 'name' => 'Jurusan Teknologi Industri', 'faculty_id' => $faculties['FRTI'] ?? 3],
+            ['code' => null, 'name' => 'Jurusan Rekayasa Industri', 'faculty_id' => $faculties['FRTI'] ?? 3],
+        ];
+
+        foreach ($majors as $major) {
+            Major::firstOrCreate(['name' => $major['name']], $major);
+        }
     }
 }

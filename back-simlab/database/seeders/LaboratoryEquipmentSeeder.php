@@ -5,26 +5,100 @@ namespace Database\Seeders;
 use App\Models\LaboratoryEquipment;
 use App\Models\LaboratoryRoom;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class LaboratoryEquipmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $labRooms = LaboratoryRoom::pluck("id")->toArray();
-        $lab1 = $labRooms[0] ?? 1;
-        $lab2 = $labRooms[1] ?? $lab1;
+        Schema::disableForeignKeyConstraints();
+        LaboratoryEquipment::truncate();
+        Schema::enableForeignKeyConstraints();
 
-        LaboratoryEquipment::insert([
-            ["laboratory_room_id" => $lab1, "equipment_name" => "Mikroskop Binokuler", "quantity" => 10, "unit" => "unit", "function" => "Mengamati objek mikroskopis", "photo" => null, "brand" => "Olympus", "equipment_type" => "Barang BMN", "origin" => "Jepang", "condition" => "Baik", "condition_description" => "Tidak ada kerusakan", "asset_code" => "LAB-EQ-001", "student_price" => 0, "lecturer_price" => 15000, "external_price" => 20000],
-            ["laboratory_room_id" => $lab1, "equipment_name" => "Centrifuge", "quantity" => 5, "unit" => "unit", "function" => "Memisahkan partikel dalam cairan", "photo" => null, "brand" => "Eppendorf", "equipment_type" => "Barang BHPL", "origin" => "Jerman", "condition" => "Baik", "condition_description" => "Baru diservis", "asset_code" => "LAB-EQ-002", "student_price" => 0, "lecturer_price" => 17000, "external_price" => 22000],
-            ["laboratory_room_id" => $lab2, "equipment_name" => "Hot Plate", "quantity" => 8, "unit" => "unit", "function" => "Memanaskan larutan", "photo" => null, "brand" => "Thermo", "equipment_type" => "Barang BHPL", "origin" => "Amerika", "condition" => "Cukup", "condition_description" => "Permukaan sedikit tergores", "asset_code" => "LAB-EQ-003", "student_price" => 0, "lecturer_price" => 14000, "external_price" => 18000],
-            ["laboratory_room_id" => $lab2, "equipment_name" => "pH Meter", "quantity" => 4, "unit" => "unit", "function" => "Mengukur tingkat keasaman", "photo" => null, "brand" => "Hanna", "equipment_type" => "Barang BHPL", "origin" => "Italia", "condition" => "Baik", "condition_description" => "Kalibrasi rutin", "asset_code" => "LAB-EQ-004", "student_price" => 0, "lecturer_price" => 12000, "external_price" => 16000],
-            ["laboratory_room_id" => $lab1, "equipment_name" => "Glassware Set", "quantity" => 30, "unit" => "pcs", "function" => "Peralatan gelas umum", "photo" => null, "brand" => "Pyrex", "equipment_type" => "Barang Hibah", "origin" => "Amerika", "condition" => "Baik", "condition_description" => "Bersih dan siap pakai", "asset_code" => "LAB-EQ-005", "student_price" => 0, "lecturer_price" => 3000, "external_price" => 5000],
-            ["laboratory_room_id" => $lab2, "equipment_name" => "Spectrophotometer", "quantity" => 2, "unit" => "unit", "function" => "Mengukur absorbansi sampel", "photo" => null, "brand" => "Shimadzu", "equipment_type" => "Barang BMN", "origin" => "Jepang", "condition" => "Baik", "condition_description" => "Terawat", "asset_code" => "LAB-EQ-006", "student_price" => 0, "lecturer_price" => 30000, "external_price" => 40000],
-            ["laboratory_room_id" => $lab1, "equipment_name" => "Incubator", "quantity" => 3, "unit" => "unit", "function" => "Menginkubasi sampel", "photo" => null, "brand" => "Memmert", "equipment_type" => "Barang BMN", "origin" => "Jerman", "condition" => "Cukup", "condition_description" => "Perlu pemeriksaan suhu", "asset_code" => "LAB-EQ-007", "student_price" => 0, "lecturer_price" => 22000, "external_price" => 30000],
-            ["laboratory_room_id" => $lab2, "equipment_name" => "Pipet Set", "quantity" => 20, "unit" => "pcs", "function" => "Mengukur volume cairan", "photo" => null, "brand" => "Gilson", "equipment_type" => "Barang Hibah", "origin" => "Prancis", "condition" => "Baik", "condition_description" => "Baru diganti beberapa batang", "asset_code" => "LAB-EQ-008", "student_price" => 0, "lecturer_price" => 2000, "external_price" => 3000],
-            ["laboratory_room_id" => $lab1, "equipment_name" => "Autoclave", "quantity" => 1, "unit" => "unit", "function" => "Sterilisasi peralatan", "photo" => null, "brand" => "Tuttnauer", "equipment_type" => "Barang BMN", "origin" => "Israel", "condition" => "Baik", "condition_description" => "Berfungsi normal", "asset_code" => "LAB-EQ-009", "student_price" => 0, "lecturer_price" => 60000, "external_price" => 80000],
-            ["laboratory_room_id" => $lab2, "equipment_name" => "Water Bath", "quantity" => 4, "unit" => "unit", "function" => "Menjaga suhu larutan", "photo" => null, "brand" => "Julabo", "equipment_type" => "Barang BHPL", "origin" => "Jerman", "condition" => "Baik", "condition_description" => "Perawatan rutin dilakukan", "asset_code" => "LAB-EQ-010", "student_price" => 0, "lecturer_price" => 10000, "external_price" => 14000],
-        ]);
+        $this->command->info('Loading equipment data from JSON...');
+
+        // 1. Load Room Data (Old ID -> Name mapping)
+        $roomJsonPath = database_path('seeders/data/room_data.json');
+        if (!file_exists($roomJsonPath)) {
+            $this->command->error("File room_data.json not found!");
+            return;
+        }
+        $roomData = json_decode(file_get_contents($roomJsonPath), true);
+
+        // Map Old Room ID => Room Name
+        $roomIdToName = [];
+        foreach ($roomData as $room) {
+            if (isset($room['id_ruangan_laboratorium']) && isset($room['nama_ruangan'])) {
+                $roomIdToName[$room['id_ruangan_laboratorium']] = $room['nama_ruangan'];
+            }
+        }
+
+        // 2. Load Equipment Data
+        $equipmentJsonPath = database_path('seeders/data/equipment_data.json');
+        if (!file_exists($equipmentJsonPath)) {
+            $this->command->error("File equipment_data.json not found!");
+            return;
+        }
+        $equipments = json_decode(file_get_contents($equipmentJsonPath), true);
+
+        // 3. Process Equipment
+        foreach ($equipments as $equipment) {
+            // Validate required data
+            if (empty($equipment['nama_alat']))
+                continue;
+
+            // Find New Room ID
+            $oldRoomId = $equipment['id_ruangan_laboratorium'] ?? null;
+            $roomName = $roomIdToName[$oldRoomId] ?? null;
+
+            $roomId = null;
+            if ($roomName) {
+                $room = LaboratoryRoom::where('name', $roomName)->first();
+                $roomId = $room?->id;
+            }
+            // Fallback to first room if not found
+            if (!$roomId) {
+                $roomId = LaboratoryRoom::first()?->id ?? 1;
+            }
+
+            // Generate asset code if missing - USE DETERMINISTIC ID based on old DB ID
+            $assetCode = $equipment['kode_aset'];
+            if (empty($assetCode) || $assetCode === '-' || $assetCode === 'null') {
+                // Use UNK- + ID. Old ID is unique.
+                $oldId = $equipment['id_alat_lab'] ?? '0';
+                $assetCode = 'UNK-' . $oldId;
+            }
+
+            // Ensure unique asset_code if collision (unlikely if using old ID)
+            // But if 'kode_aset' was provided and duplicates exist in old DB?
+            // updateOrCreate handles duplicates by updating.
+            // But if we want to insert ALL records, and they have same asset_code?
+            // The old DB allowed duplicates in asset_code? Probably not if it's not unique key there?
+            // If old DB allows duplicates, we should use different keys.
+            // Let's assume asset_code should be unique.
+
+            LaboratoryEquipment::updateOrCreate(
+                ['asset_code' => $assetCode],
+                [
+                    'laboratory_room_id' => $roomId,
+                    'equipment_name' => $equipment['nama_alat'],
+                    'quantity' => (int) ($equipment['jumlah'] ?? 0),
+                    'unit' => $equipment['satuan'] ?? 'Unit',
+                    'function' => $equipment['fungsi_alat'],
+                    'photo' => $equipment['foto_alat'],
+                    'brand' => $equipment['merek_alat'] ?? '-',
+                    'equipment_type' => $equipment['jenis_alat'] ?? '-',
+                    'origin' => $equipment['asal_alat'] ?? '-',
+                    'condition' => $equipment['kondisi_alat'] ?? 'Unknown',
+                    'condition_description' => $equipment['keterangan_kondisi_alat'],
+                    'asset_code' => $assetCode,
+                    'student_price' => 0,
+                    'lecturer_price' => 0,
+                    'external_price' => 0,
+                    'created_at' => $equipment['created_at'] ?? now(),
+                    'updated_at' => $equipment['updated_at'] ?? now(),
+                ]
+            );
+        }
     }
 }

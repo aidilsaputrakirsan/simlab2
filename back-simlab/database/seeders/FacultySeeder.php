@@ -13,19 +13,14 @@ class FacultySeeder extends Seeder
      */
     public function run(): void
     {
-        Faculty::insert([
-            [
-                'code' => 'FSTI',
-                'name' => 'Fakultas Sains dan Teknologi Informasi'
-            ],
-            [
-                'code' => 'FPB',
-                'name' => 'Fakultas Pembangunan Berkelanjutan'
-            ],
-            [
-                'code' => 'FRTI',
-                'name' => 'Fakultas Rekayasa dan Teknologi Industri'
-            ]
-        ]);
+        $faculties = [
+            ['code' => 'FSTI', 'name' => 'Fakultas Sains dan Teknologi Informasi'],
+            ['code' => 'FPB', 'name' => 'Fakultas Pembangunan Berkelanjutan'],
+            ['code' => 'FRTI', 'name' => 'Fakultas Rekayasa dan Teknologi Industri'],
+        ];
+
+        foreach ($faculties as $faculty) {
+            Faculty::firstOrCreate(['code' => $faculty['code']], $faculty);
+        }
     }
 }

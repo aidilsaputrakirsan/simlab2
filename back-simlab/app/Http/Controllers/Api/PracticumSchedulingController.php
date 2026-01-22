@@ -40,7 +40,29 @@ class PracticumSchedulingController extends BaseController
             $query = PracticumScheduling::query()->with(['user', 'practicum', 'academicYear']);
 
             $user = auth()->user();
-            $query->where('user_id', $user->id);
+
+            // Allow kepala_lab_jurusan to view all schedules in their Major (Jurusan)
+            if ($user->role === 'kepala_lab_jurusan') {
+                if ($user->study_program_id) {
+                    $user->load('studyProgram.major');
+                    $majorId = $user->studyProgram?->major_id;
+
+                    if ($majorId) {
+                        $query->whereHas('practicum.studyProgram', function ($q) use ($majorId) {
+                            $q->where('major_id', $majorId);
+                        });
+                    } else {
+                        // Fallback if no major found (shouldn't happen with valid data)
+                        $query->where('id', -1);
+                    }
+                } else {
+                    // No study program assigned
+                    $query->where('id', -1);
+                }
+            } else {
+                // Default: User only sees their own schedules
+                $query->where('user_id', $user->id);
+            }
 
             // Search functionality
             if ($request->filled('search')) {
@@ -138,9 +160,11 @@ class PracticumSchedulingController extends BaseController
             $user = auth()->user();
             $query = PracticumScheduling::query()
                 ->with(['user', 'practicum', 'academicYear'])
-                ->with(['practicumClasses' => function ($q) use ($user) {
-                    $q->where('lecturer_id', $user->id)->with('lecturer');
-                }])
+                ->with([
+                    'practicumClasses' => function ($q) use ($user) {
+                        $q->where('lecturer_id', $user->id)->with('lecturer');
+                    }
+                ])
                 ->where('status', 'approved')
                 ->whereHas('practicumClasses', function ($q) use ($user) {
                     $q->where('lecturer_id', $user->id);
@@ -216,7 +240,7 @@ class PracticumSchedulingController extends BaseController
             $this->recordApproval($practicumScheduling->id, $approvalAction, $user->id, $isApprove, $request->information);
 
             DB::commit();
-            return $this->sendResponse([],'Berhasil melakukan verifikasi pengajuan penjadwalan praktikum');
+            return $this->sendResponse([], 'Berhasil melakukan verifikasi pengajuan penjadwalan praktikum');
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
             return $this->sendError('Practicum Scheduling Not Found', [], 404);
@@ -492,7 +516,7 @@ class PracticumSchedulingController extends BaseController
             ->practicumClasses
             ->first(fn($class) => $class->practicumSessions->contains('id', $session_id));
 
-        if (! $class) {
+        if (!$class) {
             return $this->sendError('Sesi yang anda masukan tidak tersedia pada penjadwalan ini', [], 403);
         }
 

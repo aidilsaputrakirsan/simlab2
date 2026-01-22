@@ -36,7 +36,7 @@ class BookingAllExport implements FromCollection, WithHeadings, WithColumnWidths
                 }
                 if ($booking->materials && count($booking->materials) > 0) {
                     $materials = $booking->materials
-                        ->map(fn($mat) => "{$mat->laboratoryMaterial?->name ?? '-'} ({$mat->quantity})")
+                        ->map(fn($mat) => ($mat->laboratoryMaterial?->name ?? '-') . " ({$mat->quantity})")
                         ->implode(', ');
                     $resources[] = "Bahan: {$materials}";
                 }

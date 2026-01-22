@@ -26,14 +26,14 @@ export const usePracticumSchedulingDataTable = () => {
         const response = await practicumSchedulingService.getPracticumSchedulingData({
             page: currentPage ?? 1,
             per_page: perPage ?? 10,
-            search: searchTerm ?? ""
+            search: debounceSearchTerm ?? ""
         })
 
         setPracticumSchedulings(response.data ?? [])
         setTotalPages(response.last_page ?? 0)
         setTotalItems(response.total ?? 0)
         setIsLoading(false)
-    }, [])
+    }, [currentPage, perPage, debounceSearchTerm])
 
     useEffect(() => {
         getData();
