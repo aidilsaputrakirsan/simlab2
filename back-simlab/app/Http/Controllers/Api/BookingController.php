@@ -448,7 +448,7 @@ class BookingController extends BaseController
             if ($isRoom) {
                 // Auto-approve for 'room' bookings
                 $this->recordApproval($booking->id, 'request_booking', $user->id, 1);
-                
+
                 // Create payment if room has price
                 $this->createBookingPayment($booking);
             }
@@ -608,11 +608,11 @@ class BookingController extends BaseController
     private function storeEquipments($bookingId, array $equipments, $user)
     {
         $userPriceType = $this->getUserPriceType($user);
-        
+
         foreach ($equipments as $equipment) {
             $labEquipment = LaboratoryEquipment::find($equipment['id']);
             $price = $this->getItemPrice($labEquipment, $userPriceType);
-            
+
             BookingEquipment::create([
                 'booking_id' => $bookingId,
                 'laboratory_equipment_id' => $equipment['id'],
@@ -625,11 +625,11 @@ class BookingController extends BaseController
     private function storeMaterials($bookingId, array $materials, $user)
     {
         $userPriceType = $this->getUserPriceType($user);
-        
+
         foreach ($materials as $material) {
             $labMaterial = LaboratoryMaterial::find($material['id']);
             $price = $this->getItemPrice($labMaterial, $userPriceType);
-            
+
             BookingMaterial::create([
                 'booking_id' => $bookingId,
                 'laboratory_material_id' => $material['id'],
@@ -648,7 +648,7 @@ class BookingController extends BaseController
         if ($user->study_program_id) {
             return $user->role === 'dosen' ? 'lecturer' : 'student';
         }
-        
+
         // External user
         return 'external';
     }
@@ -659,7 +659,7 @@ class BookingController extends BaseController
     private function getItemPrice($item, string $userPriceType): float
     {
         if (!$item) return 0;
-        
+
         return match ($userPriceType) {
             'student' => $item->student_price ?? 0,
             'lecturer' => $item->lecturer_price ?? 0,

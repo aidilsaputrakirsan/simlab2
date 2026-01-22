@@ -148,12 +148,12 @@ class Booking extends BaseModel
     private function getUserPriceType(): string
     {
         $user = $this->user;
-        
+
         // If user has study_program_id, they're internal (student or lecturer)
         if ($user->study_program_id) {
             return $user->role === 'dosen' ? 'lecturer' : 'student';
         }
-        
+
         // External user
         return 'external';
     }

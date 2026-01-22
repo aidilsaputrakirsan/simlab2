@@ -137,7 +137,7 @@ class PaymentController extends BaseController
             // If payment is approved and the payable is a Booking, create the event
             if ($request->action === 'approved' && $payment->payable instanceof Booking) {
                 $booking = $payment->payable;
-                
+
                 // Only create event if it doesn't already exist
                 if (!$booking->event) {
                     Event::create([

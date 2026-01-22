@@ -193,19 +193,19 @@ class TestingRequest extends BaseModel
         $definition = TestingRequestApproval::actionDefinition();
         $flows = $this->getApprovalFlowsForRequest();
         $hasPaidItems = $this->hasPaidItems;
-        
+
         return collect($flows)->map(function ($action) use ($definition, $hasPaidItems) {
             $role = $definition[$action]['role'];
             $description = $definition[$action]['description'];
-            
+
             // For verified_by_head action, use admin_pengujian for paid items, kepala_lab_terpadu for free items
             if ($action === 'verified_by_head') {
                 $role = $hasPaidItems ? 'admin_pengujian' : 'kepala_lab_terpadu';
-                $description = $hasPaidItems 
+                $description = $hasPaidItems
                     ? 'Admin Pengujian memverifikasi pengajuan pengujian berbayar'
                     : 'Kepala Lab Terpadu memverifikasi pengajuan pengujian gratis';
             }
-            
+
             return [
                 'action' => $action,
                 'role' => $role,
