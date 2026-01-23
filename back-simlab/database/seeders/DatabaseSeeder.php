@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             MajorSeeder::class,
             StudyProgramSeeder::class,
             UserSeeder::class,
+            DosenSeeder::class,
+            LaboranSeeder::class,
             LaboratoryRoomSeeder::class,
             LaboratoryEquipmentSeeder::class,
             LaboratoryMaterialSeeder::class,

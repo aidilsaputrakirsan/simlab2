@@ -192,7 +192,7 @@ const PracticumSchedulingCreatePage = () => {
                     {formData.classes.map((classes, cidx) => (
                         <Card key={cidx}>
                             <CardHeader>
-                                <CardTitle>{classes.name || 'Input Nama Kelas'}</CardTitle>
+                                <CardTitle>Input Nama Kelas</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-5'>
@@ -244,7 +244,7 @@ const PracticumSchedulingCreatePage = () => {
                                                 name='practicum_assistant'
                                                 value={classes.practicum_assistant}
                                                 onChange={(e) => handleClassChange(e, cidx)}
-                                                placeholder='Asisten Praktikum'
+                                                placeholder='Nama asisten (pisahkan dengan koma jika lebih dari satu)'
                                             />
                                             {errors[`classes.${cidx}.practicum_assistant`] && (
                                                 <span className="text-xs text-red-500 mt-1">{errors[`classes.${cidx}.practicum_assistant`]}</span>
