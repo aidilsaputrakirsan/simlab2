@@ -250,8 +250,18 @@ const BookingCreatePage = () => {
                   type='file'
                   id='supporting_file'
                   name='supporting_file'
-                  onChange={handleChange}
+                  accept='.doc,.docx,.pdf'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file && file.size > 2 * 1024 * 1024) {
+                      toast.error('Ukuran file tidak boleh melebihi 2MB');
+                      e.target.value = '';
+                      return;
+                    }
+                    handleChange(e);
+                  }}
                 />
+                <p className="text-xs text-muted-foreground mt-1">Format: PDF, DOC, DOCX. Maksimal 2MB.</p>
               </FormGroup>
               {user?.role === userRole.Mahasiswa && (
                 <>

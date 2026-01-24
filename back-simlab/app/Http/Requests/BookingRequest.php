@@ -22,7 +22,7 @@ class BookingRequest extends ApiRequest
         $rules = [
             'phone_number' => 'required|max:14',
             'purpose' => 'required|max:225',
-            'supporting_file' => 'mimes:doc,docx,pdf|max:5046',
+            'supporting_file' => 'nullable|file|mimes:doc,docx,pdf|max:2048',
             'activity_name' => 'required|max:225',
             'start_time' => 'required',
             'end_time' => 'required|after_or_equal:start_time',
@@ -54,8 +54,9 @@ class BookingRequest extends ApiRequest
             'purpose.required' => 'Tujuan peminjaman wajib diisi.',
             'purpose.max' => 'Tujuan peminjaman tidak boleh lebih dari 225 karakter.',
 
+            'supporting_file.file' => 'File pendukung gagal diupload. Pastikan ukuran file tidak melebihi 2MB.',
             'supporting_file.mimes' => 'File pendukung harus berupa dokumen bertipe: doc, docx, atau pdf.',
-            'supporting_file.max' => 'Ukuran file pendukung tidak boleh melebihi 5MB.',
+            'supporting_file.max' => 'Ukuran file pendukung tidak boleh melebihi 2MB.',
 
             'activity_name.required' => 'Nama kegiatan wajib diisi.',
             'activity_name.max' => 'Nama kegiatan tidak boleh lebih dari 225 karakter.',

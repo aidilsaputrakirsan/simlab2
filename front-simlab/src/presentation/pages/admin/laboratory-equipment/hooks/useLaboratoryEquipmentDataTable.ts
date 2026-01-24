@@ -43,14 +43,14 @@ export const useLaboratoryEquipmentDataTable = ({
         const response = await laboratoryEquipmentService.getLaboratoryEquipmentData({
             page: currentPage,
             per_page: perPage,
-            search: searchTerm,
+            search: debounceSearchTerm,
             filter_laboratory_room: filter_laboratory_room
         })
         setLaboratoryEquipments(response.data ?? [])
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, filter_laboratory_room, laboratoryEquipmentService, searchTerm, setTotalItems, setTotalPages])
+    }, [currentPage, perPage, filter_laboratory_room, laboratoryEquipmentService, debounceSearchTerm, setTotalItems, setTotalPages])
 
     useEffect(() => {
         getData();

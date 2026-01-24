@@ -294,6 +294,19 @@ class Booking extends BaseModel
         }
     }
 
+    public function getFormattedRangeAttribute()
+    {
+        $startTime = $this->start_time ? \Carbon\Carbon::parse($this->start_time) : null;
+        $endTime = $this->end_time ? \Carbon\Carbon::parse($this->end_time) : null;
+
+        return [
+            'start_date' => $startTime ? $startTime->format('d/m/Y') : '-',
+            'end_date' => $endTime ? $endTime->format('d/m/Y') : '-',
+            'start_time' => $startTime ? $startTime->format('H:i') : '-',
+            'end_time' => $endTime ? $endTime->format('H:i') : '-',
+        ];
+    }
+
     public function getApprovalStepsAttribute()
     {
         $approvals = [];

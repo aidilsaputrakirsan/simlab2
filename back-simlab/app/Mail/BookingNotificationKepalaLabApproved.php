@@ -16,8 +16,9 @@ class BookingNotificationKepalaLabApproved extends Mailable implements ShouldQue
     /**
      * Create a new message instance.
      */
-    protected $laboran;
-    protected $booking;
+    public $laboran;
+    public $booking;
+
     public function __construct($laboran, $booking)
     {
         $this->afterCommit();
