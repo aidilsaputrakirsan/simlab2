@@ -33,8 +33,8 @@ export class UserService {
         return await this.userRepository.restoreToDosen(id)
     }
 
-    async getDataForSelect(role: userRole): Promise<ApiResponse<UserSelectView[]>> {
-        const users = await this.userRepository.getDataForSelect(role)
+    async getDataForSelect(roles: userRole | userRole[], major_id?: number): Promise<ApiResponse<UserSelectView[]>> {
+        const users = await this.userRepository.getDataForSelect(roles, major_id)
 
         return {
             ...users,

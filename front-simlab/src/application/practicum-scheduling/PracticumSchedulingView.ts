@@ -11,6 +11,7 @@ export class PracticumSchedulingView {
     constructor(
         readonly id: number,
         readonly academicYear: string,
+        readonly practicumId: number,
         readonly phoneNumber: number,
         readonly status: PracticumSchedulingStatus,
         readonly practicumName: string,
@@ -28,6 +29,7 @@ export class PracticumSchedulingView {
         return new PracticumSchedulingView(
             entity.id,
             entity.academicYear,
+            entity.practicumId,
             entity.phoneNumber,
             entity.status,
             entity.practicumName,

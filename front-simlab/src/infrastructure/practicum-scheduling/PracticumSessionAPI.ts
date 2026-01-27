@@ -10,7 +10,8 @@ export type PracticumSessionAPI = {
     laboran_commented_at: string | null,
     lecturer_comment: string | null,
     lecturer_commented_at: string | null,
-    practicum_module: string
+    practicum_module: string,
+    practicum_module_id: number | null
 }
 
 export function toDomain(api: PracticumSessionAPI): PracticumSession {
@@ -23,6 +24,7 @@ export function toDomain(api: PracticumSessionAPI): PracticumSession {
         api.laboran_commented_at ? new Time(api.laboran_commented_at) : null,
         api.lecturer_comment,
         api.lecturer_commented_at ? new Time(api.lecturer_commented_at) : null,
+        api.practicum_module_id
     )
 
     if (api.practicum_module) {

@@ -17,6 +17,8 @@ export type PracticumClassAPI = {
         identity_num: string
     },
     laboratory_room_name?: string,
+    lecturer_id: number,
+    laboratory_room_id: number,
     practicum_sessions: PracticumSessionAPI[]
 }
 
@@ -27,6 +29,8 @@ export function toDomain(api: PracticumClassAPI): PracticumClass {
         api.practicum_assistant,
         api.total_participant,
         api.total_group,
+        api.lecturer_id,
+        api.laboratory_room_id,
         new Time(api.created_at),
         new Time(api.updated_at),
         api.practicum_sessions ? api.practicum_sessions.map(toPracticumSesion) : undefined

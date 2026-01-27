@@ -18,6 +18,7 @@ export class PracticumScheduling {
     constructor(
         readonly id: number,
         readonly academicYear: string,
+        readonly practicumId: number,
         readonly phoneNumber: number,
         readonly status: PracticumSchedulingStatus,
         readonly practicumName: string,
@@ -37,15 +38,15 @@ export class PracticumScheduling {
         this.canVerif = value
     }
 
-    setPracticumSchedlingEquipments(items: PracticumSchedulingEquipment[]){
+    setPracticumSchedlingEquipments(items: PracticumSchedulingEquipment[]) {
         this.practicumSchedulingEquipments = items
     }
 
-    setPracticumSchedlingMaterials(items: PracticumSchedulingMaterial[]){
+    setPracticumSchedlingMaterials(items: PracticumSchedulingMaterial[]) {
         this.practicumSchedulingMaterials = items
     }
 
-    setPracticumClasses(items: PracticumClass[]){
+    setPracticumClasses(items: PracticumClass[]) {
         this.practicumClasses = items
     }
 

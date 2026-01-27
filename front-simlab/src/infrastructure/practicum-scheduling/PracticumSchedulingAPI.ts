@@ -10,6 +10,7 @@ import { Laboran } from "@/domain/shared/value-object/Laboran";
 export type PracticumSchedulingAPI = {
     id: number;
     academic_year: string,
+    practicum_id: number,
     phone_number: number,
     requestor: {
         name: string,
@@ -19,6 +20,7 @@ export type PracticumSchedulingAPI = {
         institution: string
     },
     laboran: {
+        id: number,
         name: string,
         email: string
     },
@@ -36,6 +38,7 @@ export function toDomain(api: PracticumSchedulingAPI): PracticumScheduling {
     const practicumScheduling = new PracticumScheduling(
         api.id,
         api.academic_year,
+        api.practicum_id,
         api.phone_number,
         api.status as PracticumSchedulingStatus,
         api.practicum_name,
@@ -49,7 +52,7 @@ export function toDomain(api: PracticumSchedulingAPI): PracticumScheduling {
     }
 
     if (api.laboran) {
-        const laboran = new Laboran(api.laboran.name, api.laboran.email)
+        const laboran = new Laboran(api.laboran.id, api.laboran.name, api.laboran.email)
         practicumScheduling.setLaboran(laboran)
     }
 

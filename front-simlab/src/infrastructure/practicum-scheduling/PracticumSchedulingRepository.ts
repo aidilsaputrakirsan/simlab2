@@ -55,6 +55,37 @@ export class PracticumSchedulingRepository implements IPracticumSchedulingReposi
         }
         throw json;
     }
+    async update(id: number, data: {
+        practicum_id: number | null,
+        phone_number: string,
+        classes: {
+            lecturer_id: number | null,
+            laboratory_room_id: number | null,
+            name: string,
+            practicum_assistant: string,
+            total_participant: number | null,
+            total_group: number | null,
+            sessions: {
+                practicum_module_id: number | null,
+                start_time: Date | null,
+                end_time: Date | null
+            }[]
+        }[]
+    }): Promise<ApiResponse<PracticumScheduling>> {
+        const response = await fetchApi(`/practicum-schedule/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data)
+        });
+
+        const json = await response.json() as ApiResponse;
+        if (response.ok) {
+            return {
+                ...json,
+                data: toDomain(json.data)
+            };
+        }
+        throw json;
+    }
 
     async getPracticumSchedulingData(id: number): Promise<ApiResponse<PracticumScheduling>> {
         const response = await fetchApi(`/practicum-schedule/${id}/detail`, {

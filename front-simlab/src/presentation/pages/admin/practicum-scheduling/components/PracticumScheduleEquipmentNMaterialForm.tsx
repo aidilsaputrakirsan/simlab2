@@ -98,12 +98,19 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
                         {loading ? 'Loading...' : 'Informasi Penjadwalan'}
                     </Button>
                     <PracticumScheduleDetailDialog open={isOpenDetail} onOpenChange={setIsOpenDetail} practicumScheduling={practicumScheduling} />
-                    <NavLink to={'/panel/penjadwalan-praktikum'} className='order-1 sm:order-2 ml-auto sm:ml-0'>
-                        <Button>
-                            Kembali
-                            <ArrowLeft />
-                        </Button>
-                    </NavLink>
+                    <div className='order-1 sm:order-2 ml-auto sm:ml-0 flex gap-2'>
+                        {practicumScheduling?.status === 'draft' && (
+                            <Button variant="outline" onClick={() => navigate(`/panel/penjadwalan-praktikum/${practicumScheduling.id}/edit`)}>
+                                Kembali ke Draft
+                            </Button>
+                        )}
+                        <NavLink to={'/panel/penjadwalan-praktikum'}>
+                            <Button>
+                                Kembali
+                                <ArrowLeft />
+                            </Button>
+                        </NavLink>
+                    </div>
                 </div>
                 <div className='flex flex-col gap-6'>
                     {/* === Equipment Section === */}

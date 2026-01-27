@@ -189,6 +189,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::group(['middleware' => 'role:kepala_lab_jurusan'], function () {
             Route::get('/', [PracticumSchedulingController::class, 'index']);
             Route::post('/', [PracticumSchedulingController::class, 'store']);
+            Route::put('/{id}', [PracticumSchedulingController::class, 'update']);
             Route::post('/{id}/equipment-material', [PracticumSchedulingController::class, 'storePracticumEquipmentMaterial']);
             Route::get('/have-draft', [PracticumSchedulingController::class, 'isStillHaveDraftPracticum']);
         });

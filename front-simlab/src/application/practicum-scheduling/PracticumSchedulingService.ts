@@ -33,6 +33,13 @@ export class PracticumSchedulingService {
             data: practicumScheduling.data ? PracticumSchedulingView.fromDomain(practicumScheduling.data) : undefined
         }
     }
+    async update(id: number, data: PracticumSchedulingInputDTO): Promise<ApiResponse<PracticumSchedulingView>> {
+        const practicumScheduling = await this.practicumSchedulingRepository.update(id, data);
+        return {
+            ...practicumScheduling,
+            data: practicumScheduling.data ? PracticumSchedulingView.fromDomain(practicumScheduling.data) : undefined
+        };
+    }
 
     async getPracticumSchedulingDetail(id: number): Promise<ApiResponse<PracticumSchedulingView>> {
         const practicumScheduling = await this.practicumSchedulingRepository.getPracticumSchedulingData(id)

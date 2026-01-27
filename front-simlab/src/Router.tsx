@@ -413,6 +413,16 @@ export const router = createBrowserRouter([
                         )
                     },
                     {
+                        path: ':id/edit',
+                        element: (
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Kooprodi]}>
+                                <PracticumSchedulingProvider>
+                                    <PracticumSchedulingCreatePage />
+                                </PracticumSchedulingProvider>
+                            </ProtectedRoute>
+                        )
+                    },
+                    {
                         path: ':id/manage',
                         element: (
                             <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.Mahasiswa, userRole.KepalaLabTerpadu, userRole.Kooprodi]}>

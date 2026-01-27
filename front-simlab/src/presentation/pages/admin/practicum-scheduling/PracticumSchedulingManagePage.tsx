@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react'
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { PracticumSchedulingView } from '@/application/practicum-scheduling/PracticumSchedulingView';
 import PracticumScheduleEquipmentNMaterialForm from './components/PracticumScheduleEquipmentNMaterialForm';
 import { PracticumSchedulingService } from '@/application/practicum-scheduling/PracticumSchedulingService';
@@ -57,9 +57,9 @@ const PracticumSchedulingManagePage = () => {
     }, [isHasDraftPracticum, practicumScheduling])
 
     return (
-        <>
+        <div ref={sectionRef}>
             <PracticumScheduleEquipmentNMaterialForm practicumScheduling={practicumScheduling} />
-        </>
+        </div>
     )
 }
 

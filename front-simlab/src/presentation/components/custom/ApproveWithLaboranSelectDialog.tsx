@@ -33,7 +33,7 @@ const ApproveWithLaboranSelectDialog: React.FC<ApproveWithLaboranSelectDialogPro
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { errors, processErrors } = useValidationErrors()
 
-  const { users: laborans, selectedUser: selectedLaboran, setSelectedUser: setSelectedLaboran } = useUserSelect({ role: userRole.Laboran })
+  const { users: laborans, selectedUser: selectedLaboran, setSelectedUser: setSelectedLaboran } = useUserSelect({ roles: userRole.Laboran })
   const onSubmit = async () => {
     if (!selectedLaboran) return;
     setIsSubmitting(true);
