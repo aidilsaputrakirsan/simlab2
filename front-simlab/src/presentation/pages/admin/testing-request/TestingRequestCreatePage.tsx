@@ -9,7 +9,6 @@ import { ArrowLeft, Plus, Trash } from 'lucide-react';
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTestingRequestForm } from './hooks/useTestingRequestForm';
-import SingleDatetimePicker from '@/presentation/components/custom/SingleDateTimePicker';
 import { Textarea } from '@/presentation/components/ui/textarea';
 import { useTestingTypeSelect } from '../testing-type/hooks/useTestingTypeSelect';
 import { Combobox } from '@/presentation/components/custom/combobox';
@@ -29,7 +28,6 @@ const TestingRequestCreatePage = () => {
         formData,
         setFormData,
         handleChange,
-        handleDateTimeChange,
         handleTestingItemChange,
         handleAddTestingItem,
         handleRemoveTestingItem
@@ -193,13 +191,20 @@ const TestingRequestCreatePage = () => {
                                 <FormGroup
                                     className='md:col-span-2'
                                     id='testing_time'
-                                    label='Tanggal Pengujian'
+                                    label='Tanggal Pengajuan'
                                     error={errors['testing_time']}
                                     required>
-                                    <SingleDatetimePicker
-                                        current_time={formData.testing_time}
-                                        name='testing_time'
-                                        onChange={handleDateTimeChange} />
+                                    <Input
+                                        type='text'
+                                        value={formData.testing_time ? formData.testing_time.toLocaleString('id-ID', {
+                                            day: '2-digit',
+                                            month: 'long',
+                                            year: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) : ''}
+                                        disabled={true}
+                                    />
                                 </FormGroup>
                                 <FormGroup
                                     className='md:col-span-2'

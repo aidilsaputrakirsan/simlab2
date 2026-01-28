@@ -1,7 +1,8 @@
-import { ApiResponse } from "@/presentation/shared/Types"
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types"
 import { Payment } from "./Payment"
 
 export interface IPaymentRepository {
+    getAll(params: {page: number, per_page: number, search: string}): Promise<PaginatedResponse<Payment>>
     createPayment(id: number, data: {
         payment_number: string | null,
         va_number: string | null,
@@ -11,5 +12,5 @@ export interface IPaymentRepository {
         payment_proof: string | File | null
     }): Promise<ApiResponse>
     getPaymentData(id: number): Promise<ApiResponse<Payment>>
-    verif(id: number, data:{action: 'approved' | 'rejected'}): Promise<ApiResponse>
+    verif(id: number, data:{action: 'approved' | 'rejected', receipt_file?: File | null}): Promise<ApiResponse>
 }

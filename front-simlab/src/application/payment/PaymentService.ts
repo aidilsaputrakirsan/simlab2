@@ -1,11 +1,25 @@
 import { IPaymentRepository } from "@/domain/payment/IPaymentRepository";
 import { PaymentRepository } from "@/infrastructure/payment/PaymentRepository";
-import { PaymentInputDTO, PaymentInputProofDTO } from "./dto/PaymentDTO";
-import { ApiResponse } from "@/presentation/shared/Types";
+import { PaymentInputDTO, PaymentInputProofDTO, PaymentTableParam, PaymentVerifDTO } from "./dto/PaymentDTO";
+import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PaymentView } from "./PaymentView";
 
 export class PaymentService {
     private readonly paymentRepository: IPaymentRepository = new PaymentRepository()
+
+    async generatePaymentNumber(): Promise<string> {
+        const response = await this.paymentRepository.generatePaymentNumber();
+        return response.data?.payment_number || '';
+    }
+
+    async getPayments(params: PaymentTableParam): Promise<PaginatedResponse<PaymentView>> {
+        const response = await this.paymentRepository.getAll(params);
+        
+        return {
+            ...response,
+            data: response.data.map(payment => PaymentView.fromDomain(payment))
+        };
+    }
 
     async createPayment(id: number, data: PaymentInputDTO): Promise<ApiResponse> {
         return await this.paymentRepository.createPayment(id, data)
@@ -24,7 +38,7 @@ export class PaymentService {
         }
     }
 
-    async verif(id: number, data: {action: 'approved' | 'rejected'}): Promise<ApiResponse> {
+    async verif(id: number, data: PaymentVerifDTO): Promise<ApiResponse> {
         return await this.paymentRepository.verif(id, data)
     }
 }

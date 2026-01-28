@@ -1,11 +1,11 @@
 import Header from '@/presentation/components/Header'
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/presentation/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Info } from 'lucide-react';
 import { useAuth } from '@/application/hooks/useAuth';
 import { Input } from '@/presentation/components/ui/input';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
@@ -23,6 +23,32 @@ import { useBookingForm } from './hooks/useBookingForm';
 import FormGroup from '@/presentation/components/custom/FormGroup';
 import { userRole } from '@/domain/User/UserRole';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
+import { Alert, AlertDescription, AlertTitle } from '@/presentation/components/ui/alert';
+
+// Helper function to get user price type
+const getUserPriceType = (user: { role: userRole, studyProgram?: any, institution?: any } | null): 'student' | 'lecturer' | 'external' => {
+  if (!user) return 'external';
+  
+  if (user.studyProgram) {
+    // Internal user (has study program)
+    if (user.role === userRole.Mahasiswa) {
+      return 'student';
+    }
+    return 'lecturer'; // Dosen or other internal roles
+  }
+  
+  // External user (has institution or no study program)
+  return 'external';
+};
+
+// Helper function to format price to IDR
+const formatPriceToIDR = (amount: number): string => {
+  return new Intl.NumberFormat('id-ID', { 
+    style: 'currency', 
+    currency: 'IDR', 
+    minimumFractionDigits: 0 
+  }).format(amount);
+};
 
 const BookingCreatePage = () => {
   const sectionRef = useRef<HTMLDivElement | null>(null)
@@ -58,6 +84,27 @@ const BookingCreatePage = () => {
 
   const { errors, processErrors, setErrors } = useValidationErrors()
   const navigate = useNavigate();
+
+  // Calculate selected room price based on user type
+  const selectedRoomPrice = useMemo(() => {
+    if (!formData.laboratory_room_id) return null;
+    
+    const selectedRoom = laboratoryRooms.find(room => room.id === formData.laboratory_room_id);
+    if (!selectedRoom) return null;
+
+    const priceType = getUserPriceType(user);
+    
+    switch (priceType) {
+      case 'student':
+        return { amount: selectedRoom.studentPrice.amount, label: 'Harga Mahasiswa' };
+      case 'lecturer':
+        return { amount: selectedRoom.lecturerPrice.amount, label: 'Harga Dosen/Internal' };
+      case 'external':
+        return { amount: selectedRoom.externalPrice.amount, label: 'Harga Pihak Luar' };
+      default:
+        return null;
+    }
+  }, [formData.laboratory_room_id, laboratoryRooms, user]);
 
   useEffect(() => {
     if (isHasDraftBooking) {
@@ -203,8 +250,18 @@ const BookingCreatePage = () => {
                   type='file'
                   id='supporting_file'
                   name='supporting_file'
-                  onChange={handleChange}
+                  accept='.doc,.docx,.pdf'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file && file.size > 2 * 1024 * 1024) {
+                      toast.error('Ukuran file tidak boleh melebihi 2MB');
+                      e.target.value = '';
+                      return;
+                    }
+                    handleChange(e);
+                  }}
                 />
+                <p className="text-xs text-muted-foreground mt-1">Format: PDF, DOC, DOCX. Maksimal 2MB.</p>
               </FormGroup>
               {user?.role === userRole.Mahasiswa && (
                 <>
@@ -267,6 +324,16 @@ const BookingCreatePage = () => {
                     optionLabelKey='name'
                     optionValueKey='id'
                   />
+                  {/* Display room price based on user type */}
+                  {selectedRoomPrice && selectedRoomPrice.amount > 0 && (
+                    <Alert className="mt-2">
+                      <Info className="h-4 w-4" />
+                      <AlertTitle>{selectedRoomPrice.label}</AlertTitle>
+                      <AlertDescription className="text-primary font-semibold">
+                        {formatPriceToIDR(selectedRoomPrice.amount)}
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </FormGroup>
               )}
               <FormGroup

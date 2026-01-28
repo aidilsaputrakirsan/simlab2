@@ -251,7 +251,7 @@ export const RegisterPage: React.FC = () => {
                         </FormGroup>
                         <FormGroup
                             id='c_password'
-                            label='Password'
+                            label='Konfirmasi Password'
                             error={errors['c_password']}
                             required>
                             <PasswordInput

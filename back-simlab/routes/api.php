@@ -59,6 +59,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::group(['prefix' => 'payments', 'as' => 'payments'], function () {
         Route::middleware(['role:admin_pengujian'])->group(function () {
+            Route::get('/', [PaymentController::class, 'index']);
+            Route::get('/generate-number', [PaymentController::class, 'generatePaymentNumber']);
             Route::put('/{id}/create-payment', [PaymentController::class, 'createPayment']);
             Route::put('/{id}/verif', [PaymentController::class, 'verif']);
         });
@@ -134,10 +136,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/verification', [TestingRequestController::class, 'getTestingRequestForVerification']);
             Route::post('/{id}/verify', [TestingRequestController::class, 'verify']);
         });
+
+        Route::group(['middleware' => 'role:laboran'], function () {
+            Route::post('/{id}/upload-report', [TestingRequestController::class, 'uploadReport']);
+        });
     });
 
     // booking (peminjaman)
-    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan'], function () {
+    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|admin_pengujian'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
@@ -149,7 +155,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/equipment', [BookingController::class, 'storeBookingEquipment']);
         });
 
-        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin'], function () {
+        Route::group(['middleware' => 'role:laboran|kepala_lab_terpadu|admin|admin_pengujian'], function () {
             Route::get('/verification', [BookingController::class, 'getBookingsForVerification']);
             Route::post('/{id}/verify', [BookingController::class, 'verify']);
             // Route::get('/export', [BookingController::class, 'bookingExport']);
@@ -184,6 +190,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::group(['middleware' => 'role:kepala_lab_jurusan'], function () {
             Route::get('/', [PracticumSchedulingController::class, 'index']);
             Route::post('/', [PracticumSchedulingController::class, 'store']);
+            Route::put('/{id}', [PracticumSchedulingController::class, 'update']);
             Route::post('/{id}/equipment-material', [PracticumSchedulingController::class, 'storePracticumEquipmentMaterial']);
             Route::get('/have-draft', [PracticumSchedulingController::class, 'isStillHaveDraftPracticum']);
         });

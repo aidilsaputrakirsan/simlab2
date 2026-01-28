@@ -72,7 +72,8 @@ class TestingRequestController extends BaseController
             $query = TestingRequest::query();
             $query->with([
                 'academicYear',
-                'payment'
+                'payment',
+                'testRequestItems'
             ]);
 
             $query->where('academic_year_id', $this->activeAcademicYear->id);
@@ -83,6 +84,13 @@ class TestingRequestController extends BaseController
             if ($user->role === 'admin_keuangan') {
                 // Admin keuangan should only see testing requests that have payment records
                 $query->whereHas('payment');
+            }
+
+            if ($user->role === 'admin_pengujian') {
+                // Admin pengujian should only see testing requests that have paid items
+                $query->whereHas('testRequestItems', function ($q) {
+                    $q->where('price', '>', 0);
+                });
             }
 
             if ($user->role === 'laboran') {
@@ -122,6 +130,10 @@ class TestingRequestController extends BaseController
 
     public function store(TestingRequestInputRequest $request)
     {
+        if (!$this->activeAcademicYear) {
+            return $this->sendError('Tidak dapat mengajukan pengujian. Tahun akademik belum diaktifkan. Silakan hubungi admin.', [], 400);
+        }
+
         DB::beginTransaction();
         try {
             $data = $request->validated();
@@ -171,6 +183,16 @@ class TestingRequestController extends BaseController
                 }
             }
 
+            // Admin pengujian can only verify paid testing requests
+            if ($user->role === 'admin_pengujian' && !$testingRequest->hasPaidItems) {
+                return $this->sendError('Admin Pengujian hanya dapat memverifikasi pengajuan pengujian berbayar', [], 400);
+            }
+
+            // Kepala lab terpadu can only verify non-paid testing requests
+            if ($user->role === 'kepala_lab_terpadu' && $testingRequest->hasPaidItems) {
+                return $this->sendError('Pengajuan pengujian berbayar diverifikasi oleh Admin Pengujian', [], 400);
+            }
+
             if ($testingRequest->canVerif($user) !== 1) {
                 return $this->sendError('Anda tidak diizinkan untuk melakukan verifikasi', [], 400);
             }
@@ -178,7 +200,7 @@ class TestingRequestController extends BaseController
             $isApprove = $request->action === 'approve' ? 1 : ($request->action === 'revision' ? 2 : 0);
             $this->assignTestingRequestDataByRole($testingRequest, $user, $request, $isApprove);
 
-            $approvalAction = $user->role === 'laboran' ? 'verified_by_laboran' : 'verified_by_head';
+            $approvalAction = $this->getApprovalActionByRole($user->role, $testingRequest->hasPaidItems);
             $this->recordApproval($testingRequest->id, $approvalAction, $user->id, $isApprove, $request->information);
 
             DB::commit();
@@ -189,6 +211,19 @@ class TestingRequestController extends BaseController
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError('Terjadi kesalahan dalam verifikasi pengujian', [$e->getMessage()], 500);
+        }
+    }
+
+    private function getApprovalActionByRole($role, $hasPaidItems)
+    {
+        switch ($role) {
+            case 'admin_pengujian':
+            case 'kepala_lab_terpadu':
+                return 'verified_by_head';
+            case 'laboran':
+                return 'verified_by_laboran';
+            default:
+                return null;
         }
     }
 
@@ -252,6 +287,7 @@ class TestingRequestController extends BaseController
         // is APPROVED
         switch ($user->role) {
             case 'kepala_lab_terpadu':
+            case 'admin_pengujian':
                 // Assign laboran
                 $testingRequest->update(['laboran_id' => $request->laboran_id]);
 
@@ -289,6 +325,57 @@ class TestingRequestController extends BaseController
                 'quantity' => $item['quantity'],
                 'price' => $item['price']
             ]);
+        }
+    }
+
+    public function uploadReport(Request $request, $id)
+    {
+        $request->validate([
+            'result_file' => 'required|mimes:pdf|max:10240' // Max 10MB
+        ]);
+
+        try {
+            $testingRequest = TestingRequest::findOrFail($id);
+            $user = auth()->user();
+
+            // Only laboran assigned to this request can upload
+            if ($user->role !== 'laboran') {
+                if ($testingRequest->laboran_id !== $user->id) {
+                    return $this->sendError('Hanya laboran penanggung jawab yang dapat mengupload hasil pengujian', [], 403);
+                }
+            }
+
+            //Testing request must be approved first
+            if ($testingRequest->status !== 'approved') {
+                return $this->sendError('Hasil pengujian hanya dapat diupload setelah pengajuan disetujui', [], 400);
+            }
+
+            // For paid items, payment must be verified first
+            if ($testingRequest->has_paid_items) {
+                if (!$testingRequest->payment || !in_array($testingRequest->payment->status, ['paid', 'verified', 'approved'])) {
+                    return $this->sendError('Hasil pengujian baru dapat diupload setelah pembayaran terverifikasi', [], 400);
+                }
+            }
+
+            // Delete old file if exists
+            if ($testingRequest->result_file) {
+                // Storage::disk('public')->delete($testingRequest->result_file);
+            }
+
+            // Store new file
+            $file = $request->file('result_file');
+            $filename = 'testing-results/' . time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public', $filename);
+            // remove public/ prefix for storage link access
+            $path = str_replace('public/', '', $path);
+
+            $testingRequest->update(['result_file' => $path]);
+
+            return $this->sendResponse(new TestingRequestResource($testingRequest), 'Berhasil mengupload hasil pengujian');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError('Data pengujian tidak ditemukan', [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Gagal mengupload hasil pengujian', [$e->getMessage()], 500);
         }
     }
 }

@@ -155,7 +155,22 @@ class UserController extends BaseController
     {
         try {
             $query = User::query()->select('id', 'name');
-            $query->where('role', $request->role);
+
+            // Support multiple roles via 'roles[]' parameter
+            if ($request->has('roles')) {
+                $roles = is_array($request->roles) ? $request->roles : [$request->roles];
+                $query->whereIn('role', $roles);
+            } elseif ($request->has('role')) {
+                // Backward compatibility for single role
+                $query->where('role', $request->role);
+            }
+
+            if ($request->has('major_id')) {
+                $query->whereHas('studyProgram', function ($q) use ($request) {
+                    $q->where('major_id', $request->major_id);
+                });
+            }
+
             $users = $query->get();
             return $this->sendResponse($users, 'Data pengguna berhasil diambil');
         } catch (\Exception $e) {

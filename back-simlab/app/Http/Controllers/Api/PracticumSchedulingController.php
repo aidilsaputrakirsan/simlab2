@@ -9,16 +9,15 @@ use App\Http\Requests\PracticumSchedulingSessionConductedRequest;
 use App\Http\Requests\PracticumSchedulingVerifyRequest;
 use App\Http\Resources\PracticumScheduling\PracticumSchedulingResource;
 use App\Models\PracticumApproval;
-use App\Models\PracticumGroup;
 use App\Models\PracticumScheduling;
 use App\Models\PracticumSchedulingEquipment;
 use App\Models\PracticumSchedulingMaterial;
 use App\Models\AcademicYear;
+use App\Models\Event;
 use App\Models\LaboratoryEquipment;
 use App\Models\LaboratoryTemporaryEquipment;
 use App\Models\PracticumClass;
 use App\Models\PracticumSession;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -33,7 +32,6 @@ class PracticumSchedulingController extends BaseController
         $this->activeAcademicYear = AcademicYear::where('status', 'Active')->first();
     }
 
-
     // get Practicum Scheduling data for kepala lab jurusan
     public function index(Request $request)
     {
@@ -43,24 +41,26 @@ class PracticumSchedulingController extends BaseController
 
             $user = auth()->user();
 
-            // Allow kepala_lab_jurusan to view all schedules in their Major (Jurusan)
-            if ($user->role === 'kepala_lab_jurusan') {
-                if ($user->study_program_id) {
-                    $user->load('studyProgram.major');
-                    $majorId = $user->studyProgram?->major_id;
+            if ($this->activeAcademicYear) {
+                $query->where('academic_year_id', $this->activeAcademicYear->id);
+            }
 
-                    if ($majorId) {
-                        $query->whereHas('practicum.studyProgram', function ($q) use ($majorId) {
-                            $q->where('major_id', $majorId);
-                        });
-                    } else {
-                        // Fallback if no major found (shouldn't happen with valid data)
-                        $query->where('id', -1);
+            // Allow kepala_lab_jurusan to view all schedules in their Major (Jurusan) + their own
+            if ($user->role === 'kepala_lab_jurusan') {
+                $query->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+
+                    if ($user->study_program_id) {
+                        $user->load('studyProgram.major');
+                        $majorId = $user->studyProgram?->major_id;
+
+                        if ($majorId) {
+                            $q->orWhereHas('practicum.studyProgram', function ($sq) use ($majorId) {
+                                $sq->where('major_id', $majorId);
+                            });
+                        }
                     }
-                } else {
-                    // No study program assigned
-                    $query->where('id', -1);
-                }
+                });
             } else {
                 // Default: User only sees their own schedules
                 $query->where('user_id', $user->id);
@@ -288,42 +288,88 @@ class PracticumSchedulingController extends BaseController
 
             $practicumScheduling = PracticumScheduling::create($data);
 
-            // Create Practicum Classes
-            foreach ($classes as $key => $class) {
-                $classData = [
-                    'practicum_scheduling_id' => $practicumScheduling->id,
-                    'lecturer_id' => $class['lecturer_id'],
-                    'laboratory_room_id' => $class['laboratory_room_id'],
-                    'name' => $class['name'],
-                    'practicum_assistant' => $class['practicum_assistant'],
-                    'total_participant' => $class['total_participant'],
-                    'total_group' => $class['total_group']
-                ];
-
-                // Remove nested data before creating practicum class
-                $sessions = $class['sessions'] ?? [];
-                unset($data['sessions']);
-
-                $practicumClass = PracticumClass::create($classData);
-
-                // Create practicum sessions
-                foreach ($sessions as $key => $session) {
-                    $sessionData = [
-                        'practicum_class_id' => $practicumClass->id,
-                        'practicum_module_id' => $session['practicum_module_id'],
-                        'start_time' => Carbon::parse($session['start_time'])->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s'),
-                        'end_time' => Carbon::parse($session['end_time'])->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s')
-                    ];
-
-                    PracticumSession::create($sessionData);
-                }
-            }
+            $this->createClassesAndSessions($practicumScheduling->id, $classes);
 
             DB::commit();
             return $this->sendResponse($practicumScheduling->load(['user', 'practicum']), "Practicum Scheduling Created Successfully");
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError('Failed to create practicum scheduling', [$e->getMessage()], 500);
+        }
+    }
+
+    public function update(PracticumSchedulingRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $practicumScheduling = PracticumScheduling::findOrFail($id);
+
+            if ($practicumScheduling->status !== 'draft') {
+                DB::rollBack();
+                return $this->sendError('Hanya penjadwalan dengan status draft yang dapat diubah.', [], 400);
+            }
+
+            $user = auth()->user();
+            if ($practicumScheduling->user_id !== $user->id) {
+                DB::rollBack();
+                return $this->sendError('Anda tidak memiliki akses untuk mengubah data ini.', [], 403);
+            }
+
+            $data = $request->validated();
+
+            $classes = $data['classes'] ?? [];
+            unset($data['classes']);
+
+            // Update parent data
+            $practicumScheduling->update($data);
+
+            // Delete existing classes (and sessions via cascade or manually if needed)
+            // Manual delete to ensuring all childs are deleted
+            foreach ($practicumScheduling->practicumClasses as $class) {
+                $class->practicumSessions()->delete();
+                $class->delete();
+            }
+
+            // Re-create classes and sessions
+            $this->createClassesAndSessions($practicumScheduling->id, $classes);
+
+            DB::commit();
+            return $this->sendResponse($practicumScheduling->load(['user', 'practicum']), "Practicum Scheduling Updated Successfully");
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return $this->sendError('Practicum Scheduling Not Found', [], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Failed to update practicum scheduling', [$e->getMessage()], 500);
+        }
+    }
+
+    private function createClassesAndSessions($schedulingId, $classes)
+    {
+        foreach ($classes as $key => $class) {
+            $classData = [
+                'practicum_scheduling_id' => $schedulingId,
+                'lecturer_id' => $class['lecturer_id'],
+                'laboratory_room_id' => $class['laboratory_room_id'],
+                'name' => $class['name'],
+                'practicum_assistant' => $class['practicum_assistant'],
+                'total_participant' => $class['total_participant'],
+                'total_group' => $class['total_group']
+            ];
+
+            $sessions = $class['sessions'] ?? [];
+            $practicumClass = PracticumClass::create($classData);
+
+            foreach ($sessions as $key => $session) {
+                $sessionData = [
+                    'practicum_class_id' => $practicumClass->id,
+                    'practicum_module_id' => $session['practicum_module_id'],
+                    'start_time' => Carbon::parse($session['start_time'])->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s'),
+                    'end_time' => Carbon::parse($session['end_time'])->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s')
+                ];
+
+                PracticumSession::create($sessionData);
+            }
         }
     }
 
@@ -628,8 +674,29 @@ class PracticumSchedulingController extends BaseController
                 // Final approval (laboran confirms everything)
                 $practicumScheduling->update(['status' => 'approved']);
 
+                // Create event for approved practicum scheduling
+                $this->createPracticumSchedulingEvents($practicumScheduling);
+
                 // Notify applicant
                 return null;
+        }
+    }
+
+    private function createPracticumSchedulingEvents($practicumScheduling)
+    {
+        // Load practicum classes with sessions if not already loaded
+        $practicumScheduling->load('practicumClasses.practicumSessions', 'practicum');
+
+        foreach ($practicumScheduling->practicumClasses as $class) {
+            foreach ($class->practicumSessions as $session) {
+                Event::create([
+                    'eventable_id' => $session->id,
+                    'eventable_type' => PracticumSession::class,
+                    'title' => $practicumScheduling->practicum->name . ' - ' . $class->name,
+                    'start_date' => $session->start_time,
+                    'end_date' => $session->end_time,
+                ]);
+            }
         }
     }
 }

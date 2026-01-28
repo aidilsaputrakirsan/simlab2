@@ -21,9 +21,11 @@ class PracticumClassResource extends JsonResource
             'practicum_assistant' => $this->practicum_assistant,
             'total_participant' => $this->total_participant,
             'total_group' => $this->total_group,
+            'laboratory_room_id' => $this->laboratory_room_id,
             'laboratory_room_name' => $this->whenLoaded('laboratoryRoom', function () {
                 return $this->laboratoryRoom->name;
             }),
+            'lecturer_id' => $this->lecturer_id,
             'lecturer' => $this->whenLoaded('lecturer', function () {
                 return [
                     'name' => $this->lecturer->name,

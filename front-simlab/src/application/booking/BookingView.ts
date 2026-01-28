@@ -7,6 +7,7 @@ import { BookingMaterialtView } from "./BookingMaterialView";
 import { BookingApprovalView } from "./BookingApprovalView";
 import { Requestor } from "@/domain/shared/value-object/Requestor";
 import { Laboran } from "@/domain/shared/value-object/Laboran";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
 
 export class BookingView {
     constructor(
@@ -34,6 +35,16 @@ export class BookingView {
         readonly requestor?: Requestor,
         readonly laboran?: Laboran,
         readonly laboratoryRoomName?: string,
+        // Price information
+        readonly roomPrice?: number,
+        readonly equipmentTotalPrice?: number,
+        readonly materialTotalPrice?: number,
+        readonly totalPrice?: number,
+        readonly hasPaidItems?: boolean,
+        readonly paymentId?: number,
+        readonly paymentStatus?: PaymentStatus,
+        readonly isPaymentProofHasUploaded?: boolean,
+        readonly canVerif?: number,
     ) { }
 
     static fromDomain(entity: Booking): BookingView {
@@ -62,6 +73,15 @@ export class BookingView {
             entity.getRequestor(),
             entity.getLaboran(),
             entity.getLaboratoryRoomName(),
+            entity.getRoomPrice(),
+            entity.getEquipmentTotalPrice(),
+            entity.getMaterialTotalPrice(),
+            entity.getTotalPrice(),
+            entity.getHasPaidItems(),
+            entity.getPaymentId(),
+            entity.getPaymentStatus() as PaymentStatus | undefined,
+            entity.getIsPaymentProofHasUploaded(),
+            entity.getCanVerif(),
         )
     }
 
@@ -91,5 +111,10 @@ export class BookingView {
 
     getEventTimeRange(): string {
         return `${this.startTime.formatForTime()} - ${this.endTime.formatForTime()}`
+    }
+
+    formatPrice(price: number | undefined): string {
+        if (!price) return 'Rp 0'
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)
     }
 }

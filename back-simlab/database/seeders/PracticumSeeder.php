@@ -214,7 +214,7 @@ class PracticumSeeder extends Seeder
 
         return AcademicYear::firstOrCreate(
             ['name' => $name],
-            ['status' => ($name == '2024/2025 Ganjil') ? 'Active' : 'Deactive']
+            ['status' => ($name == '2025/2026 Genap') ? 'Active' : 'Deactive']
         )->id;
     }
 }

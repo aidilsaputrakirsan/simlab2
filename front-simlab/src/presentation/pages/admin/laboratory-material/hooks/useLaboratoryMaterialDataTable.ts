@@ -41,14 +41,14 @@ export const useLaboratoryMaterialDataTable = ({
         const response = await laboratoryMaterialService.getLaboratoryMaterialData({
             page: currentPage,
             per_page: perPage,
-            search: searchTerm,
+            search: debounceSearchTerm,
         })
 
         setLaboratoryMaterials(response.data ?? [])
         setTotalItems(response.total ?? 0)
         setTotalPages(response.last_page ?? 0)
         setIsLoading(false)
-    }, [currentPage, perPage, laboratoryMaterialService, searchTerm, setTotalItems, setTotalPages])
+    }, [currentPage, perPage, laboratoryMaterialService, debounceSearchTerm, setTotalItems, setTotalPages])
 
     useEffect(() => {
         getData();

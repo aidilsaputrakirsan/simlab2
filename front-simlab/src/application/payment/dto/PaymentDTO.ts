@@ -7,3 +7,14 @@ export interface PaymentInputDTO {
 export interface PaymentInputProofDTO {
     payment_proof: string | File | null
 }
+
+export interface PaymentTableParam {
+    page: number,
+    per_page: number,
+    search: string,
+}
+
+export interface PaymentVerifDTO {
+    action: 'approved' | 'rejected';
+    receipt_file?: File | null;
+}

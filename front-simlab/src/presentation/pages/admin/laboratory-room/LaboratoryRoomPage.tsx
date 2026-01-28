@@ -17,7 +17,7 @@ import MainContent from "@/presentation/components/MainContent";
 import { LaboratoryRoomView } from "@/application/laboratory-room/LaboratoryRoomView";
 
 const LaboratoryRoomPage = () => {
-    const { laboratoryRoomService } =  useDepedencies()
+    const { laboratoryRoomService } = useDepedencies()
 
     const {
         laboratoryRooms,
@@ -35,7 +35,7 @@ const LaboratoryRoomPage = () => {
         currentPage,
     } = useLaboratoryRoomDataTable()
 
-    const { users } = useUserSelect({ role: userRole.Laboran })
+    const { users } = useUserSelect({ roles: userRole.Laboran })
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [selectedLaboratoryRoom, setSelectedLaboratoryRoom] = useState<LaboratoryRoomView | undefined>(undefined)
@@ -103,8 +103,8 @@ const LaboratoryRoomPage = () => {
                             totalPages={totalPages}
                             totalItems={totalItems}
                             currentPage={currentPage}
-                            handlePageChange={handlePageChange} 
-                            handleRefresh={refresh}/>
+                            handlePageChange={handlePageChange}
+                            handleRefresh={refresh} />
                     </CardContent>
                 </Card>
             </MainContent>

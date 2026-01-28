@@ -3,7 +3,7 @@ import { MajorAPI, toDomain as toMajor } from "../major/MajorAPI"
 
 export type StudyProgramAPI = {
     id: number
-    jurusan_id: number
+    major_id: number
     name: string,
     major?: MajorAPI
 }
@@ -11,10 +11,10 @@ export type StudyProgramAPI = {
 export function toDomain(api: StudyProgramAPI): StudyProgram {
     return new StudyProgram(
         api.id,
-        api.jurusan_id,
+        api.major_id,
         api.name,
         api.major ?
-        toMajor(api.major)
-         : undefined
+            toMajor(api.major)
+            : undefined
     )
 }

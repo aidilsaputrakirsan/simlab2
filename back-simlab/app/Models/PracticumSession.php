@@ -43,4 +43,9 @@ class PracticumSession extends BaseModel
     {
         return $this->belongsTo(PracticumModule::class, 'practicum_module_id');
     }
+
+    public function event()
+    {
+        return $this->morphMany(Event::class, 'eventable');
+    }
 }

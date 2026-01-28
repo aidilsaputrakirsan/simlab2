@@ -23,6 +23,7 @@ class PracticumSessionResource extends JsonResource
             'laboran_commented_at' => $this->convertToISO('laboran_commented_at'),
             'lecturer_comment' => $this->lecturer_comment,
             'lecturer_commented_at' => $this->convertToISO('lecturer_commented_at'),
+            'practicum_module_id' => $this->practicum_module_id,
             'practicum_module' => $this->whenLoaded('practicumModule', function () {
                 return $this->practicumModule->name;
             }),

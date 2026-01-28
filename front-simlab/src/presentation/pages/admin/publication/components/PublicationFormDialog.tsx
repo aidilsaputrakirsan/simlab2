@@ -25,6 +25,7 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { UserSelectView } from "@/application/user/UserSelectView";
+import { userRole } from "@/domain/User/UserRole";
 
 type PublicationFormDialogProps = {
     isOpen: boolean;
@@ -48,7 +49,7 @@ const PublicationFormDialog = ({
     useEffect(() => {
         const fetchUsers = async () => {
             // Fetch all users - will get all roles
-                const response = await userService.getDataForSelect('dosen' as any);
+            const response = await userService.getDataForSelect(userRole.Dosen);
             setUsers(response.data ?? []);
         };
         fetchUsers();
@@ -98,7 +99,7 @@ const PublicationFormDialog = ({
         const file = e.target.files?.[0];
         if (file) {
             setFormData({ ...formData, images: file });
-            
+
             // Create preview
             const reader = new FileReader();
             reader.onloadend = () => {

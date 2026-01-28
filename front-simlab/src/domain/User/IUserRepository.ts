@@ -29,6 +29,6 @@ export interface IUserRepository {
     }): Promise<ApiResponse>
     deleteData(id: number): Promise<ApiResponse>
     restoreToDosen(id: number): Promise<ApiResponse>
-    getDataForSelect(role: userRole): Promise<ApiResponse<UserSelect[]>>
-    toggleManager(id:number): Promise<ApiResponse<User>>
+    getDataForSelect(roles: userRole | userRole[], major_id?: number): Promise<ApiResponse<UserSelect[]>>
+    toggleManager(id: number): Promise<ApiResponse<User>>
 }

@@ -27,6 +27,7 @@ class PracticumSchedulingResource extends JsonResource
             'academic_year' => $this->whenLoaded('academicYear', function () {
                 return $this->academicYear->name;
             }),
+            'practicum_id' => $this->practicum_id,
             'practicum_name' => $this->whenLoaded('practicum', function () {
                 return $this->practicum->name;
             }),
@@ -36,6 +37,7 @@ class PracticumSchedulingResource extends JsonResource
             }),
             'laboran' => $this->whenLoaded('laboran', function () {
                 return [
+                    'id' => $this->laboran->id,
                     'name' => $this->laboran->name,
                     'email' => $this->laboran->email,
                 ];

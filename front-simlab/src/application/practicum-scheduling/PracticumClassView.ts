@@ -9,6 +9,8 @@ export class PracticumClassView {
         readonly practicumAssistant: string,
         readonly totalParticipant: number,
         readonly totalGroup: number,
+        readonly lecturerId: number,
+        readonly laboratoryRoomId: number,
         readonly createdAt: TimeView,
         readonly updatedAt: TimeView,
         readonly practicumSessions?: PracticumSessionView[],
@@ -27,10 +29,16 @@ export class PracticumClassView {
             entity.practicumAssistant,
             entity.totalParticipant,
             entity.totalGroup,
+            entity.lecturerId,
+            entity.laboratoryRoomId,
             TimeView.fromDomain(entity.createdAt),
             TimeView.fromDomain(entity.updatedAt),
             entity.practicumSessions ? entity.practicumSessions.map(PracticumSessionView.fromDomain) : undefined,
-            entity.getLecturer(),
+            entity.getLecturer() ? {
+                name: entity.getLecturer()!.name,
+                email: entity.getLecturer()!.email,
+                identityNum: entity.getLecturer()!.identityNumber
+            } : undefined,
             entity.getLaboratoryRoomName(),
         )
     }

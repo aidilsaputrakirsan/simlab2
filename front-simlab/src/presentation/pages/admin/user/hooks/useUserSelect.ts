@@ -4,22 +4,23 @@ import { useDepedencies } from "@/presentation/contexts/useDepedencies"
 import { useEffect, useState } from "react"
 
 interface useUserSelectProps {
-    role: userRole
+    roles: userRole | userRole[]
+    major_id?: number
 }
 
-export const useUserSelect = ({role}: useUserSelectProps) => {
+export const useUserSelect = ({ roles, major_id }: useUserSelectProps) => {
     const { userService } = useDepedencies()
     const [users, setUsers] = useState<UserSelectView[]>([])
     const [selectedUser, setSelectedUser] = useState<number>(0)
 
     useEffect(() => {
         const getUsers = async () => {
-            const response = await userService.getDataForSelect(role)
+            const response = await userService.getDataForSelect(roles, major_id)
             setUsers(response.data ?? [])
         }
 
         getUsers()
-    }, [userService])
+    }, [userService, major_id])
 
     return {
         users,

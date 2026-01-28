@@ -3,8 +3,8 @@ import { userRole } from '@/domain/User/UserRole'
 import Header from '@/presentation/components/Header'
 import MainContent from '@/presentation/components/MainContent'
 import { Button } from '@/presentation/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { ArrowLeft, Upload } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { TestingRequestView } from '@/application/testing-request/TestingRequestView'
@@ -18,6 +18,11 @@ import { MoneyView } from '@/application/money/MoneyView';
 import TestingRequestStepperDialog from './components/TestingRequestStepperDialog'
 import { PaymentStatus } from '@/domain/payment/PaymentStatus'
 import PaymentDetailDialog from '../payment/components/PaymentDetailDialog'
+import PaymentProofFormDialog from '../payment/components/PaymentProofFormDialog'
+import { PaymentInputProofDTO } from '@/application/payment/dto/PaymentDTO'
+import { toast } from 'sonner'
+import ReportUploadDialog from './components/ReportUploadDialog'
+import { Eye } from 'lucide-react'
 
 const TestingRequestDetailPage = () => {
     const { user } = useAuth()
@@ -25,14 +30,43 @@ const TestingRequestDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const testingRequestId = Number(id);
     const backTo =
-        user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu, userRole.AdminPengujian].includes(user.role)
+        user?.role && [userRole.Laboran, userRole.KepalaLabTerpadu].includes(user.role)
             ? '/panel/pengujian/verif'
-            : '/panel/pengujian';
+            : user?.role === userRole.AdminPengujian
+                ? '/panel/pembayaran'
+                : '/panel/pengujian';
 
     const [testingRequest, setTestingRequest] = useState<TestingRequestView>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isReuploadDialogOpen, setIsReuploadDialogOpen] = useState<boolean>(false)
+    const [isReportDialogOpen, setIsReportDialogOpen] = useState<boolean>(false)
 
-    const { testingRequestService } = useDepedencies()
+    const { testingRequestService, paymentService } = useDepedencies()
+
+    const handleReuploadPaymentProof = async (data: PaymentInputProofDTO) => {
+        if (!testingRequest?.paymentId) return
+
+        const res = await paymentService.storePaymentProof(testingRequest.paymentId, data)
+        toast.success(res.message)
+        setIsReuploadDialogOpen(false)
+        // Refresh the testing request data
+        const refreshedData = await testingRequestService.getTestingRequestDetail(testingRequestId)
+        setTestingRequest(refreshedData.data)
+    }
+
+    const handleUploadReport = async (file: File) => {
+        try {
+            await testingRequestService.uploadReport(testingRequestId, file)
+            toast.success("Berhasil mengupload laporan pengujian")
+            // Refresh data
+            const res = await testingRequestService.getTestingRequestDetail(testingRequestId)
+            setTestingRequest(res.data)
+            setIsReportDialogOpen(false)
+        } catch (error: any) {
+            toast.error(error.message || "Gagal mengupload laporan")
+        }
+    }
+
     useEffect(() => {
         const getTestingRequestData = async () => {
             setIsLoading(true)
@@ -72,6 +106,13 @@ const TestingRequestDetailPage = () => {
         </>
     );
 
+    // Logic to show upload button (Laboran only)
+    const canUploadReport =
+        user?.role === userRole.Laboran &&
+        testingRequest.laboran?.id === user?.id &&
+        testingRequest.status === 'approved' &&
+        (!testingRequest.paymentId || testingRequest.paymentStatus === 'approved' || testingRequest.paymentStatus === 'paid' || testingRequest.paymentStatus === 'verified');
+
     return (
         <>
             <Header title='Detail Pengajuan Pengujian' />
@@ -105,7 +146,7 @@ const TestingRequestDetailPage = () => {
                                 )}
                                 <Item title='Dosen Pembimbing' value={testingRequest.supervisor} />
                                 <Item title='Email Dosen Pembimbing' value={testingRequest.supervisorEmail} />
-                                {testingRequest.laboran && (
+                                {testingRequest.laboran && ![userRole.Mahasiswa, userRole.Dosen, userRole.PihakLuar].includes(user?.role as userRole) && (
                                     <>
                                         <Item title='Laboran Penanggung Jawab' value={testingRequest.laboran.name} />
                                         <Item title='Email Laboran' value={testingRequest.laboran.email} />
@@ -122,9 +163,73 @@ const TestingRequestDetailPage = () => {
                                 {testingRequest.paymentStatus !== PaymentStatus.Draft && testingRequest.paymentId && (
                                     <div className="flex flex-col">
                                         <span className='font-semibold'>Pembayaran</span>
-                                        <PaymentDetailDialog paymentId={testingRequest.paymentId}/>
+                                        <div className="flex gap-2 flex-wrap">
+                                            <PaymentDetailDialog paymentId={testingRequest.paymentId} />
+                                            {testingRequest.paymentStatus === PaymentStatus.Rejected &&
+                                                user?.email === testingRequest.requestor?.email && (
+                                                    <Button
+                                                        variant="outline"
+                                                        className="w-full sm:w-fit"
+                                                        onClick={() => setIsReuploadDialogOpen(true)}
+                                                    >
+                                                        <Upload className="h-4 w-4 mr-1" />
+                                                        Upload Ulang Bukti
+                                                    </Button>
+                                                )}
+                                        </div>
+                                        {testingRequest.paymentStatus === PaymentStatus.Rejected &&
+                                            user?.email === testingRequest.requestor?.email && (
+                                                <Badge variant="destructive" className="mt-2 w-fit">Pembayaran Ditolak - Silakan upload ulang bukti pembayaran</Badge>
+                                            )}
                                     </div>
                                 )}
+                                <PaymentProofFormDialog
+                                    open={isReuploadDialogOpen}
+                                    onOpenChange={setIsReuploadDialogOpen}
+                                    handleSave={handleReuploadPaymentProof}
+                                    paymentId={testingRequest.paymentId}
+                                />
+                                <ReportUploadDialog
+                                    open={isReportDialogOpen}
+                                    onOpenChange={setIsReportDialogOpen}
+                                    onConfirm={handleUploadReport}
+                                />
+
+                                {/* Report Section */}
+                                {(testingRequest.resultFile || canUploadReport) && (
+                                    <div className="flex flex-col md:col-span-2 gap-2 p-4 border rounded-md bg-slate-50 dark:bg-slate-900/50">
+                                        <span className='font-semibold'>Hasil Pengujian</span>
+                                        <div className="flex gap-4 items-center">
+                                            {testingRequest.resultFile ? (
+                                                <a
+                                                    href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/storage/${testingRequest.resultFile}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Button variant="outline" className="gap-2">
+                                                        <Eye className="w-4 h-4" />
+                                                        Lihat Laporan Hasil Pengujian (PDF)
+                                                    </Button>
+                                                </a>
+                                            ) : (
+                                                <span className="text-muted-foreground italic text-sm">Belum ada laporan yang diupload</span>
+                                            )}
+
+                                            {canUploadReport && (
+                                                <Button onClick={() => setIsReportDialogOpen(true)} className="gap-2 w-fit">
+                                                    <Upload className="w-4 h-4" />
+                                                    {testingRequest.resultFile ? 'Update Laporan' : 'Upload Laporan'}
+                                                </Button>
+                                            )}
+                                        </div>
+                                        {testingRequest.resultFile && (
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Untuk pengambilan hardcopy hasil pengujian, silakan datang ke Laboratorium Terpadu 2 Lt. 2 di Ruang Administrasi.
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
                                 <div className='flex flex-col md:col-span-2'>
                                     <span className='font-semibold'>Daftar Pengujian</span>
                                     <div className='border rounded-lg overflow-hidden'>

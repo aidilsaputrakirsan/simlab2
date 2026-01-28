@@ -14,6 +14,30 @@ import { useLaboratoryEquipmentDataTable } from '../../laboratory-equipment/hook
 import { useLaboratoryMaterialDataTable } from '../../laboratory-material/hooks/useLaboratoryMaterialDataTable'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog'
+import { Alert, AlertDescription, AlertTitle } from '@/presentation/components/ui/alert'
+import { Info } from 'lucide-react'
+
+// Helper function to format price to IDR
+const formatPriceToIDR = (amount: number): string => {
+    return new Intl.NumberFormat('id-ID', { 
+        style: 'currency', 
+        currency: 'IDR', 
+        minimumFractionDigits: 0 
+    }).format(amount);
+};
+
+const getPriceLabel = (priceType: 'student' | 'lecturer' | 'external'): string => {
+    switch (priceType) {
+        case 'student':
+            return 'Mahasiswa';
+        case 'lecturer':
+            return 'Dosen/Internal';
+        case 'external':
+            return 'Pihak Luar';
+        default:
+            return '';
+    }
+};
 
 const BookingRoomNEquipmentForm: React.FC = () => {
     const { id } = useParams()
@@ -26,6 +50,12 @@ const BookingRoomNEquipmentForm: React.FC = () => {
         handleChangeItem,
         handleRemoveItem,
         handleSelectItem,
+        getSubmitData,
+        getApplicablePrice,
+        priceType,
+        equipmentTotal,
+        materialTotal,
+        grandTotal,
     } = useBookingEquipmentMaterialForm()
 
     const { errors, processErrors } = useValidationErrors()
@@ -46,7 +76,7 @@ const BookingRoomNEquipmentForm: React.FC = () => {
     const handleSubmit = async () => {
         if (!bookingId) return
         try {
-            const res = await bookingService.storeBookingEquipmentMaterial(bookingId, formData)
+            const res = await bookingService.storeBookingEquipmentMaterial(bookingId, getSubmitData())
             toast.success(res.message)
             navigate('/panel/peminjaman')
         } catch (e: any) {
@@ -94,6 +124,8 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                             <div className='flex flex-col gap-3'>
                                 {formData.laboratoryEquipments.length === 0 && <p className='text-sm text-muted-foreground'>Belum ada alat yang dipilih. Klik tombol Pilih pada tabel.</p>}
                                 {formData.laboratoryEquipments.map((eq, index) => {
+                                    const itemPrice = getApplicablePrice(eq)
+                                    const subtotal = itemPrice * (eq.quantity ?? 0)
                                     return (
                                         <div key={eq.id} className='flex flex-col gap-1 border rounded-md px-5 py-3 bg-background'>
                                             <div className='flex flex-col md:flex-row items-center gap-5'>
@@ -104,6 +136,15 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                                                 </div>
                                                 <Button type='button' variant='destructive' size='sm' className='w-full md:w-fit' onClick={() => handleRemoveItem('laboratory_equipment', eq.id)}>Hapus</Button>
                                             </div>
+                                            {/* Price info */}
+                                            {itemPrice > 0 && (
+                                                <div className='flex justify-between items-center text-xs text-muted-foreground mt-1'>
+                                                    <span>Harga: {formatPriceToIDR(itemPrice)}/{eq.unit}</span>
+                                                    {(eq.quantity ?? 0) > 0 && (
+                                                        <span className='font-semibold text-primary'>Subtotal: {formatPriceToIDR(subtotal)}</span>
+                                                    )}
+                                                </div>
+                                            )}
                                             {hasEquipmentErrors && (
                                                 <p className='text-xs italic text-red-500'>{errors[`laboratoryEquipments.${index}.quantity`]}</p>
                                             )}
@@ -111,6 +152,16 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                                     )
                                 })}
                             </div>
+                            
+                            {/* Equipment Subtotal */}
+                            {equipmentTotal > 0 && (
+                                <div className='mt-3 p-3 bg-muted/30 rounded-md'>
+                                    <div className='flex justify-between items-center text-sm'>
+                                        <span className='font-medium'>Subtotal Alat</span>
+                                        <span className='font-semibold text-primary'>{formatPriceToIDR(equipmentTotal)}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </CardContent>
@@ -148,6 +199,8 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                             <div className='flex flex-col gap-3'>
                                 {formData.laboratoryMaterials.length === 0 && <p className='text-sm text-muted-foreground'>Belum ada bahan yang dipilih. Klik tombol Pilih pada tabel.</p>}
                                 {formData.laboratoryMaterials.map((mt, index) => {
+                                    const itemPrice = getApplicablePrice(mt)
+                                    const subtotal = itemPrice * (mt.quantity ?? 0)
                                     return (
                                         <div key={mt.id} className='flex flex-col gap-1 border rounded-md px-5 py-3 bg-background'>
                                             <div className='flex flex-col md:flex-row items-center gap-5'>
@@ -158,6 +211,15 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                                                 </div>
                                                 <Button type='button' variant='destructive' className='w-full md:w-fit' size='sm' onClick={() => handleRemoveItem('laboratory_material', mt.id)}>Hapus</Button>
                                             </div>
+                                            {/* Price info */}
+                                            {itemPrice > 0 && (
+                                                <div className='flex justify-between items-center text-xs text-muted-foreground mt-1'>
+                                                    <span>Harga: {formatPriceToIDR(itemPrice)}/{mt.unit}</span>
+                                                    {(mt.quantity ?? 0) > 0 && (
+                                                        <span className='font-semibold text-primary'>Subtotal: {formatPriceToIDR(subtotal)}</span>
+                                                    )}
+                                                </div>
+                                            )}
                                             {hasMaterialErrors && (
                                                 <p className='text-xs italic text-red-500'>{errors[`laboratoryMaterials.${index}.quantity`]}</p>
                                             )}
@@ -165,10 +227,31 @@ const BookingRoomNEquipmentForm: React.FC = () => {
                                     )
                                 })}
                             </div>
+                            
+                            {/* Material Subtotal */}
+                            {materialTotal > 0 && (
+                                <div className='mt-3 p-3 bg-muted/30 rounded-md'>
+                                    <div className='flex justify-between items-center text-sm'>
+                                        <span className='font-medium'>Subtotal Bahan</span>
+                                        <span className='font-semibold text-primary'>{formatPriceToIDR(materialTotal)}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Grand Total Display */}
+            {grandTotal > 0 && (
+                <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Estimasi Total Harga ({getPriceLabel(priceType)})</AlertTitle>
+                    <AlertDescription className="text-primary font-bold text-lg">
+                        {formatPriceToIDR(grandTotal)}
+                    </AlertDescription>
+                </Alert>
+            )}
 
             <div className='flex justify-end'>
                 <Button

@@ -1,5 +1,5 @@
 import { userRole } from "@/domain/User/UserRole";
-import { CalendarClock, CalendarPlus, CalendarRange, Key, LayoutDashboard, Newspaper, SquareTerminal } from "lucide-react"
+import { CalendarClock, CalendarPlus, CalendarRange, Key, LayoutDashboard, Newspaper, ReceiptText, SquareTerminal } from "lucide-react"
 
 export const navItems: NavItem[] = [
   {
@@ -108,11 +108,17 @@ export const navItems: NavItem[] = [
     title: "Manajemen Pengujian",
     url: "#",
     icon: CalendarRange,
-    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan, userRole.AdminPengujian],
+    roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.KepalaLabJurusan],
     items: [
       // { title: "Peminjaman", url: "/panel/peminjaman", roles: [userRole.KepalaLabTerpadu]},
-      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran, userRole.AdminPengujian]},
+      { title: "Verifikasi Pengujian", url: "/panel/pengujian/verif", roles: [userRole.KepalaLabTerpadu, userRole.Laboran]},
     ],
+  },
+  {
+    title: "Manajemen Pembayaran",
+    url: "/panel/pembayaran",
+    icon: ReceiptText,
+    roles: [userRole.AdminPengujian],
   },
 ]
 

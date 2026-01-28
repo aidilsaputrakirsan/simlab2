@@ -78,7 +78,7 @@ class LaboratoryRoomController extends BaseController
     public function getDataForSelect()
     {
         try {
-            $laboratory_rooms = LaboratoryRoom::select('id', 'name')->get();
+            $laboratory_rooms = LaboratoryRoom::select('id', 'name', 'student_price', 'lecturer_price', 'external_price')->get();
             return $this->sendResponse($laboratory_rooms, 'Data jenis pengujian berhasil diambil');
         } catch(\Exception $e) {
             return $this->sendError('Gagal mengmbil data ruangan laboratorium', [$e->getMessage()], 400);

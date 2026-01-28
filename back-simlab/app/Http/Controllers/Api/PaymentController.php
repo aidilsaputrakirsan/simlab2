@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PaymentCreateRequest;
 use App\Http\Requests\PaymentProofRequest;
+use App\Http\Requests\PaymentVerifRequest;
 use App\Http\Resources\PaymentResource;
+use App\Models\Booking;
+use App\Models\Event;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -13,10 +16,85 @@ use PhpParser\Node\Expr\FuncCall;
 
 class PaymentController extends BaseController
 {
+    public function generatePaymentNumber()
+    {
+        try {
+            $today = now()->format('dmY');
+
+            // Cari payment_number terakhir yang dibuat hari ini dengan format DDMMYYYY-XXX
+            $lastPayment = Payment::where('payment_number', 'LIKE', $today . '-%')
+                ->orderBy('payment_number', 'desc')
+                ->first();
+
+            if ($lastPayment) {
+                // Ambil nomor urut terakhir dan tambah 1
+                $lastNumber = (int) substr($lastPayment->payment_number, -3);
+                $newNumber = $lastNumber + 1;
+            } else {
+                // Mulai dari 001 jika belum ada payment hari ini
+                $newNumber = 1;
+            }
+
+            // Format: DDMMYYYY-XXX
+            $paymentNumber = $today . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+            return $this->sendResponse(['payment_number' => $paymentNumber], 'Berhasil generate nomor pembayaran');
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika generate nomor pembayaran', [$e->getMessage()], 500);
+        }
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            $query = Payment::query()->with(['user', 'payable']);
+
+            // Search functionality
+            if ($request->filled('search')) {
+                $searchTerm = $request->input('search');
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->orWhere('payment_number', 'LIKE', "%{$searchTerm}%")
+                      ->orWhere('va_number', 'LIKE', "%{$searchTerm}%")
+                      ->orWhereHas('user', function ($userQ) use ($searchTerm) {
+                          $userQ->where('name', 'LIKE', "%{$searchTerm}%");
+                      });
+                });
+            }
+
+            // Pagination parameters
+            $perPage = (int) $request->input('per_page', 10);
+            $page = (int) $request->input('page', 1);
+
+            $query->orderBy('created_at', 'desc');
+
+            // Execute pagination
+            $payments = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $response = [
+                'current_page' => $payments->currentPage(),
+                'last_page' => $payments->lastPage(),
+                'per_page' => $payments->perPage(),
+                'total' => $payments->total(),
+                'data' => PaymentResource::collection($payments)
+            ];
+
+            return $this->sendResponse($response, 'Data pembayaran berhasil diambil');
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika mengambil data pembayaran', [$e->getMessage()], 500);
+        }
+    }
+
     public function createPayment(PaymentCreateRequest $request, $id)
     {
         try {
-            $payment = Payment::findOrFail($id);
+            $payment = Payment::with('payable')->findOrFail($id);
+
+            // Validate that the related testing request is approved
+            if ($payment->payable && $payment->payable->status !== 'approved') {
+                return $this->sendError('Tidak dapat menerbitkan pembayaran sebelum pengajuan pengujian disetujui', [], 400);
+            }
+
             $data = $request->validated();
             $data['invoice_file'] = $this->storeFile($request, 'invoice_file', 'invoice');
 
@@ -38,15 +116,26 @@ class PaymentController extends BaseController
     {
         try {
             $payment = Payment::findOrFail($id);
-            $payment_proof = $this->storeFile($request, 'payment_proof', 'invoice');
 
             if ($payment->user_id !== auth()->user()->id) {
                 return $this->sendError('Tidak diizinkan mengunggah bukti pembayaran ini', [], 403);
             }
 
-            $payment->update([
-                'payment_proof' => $payment_proof,
-            ]);
+            // Only allow re-upload if payment is rejected or pending without proof yet
+            if ($payment->status === 'approved') {
+                return $this->sendError('Pembayaran sudah disetujui, tidak dapat mengubah bukti pembayaran', [], 400);
+            }
+
+            // Delete previous payment proof if exists before uploading new one
+            $payment_proof = $this->storeFile($request, 'payment_proof', 'invoice', $payment->payment_proof);
+
+            // If payment was rejected, reset status to pending for re-review
+            $updateData = ['payment_proof' => $payment_proof];
+            if ($payment->status === 'rejected') {
+                $updateData['status'] = 'pending';
+            }
+
+            $payment->update($updateData);
             return $this->sendResponse([], 'Berhasil mengupload bukti pembayaran');
         } catch (ModelNotFoundException $e) {
             return $this->sendError("Data Pembayaran tidak ditemukan", [], 404);
@@ -68,17 +157,41 @@ class PaymentController extends BaseController
         }
     }
 
-    public function verif(Request $request, $id)
+    public function verif(PaymentVerifRequest $request, $id)
     {
         try {
-            $payment = Payment::findOrFail($id);
-            $payment->update(['status' => $request->action]);
+            $payment = Payment::with('payable')->findOrFail($id);
 
-            return $this->sendResponse([], 'Berhasil mengupload bukti pembayaran');
+            $updateData = ['status' => $request->action];
+
+            // If approving, upload receipt file
+            if ($request->action === 'approved') {
+                $updateData['receipt_file'] = $this->storeFile($request, 'receipt_file', 'receipt');
+            }
+
+            $payment->update($updateData);
+
+            // If payment is approved and the payable is a Booking, create the event
+            if ($request->action === 'approved' && $payment->payable instanceof Booking) {
+                $booking = $payment->payable;
+
+                // Only create event if it doesn't already exist
+                if (!$booking->event) {
+                    Event::create([
+                        'eventable_id' => $booking->id,
+                        'eventable_type' => Booking::class,
+                        'title' => 'Peminjaman - ' . $booking->activity_name,
+                        'start_date' => $booking->start_time,
+                        'end_date' => $booking->end_time,
+                    ]);
+                }
+            }
+
+            return $this->sendResponse([], 'Berhasil memverifikasi pembayaran');
         } catch (ModelNotFoundException $e) {
             return $this->sendError("Data Pembayaran tidak ditemukan", [], 404);
         } catch (\Exception $e) {
-            return $this->sendError('Terjadi kesalahan ketika mengupload bukti pembayaran', [$e->getMessage()], 500);
+            return $this->sendError('Terjadi kesalahan ketika memverifikasi pembayaran', [$e->getMessage()], 500);
         }
     }
 }

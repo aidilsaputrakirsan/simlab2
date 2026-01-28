@@ -1,5 +1,4 @@
 import { BookingView } from "@/application/booking/BookingView";
-import { BookingType } from "@/domain/booking/BookingType";
 import { userRole } from "@/domain/User/UserRole";
 import { Badge } from "@/presentation/components/ui/badge";
 import { Button } from "@/presentation/components/ui/button";
@@ -7,6 +6,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import BookingBadgeStatus from "../components/BookingBadgeStatus";
 import BookingVerificationAction from "../components/BookingVerificationAction";
+import PaymentBadgeStatus from "../../payment/components/PaymentBadgeStatus";
+import { PaymentStatus } from "@/domain/payment/PaymentStatus";
 
 interface ColumnProps {
     role: userRole;
@@ -19,38 +20,13 @@ interface ColumnProps {
 export const BookingVerificationColumn = ({ role, openApproval, openRejection, openReturnVerification, openReturnConfirmation }: ColumnProps): ColumnDef<BookingView>[] => [
     { header: 'Tahun Akademik', accessorKey: 'academicYear', cell: ({ row }) => row.original.academicYear },
     {
-        header: 'Identitas Peminjam', accessorKey: 'user',
-        cell: ({ row }) => (
-            <div className='flex flex-col'>
-                <span className='font-semibold'>{row.original.requestor?.name}</span>
-                <span className='text-sm'>Email: {row.original.requestor?.email}</span>
-            </div>
-        )
-    },
-    {
-        header: 'Kebutuhan', accessorKey: 'purpose',
-        cell: ({ row }) => (
-            <div className='flex flex-col'>
-                <span className='font-semibold'>{row.original.purpose}</span>
-                <span className='text-sm'>Judul: {row.original.activityName}</span>
-            </div>
-        )
+        header: "Judul Proyek / Penelitian",
+        accessorKey: 'activityName',
     },
     {
         header: 'Waktu', accessorKey: 'startTime', cell: ({ row }) => (
             <Badge variant={'secondary'}>{row.original.getEventDateRange()} | {row.original.getEventTimeRange()}</Badge>
         )
-    },
-    {
-        header: 'Jenis', accessorKey: 'bookingType', cell: ({ row }) => {
-            let text = '';
-            switch (row.original.bookingType) {
-                case BookingType.Room: text = 'Peminjaman Ruangan'; break;
-                case BookingType.RoomNEquipment: text = 'Peminjaman Ruangan dan Alat'; break;
-                case BookingType.Equipment: text = 'Peminjaman Alat'; break;
-            }
-            return <Badge>{text}</Badge>;
-        }
     },
     {
         header: 'Status Peminjaman', accessorKey: 'status',
@@ -59,14 +35,29 @@ export const BookingVerificationColumn = ({ role, openApproval, openRejection, o
         )
     },
     {
-        header: 'Informasi Peminjaman', accessorKey: 'activityName', cell: ({ row }) => (
+        header: "Status Pembayaran",
+        accessorKey: 'paymentStatus',
+        cell: ({ row }) => {
+            if (row.original.hasPaidItems) {
+                if (row.original.paymentStatus === PaymentStatus.Draft) {
+                    return <Badge variant={"outline"}>Menunggu Penerbitan Pembayaran</Badge>
+                }
+                if (row.original.paymentStatus) {
+                    return <PaymentBadgeStatus status={row.original.paymentStatus}/>
+                }
+            }
+            return <span>-</span>
+        }
+    },
+    {
+        header: 'Informasi Peminjaman', accessorKey: 'detail', cell: ({ row }) => (
             <NavLink to={`/panel/peminjaman/${row.original.id}/detail`}>
                 <Button size="sm" variant="secondary">Detail</Button>
             </NavLink>
         )
     },
     {
-        header: 'Verifikasi Peminjaman', accessorKey: 'id', cell: ({ row }) => (
+        header: 'Action', accessorKey: 'id', cell: ({ row }) => (
             <BookingVerificationAction
                 booking={row.original}
                 role={role}

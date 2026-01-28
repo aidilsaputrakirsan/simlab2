@@ -12,7 +12,8 @@ export class PracticumSession {
         readonly laboranCommentedAt: Time | null,
         readonly lecturerComment: string | null,
         readonly lecturerCommentedAt: Time | null,
-    ){}
+        readonly practicumModuleId: number | null,
+    ) { }
 
     setPracticumModule(practicumModule: string) {
         this.practicumModule = practicumModule

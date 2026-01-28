@@ -29,7 +29,13 @@ const TestingRequestVerificationAction: React.FC<TestingRequestVerificationActio
             </div>
         )
 
-    if (status === 2) return <Badge variant="default">Menunggu</Badge>
+    if (status === 2) {
+        // If has paid items, show that it's verified via payment page
+        if (testingRequest.hasPaidItems) {
+            return <Badge variant="secondary">Diverifikasi via Pembayaran</Badge>
+        }
+        return <Badge variant="default">Menunggu</Badge>
+    }
     if (status === 3) return <Badge variant="destructive">Ditolak</Badge>
 
     return null

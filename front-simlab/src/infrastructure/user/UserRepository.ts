@@ -97,8 +97,15 @@ export class UserRepository implements IUserRepository {
         throw json
     }
 
-    async getDataForSelect(role: userRole): Promise<ApiResponse<UserSelect[]>> {
-        const response = await fetchApi(`/users/select?role=${role}`, { method: 'GET' })
+    async getDataForSelect(roles: userRole | userRole[], major_id?: number): Promise<ApiResponse<UserSelect[]>> {
+        const rolesArray = Array.isArray(roles) ? roles : [roles];
+        let queryParams = rolesArray.map(role => `roles[]=${role}`).join('&');
+
+        if (major_id) {
+            queryParams += `&major_id=${major_id}`;
+        }
+
+        const response = await fetchApi(`/users/select?${queryParams}`, { method: 'GET' })
 
         const json = await response.json() as ApiResponse
         if (response.ok) {

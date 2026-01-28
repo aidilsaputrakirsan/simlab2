@@ -92,7 +92,7 @@ const KepalaLabTerpaduPracticumScheduleApproval = () => {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0" ref={sectionRef}>
         <Card>
           <CardHeader>
-            <CardTitle>Menu Verifikasi Peminjaman</CardTitle>
+            <CardTitle>Menu Verifikasi Penjadwalan</CardTitle>
           </CardHeader>
           <CardContent>
             <Table
@@ -106,7 +106,8 @@ const KepalaLabTerpaduPracticumScheduleApproval = () => {
               totalPages={totalPages}
               totalItems={totalItems}
               currentPage={currentPage}
-              handlePageChange={handlePageChange} />
+              handlePageChange={handlePageChange} 
+              handleRefresh={refresh}/>
           </CardContent>
         </Card>
         <ApproveWithLaboranSelectDialog open={openApprovalDialog} onOpenChange={setOpenApprovalDialog} handleSave={handleApproval} />

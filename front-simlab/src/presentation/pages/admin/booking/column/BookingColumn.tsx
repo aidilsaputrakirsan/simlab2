@@ -4,12 +4,14 @@ import { Badge } from "@/presentation/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 import BookingBadgeStatus from "../components/BookingBadgeStatus";
 import BookingReturnAction from "../components/BookingReturnAction";
+import PaymentRequestorAction from "../../payment/components/PaymentRequestorAction";
 
 interface ColumnProps {
     openReturnConfirmation?: (id: number) => void;
+    openPaymentProof?: (paymentId: number) => void;
 }
 
-export const BookingColumn = ({ openReturnConfirmation }: ColumnProps): ColumnDef<BookingView>[] => [
+export const BookingColumn = ({ openReturnConfirmation, openPaymentProof }: ColumnProps): ColumnDef<BookingView>[] => [
     {
         header: 'Tahun Akademik',
         accessorKey: 'academicYear'
@@ -65,10 +67,20 @@ export const BookingColumn = ({ openReturnConfirmation }: ColumnProps): ColumnDe
         }
     },
     {
+        header: "Status Pembayaran",
+        accessorKey: 'paymentStatus',
+        cell: ({ row }) => {
+            return <PaymentRequestorAction data={row.original} onOpenPayment={openPaymentProof}/>
+        }
+    },
+    {
         header: "Action",
         accessorKey: 'id',
         cell: ({ row }) => {
-            return <BookingReturnAction booking={row.original} openReturnConfirmation={openReturnConfirmation}/>
+            return <BookingReturnAction 
+                booking={row.original} 
+                openReturnConfirmation={openReturnConfirmation}
+            />
         }
     }
 ];

@@ -18,6 +18,7 @@ export type TestingRequestApi = {
         is_mahasiswa: boolean
     },
     laboran: {
+        id: number,
         name: string,
         email: string
     },
@@ -67,14 +68,14 @@ export function toDomain(api: TestingRequestApi): TestingRequest {
     }
 
     if (api.laboran) {
-        const laboran = new Laboran(api.laboran.name, api.laboran.email)
+        const laboran = new Laboran(api.laboran.id, api.laboran.name, api.laboran.email)
         testRequest.setLaboran(laboran)
     }
 
     if (api.canVerif !== undefined) {
         testRequest.setCanVerif(api.canVerif)
     }
-    
+
     if (api.testing_request_items) {
         const items = api.testing_request_items.map(
             (item) => toTestingRequestItem(item)

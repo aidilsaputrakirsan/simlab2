@@ -11,6 +11,7 @@ export class PracticumSessionView {
         readonly laboranCommentedAt: TimeView | null,
         readonly lecturerComment: string | null,
         readonly lecturerCommentedAt: TimeView | null,
+        readonly practicumModuleId: number | null,
         readonly practicumModule?: string
     ) { }
 
@@ -24,6 +25,7 @@ export class PracticumSessionView {
             entity.laboranCommentedAt ? TimeView.fromDomain(entity.laboranCommentedAt) : null,
             entity.lecturerComment,
             entity.lecturerCommentedAt ? TimeView.fromDomain(entity.lecturerCommentedAt) : null,
+            entity.practicumModuleId,
             entity.getPracticumModule()
         )
     }

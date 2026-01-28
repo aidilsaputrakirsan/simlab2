@@ -7,7 +7,7 @@ import { Label } from '@/presentation/components/ui/label';
 import { Button } from '@/presentation/components/ui/button';
 import { Input } from '@/presentation/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Copy, Plus, Trash } from 'lucide-react';
 import { useValidationErrors } from '@/presentation/hooks/useValidationError';
 import { toast } from 'sonner';
@@ -67,26 +67,79 @@ const PracticumSchedulingCreatePage = () => {
 
     const { laboratoryRooms } = useLaboratoryRoomSelect()
     const { practicums } = usePracticumSelect()
-    const { users: lecturers } = useUserSelect({ role: userRole.Dosen })
+    const majorId = user?.role === userRole.KepalaLabJurusan ? user?.studyProgram?.majorId : undefined
+
+    const { users: lecturers } = useUserSelect({
+        roles: [
+            userRole.Dosen,
+            userRole.KepalaLabJurusan,
+            userRole.Kooprodi,
+            userRole.KepalaLabTerpadu
+        ],
+        major_id: majorId
+    })
     const { practicumSchedulingService } = useDepedencies()
 
     const [practicumModules, setPracticumModules] = useState<PracticumModuleSelectView[]>([])
+
+    const { id } = useParams<{ id: string }>()
+    const practicumSchedulingId = Number(id)
+    const isEditMode = !!practicumSchedulingId
     useEffect(() => {
         setPracticumModules(getPracticumModule(practicums))
     }, [formData.practicum_id])
 
     useEffect(() => {
-        if (isHasDraftPracticum) {
+        const load = async () => {
+            if (!isEditMode) return
+            try {
+                const res = await practicumSchedulingService.getPracticumSchedulingDetail(practicumSchedulingId)
+                const data = res.data
+                if (data) {
+                    setFormData({
+                        practicum_id: data.practicumId,
+                        phone_number: String(data.phoneNumber),
+                        classes: data.practicumClasses?.map((cls: any) => ({
+                            lecturer_id: cls.lecturerId,
+                            laboratory_room_id: cls.laboratoryRoomId,
+                            name: cls.name,
+                            practicum_assistant: cls.practicumAssistant,
+                            total_participant: cls.totalParticipant,
+                            total_group: cls.totalGroup,
+                            sessions: cls.practicumSessions?.map((sess: any) => ({
+                                practicum_module_id: sess.practicumModuleId,
+                                start_time: sess.startTime.date,
+                                end_time: sess.endTime.date
+                            })) || []
+                        })) || []
+                    })
+                }
+            } catch (e) {
+                navigate('/404')
+            }
+        }
+        load()
+    }, [isEditMode, practicumSchedulingId])
+
+
+
+    useEffect(() => {
+        if (isHasDraftPracticum && !isEditMode) {
             navigate('/404')
         }
-    }, [isHasDraftPracticum])
+    }, [isHasDraftPracticum, isEditMode])
 
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false)
     const handleSubmit = async () => {
         setErrors({})
         try {
-            const res = await practicumSchedulingService.create(formData);
+            let res;
+            if (isEditMode) {
+                res = await practicumSchedulingService.update(practicumSchedulingId, formData);
+            } else {
+                res = await practicumSchedulingService.create(formData);
+            }
             toast.success(res.message)
             refreshIsHasDraftPracticum()
             navigate(`/panel/penjadwalan-praktikum/${res.data?.id}/manage`)
@@ -116,7 +169,7 @@ const PracticumSchedulingCreatePage = () => {
                 <div className='flex flex-col gap-5'>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Ajukan Peminjaman</CardTitle>
+                            <CardTitle>{isEditMode ? 'Edit Penjadwalan' : 'Ajukan Peminjaman'}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className='flex flex-col gap-5'>
@@ -192,7 +245,7 @@ const PracticumSchedulingCreatePage = () => {
                     {formData.classes.map((classes, cidx) => (
                         <Card key={cidx}>
                             <CardHeader>
-                                <CardTitle>{classes.name || 'Input Nama Kelas'}</CardTitle>
+                                <CardTitle>Input Nama Kelas</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-5'>
@@ -244,7 +297,7 @@ const PracticumSchedulingCreatePage = () => {
                                                 name='practicum_assistant'
                                                 value={classes.practicum_assistant}
                                                 onChange={(e) => handleClassChange(e, cidx)}
-                                                placeholder='Asisten Praktikum'
+                                                placeholder='Nama asisten (pisahkan dengan koma jika lebih dari satu)'
                                             />
                                             {errors[`classes.${cidx}.practicum_assistant`] && (
                                                 <span className="text-xs text-red-500 mt-1">{errors[`classes.${cidx}.practicum_assistant`]}</span>
@@ -381,7 +434,7 @@ const PracticumSchedulingCreatePage = () => {
                                         {formData.classes.length > 1 && (
                                             <Button type="button" variant="destructive" onClick={() => handleRemoveClass(cidx)} title="Hapus Kelas">Hapus Kelas<Trash /></Button>
                                         )}
-                                        <Button type="button" variant="default" onClick={() => duplicateClassByIndex(cidx)} title="Duplikat">Duplicate<Copy /></Button>
+                                        <Button type="button" variant="default" onClick={() => duplicateClassByIndex(cidx)} title="Duplikat">Duplicate Kelas<Copy /></Button>
                                     </div>
                                 </div>
                             </CardContent>
