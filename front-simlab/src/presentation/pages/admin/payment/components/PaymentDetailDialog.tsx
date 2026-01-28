@@ -77,9 +77,26 @@ const PaymentDetailDialog: React.FC<PaymentDetailDialogProps> = ({
                         <div className="flex flex-col">
                             <span className='font-semibold'>Bukti Pembayaran</span>
                             {payment?.paymentProof ? (
-                                <a 
-                                    href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${payment.paymentProof}`} 
-                                    className='w-full' 
+                                <a
+                                    href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${payment.paymentProof}`}
+                                    className='w-full'
+                                    target='_blank'
+                                    rel="noopener noreferrer"
+                                >
+                                    <Button className='w-full' type="button" variant="outline">
+                                        Lihat File <Eye className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </a>
+                            ) : (
+                                <Button variant="secondary" disabled>N/A</Button>
+                            )}
+                        </div>
+                        <div className="flex flex-col">
+                            <span className='font-semibold'>File Kwitansi</span>
+                            {payment?.receiptFile ? (
+                                <a
+                                    href={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${payment.receiptFile}`}
+                                    className='w-full'
                                     target='_blank'
                                     rel="noopener noreferrer"
                                 >

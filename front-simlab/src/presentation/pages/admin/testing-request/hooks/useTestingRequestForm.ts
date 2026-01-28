@@ -7,7 +7,7 @@ export const useTestingRequestForm = () => {
         activity_name: '',
         supervisor: null,
         supervisor_email: null,
-        testing_time: undefined,
+        testing_time: new Date(),
         information: '',
         testing_items: [
             {

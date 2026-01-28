@@ -8,16 +8,18 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/presentation/components/ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PaymentView } from "@/application/payment/PaymentView";
 import Item from "@/presentation/components/Item";
 import { Eye } from "lucide-react";
 import PaymentBadgeStatus from "./PaymentBadgeStatus";
+import FormGroup from "@/presentation/components/custom/FormGroup";
+import { Input } from "@/presentation/components/ui/input";
 
 interface PaymentApprovalDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onConfirm: () => Promise<void>;
+    onConfirm: (receiptFile?: File | null) => Promise<void>;
     payment: PaymentView | null;
     isRejection?: boolean;
 }
@@ -30,11 +32,31 @@ export default function PaymentApprovalDialog({
     isRejection = false
 }: PaymentApprovalDialogProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const [receiptFile, setReceiptFile] = useState<File | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!open) {
+            setReceiptFile(null);
+            setError(null);
+        }
+    }, [open]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setReceiptFile(file);
+        setError(null);
+    };
 
     async function submit() {
+        if (!isRejection && !receiptFile) {
+            setError("File kwitansi wajib diupload untuk menerima pembayaran");
+            return;
+        }
+
         setIsLoading(true);
         try {
-            await onConfirm();
+            await onConfirm(isRejection ? null : receiptFile);
         } finally {
             setIsLoading(false);
         }
@@ -111,6 +133,29 @@ export default function PaymentApprovalDialog({
                             <span className="font-semibold">Status</span>
                             <PaymentBadgeStatus status={payment.status} />
                         </div>
+
+                        {!isRejection && (
+                            <>
+                                <hr className="my-2" />
+                                <FormGroup
+                                    id="receipt_file"
+                                    label="File Kwitansi"
+                                    error={error || undefined}
+                                    required
+                                >
+                                    <Input
+                                        type="file"
+                                        id="receipt_file"
+                                        name="receipt_file"
+                                        accept=".pdf"
+                                        onChange={handleFileChange}
+                                    />
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Format yang diizinkan: pdf (maks. 2MB)
+                                    </p>
+                                </FormGroup>
+                            </>
+                        )}
                     </div>
                 )}
 

@@ -130,6 +130,10 @@ class TestingRequestController extends BaseController
 
     public function store(TestingRequestInputRequest $request)
     {
+        if (!$this->activeAcademicYear) {
+            return $this->sendError('Tidak dapat mengajukan pengujian. Tahun akademik belum diaktifkan. Silakan hubungi admin.', [], 400);
+        }
+
         DB::beginTransaction();
         try {
             $data = $request->validated();

@@ -137,8 +137,12 @@ const PaymentProofFormDialog: React.FC<PaymentProofFormDialogProps> = ({
                             type='file'
                             id='payment_proof'
                             name='payment_proof'
+                            accept=".jpg,.jpeg,.png,.pdf"
                             onChange={handleChange}
                         />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Format yang diizinkan: jpg, jpeg, png, pdf (maks. 2MB)
+                        </p>
                     </FormGroup>
                 </div>
                 <DialogFooter>

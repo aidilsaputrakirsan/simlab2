@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -15,6 +15,7 @@ import { Input } from '@/presentation/components/ui/input';
 import { Button } from '@/presentation/components/ui/button';
 import { ApiResponse } from '@/presentation/shared/Types';
 import { toast } from 'sonner';
+import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 
 interface PaymentCreateFormDialogProps {
     open: boolean,
@@ -27,7 +28,9 @@ const PaymentCreateFormDialog: React.FC<PaymentCreateFormDialogProps> = ({
     onOpenChange,
     handleSave,
 }) => {
+    const { paymentService } = useDepedencies()
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoadingNumber, setIsLoadingNumber] = useState(false);
     const { errors, processErrors, setErrors } = useValidationErrors()
 
     const [formData, setFormData] = useState<PaymentInputDTO>({
@@ -35,6 +38,24 @@ const PaymentCreateFormDialog: React.FC<PaymentCreateFormDialogProps> = ({
         va_number: '',
         invoice_file: null
     });
+
+    useEffect(() => {
+        const fetchPaymentNumber = async () => {
+            if (open) {
+                setIsLoadingNumber(true);
+                try {
+                    const paymentNumber = await paymentService.generatePaymentNumber();
+                    setFormData(prev => ({ ...prev, payment_number: paymentNumber }));
+                } catch (error) {
+                    console.error('Failed to generate payment number:', error);
+                } finally {
+                    setIsLoadingNumber(false);
+                }
+            }
+        };
+
+        fetchPaymentNumber();
+    }, [open]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, type, value } = e.target;
@@ -84,8 +105,11 @@ const PaymentCreateFormDialog: React.FC<PaymentCreateFormDialogProps> = ({
                             type='text'
                             id='payment_number'
                             name='payment_number'
-                            onChange={handleChange}
-                            placeholder='No Pembayaran'
+                            value={formData.payment_number || ''}
+                            placeholder={isLoadingNumber ? 'Memuat...' : 'No Pembayaran'}
+                            disabled={isLoadingNumber}
+                            readOnly
+                            className='bg-muted'
                         />
                     </FormGroup>
                     <FormGroup

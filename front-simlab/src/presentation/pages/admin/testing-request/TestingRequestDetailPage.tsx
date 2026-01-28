@@ -146,7 +146,7 @@ const TestingRequestDetailPage = () => {
                                 )}
                                 <Item title='Dosen Pembimbing' value={testingRequest.supervisor} />
                                 <Item title='Email Dosen Pembimbing' value={testingRequest.supervisorEmail} />
-                                {testingRequest.laboran && (
+                                {testingRequest.laboran && ![userRole.Mahasiswa, userRole.Dosen, userRole.PihakLuar].includes(user?.role as userRole) && (
                                     <>
                                         <Item title='Laboran Penanggung Jawab' value={testingRequest.laboran.name} />
                                         <Item title='Email Laboran' value={testingRequest.laboran.email} />
@@ -222,6 +222,11 @@ const TestingRequestDetailPage = () => {
                                                 </Button>
                                             )}
                                         </div>
+                                        {testingRequest.resultFile && (
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Untuk pengambilan hardcopy hasil pengujian, silakan datang ke Laboratorium Terpadu 2 Lt. 2 di Ruang Administrasi.
+                                            </p>
+                                        )}
                                     </div>
                                 )}
 

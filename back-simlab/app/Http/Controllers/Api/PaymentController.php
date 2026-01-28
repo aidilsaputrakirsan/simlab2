@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PaymentCreateRequest;
 use App\Http\Requests\PaymentProofRequest;
+use App\Http\Requests\PaymentVerifRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Booking;
 use App\Models\Event;
@@ -15,6 +16,34 @@ use PhpParser\Node\Expr\FuncCall;
 
 class PaymentController extends BaseController
 {
+    public function generatePaymentNumber()
+    {
+        try {
+            $today = now()->format('dmY');
+
+            // Cari payment_number terakhir yang dibuat hari ini dengan format DDMMYYYY-XXX
+            $lastPayment = Payment::where('payment_number', 'LIKE', $today . '-%')
+                ->orderBy('payment_number', 'desc')
+                ->first();
+
+            if ($lastPayment) {
+                // Ambil nomor urut terakhir dan tambah 1
+                $lastNumber = (int) substr($lastPayment->payment_number, -3);
+                $newNumber = $lastNumber + 1;
+            } else {
+                // Mulai dari 001 jika belum ada payment hari ini
+                $newNumber = 1;
+            }
+
+            // Format: DDMMYYYY-XXX
+            $paymentNumber = $today . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+            return $this->sendResponse(['payment_number' => $paymentNumber], 'Berhasil generate nomor pembayaran');
+        } catch (\Exception $e) {
+            return $this->sendError('Terjadi kesalahan ketika generate nomor pembayaran', [$e->getMessage()], 500);
+        }
+    }
+
     public function index(Request $request)
     {
         try {
@@ -128,11 +157,19 @@ class PaymentController extends BaseController
         }
     }
 
-    public function verif(Request $request, $id)
+    public function verif(PaymentVerifRequest $request, $id)
     {
         try {
             $payment = Payment::with('payable')->findOrFail($id);
-            $payment->update(['status' => $request->action]);
+
+            $updateData = ['status' => $request->action];
+
+            // If approving, upload receipt file
+            if ($request->action === 'approved') {
+                $updateData['receipt_file'] = $this->storeFile($request, 'receipt_file', 'receipt');
+            }
+
+            $payment->update($updateData);
 
             // If payment is approved and the payable is a Booking, create the event
             if ($request->action === 'approved' && $payment->payable instanceof Booking) {

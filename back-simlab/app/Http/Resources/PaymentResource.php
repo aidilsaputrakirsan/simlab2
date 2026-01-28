@@ -21,6 +21,7 @@ class PaymentResource extends JsonResource
             'amount' => $this->amount,
             'invoice_file' => $this->invoice_file,
             'payment_proof' => $this->payment_proof,
+            'receipt_file' => $this->receipt_file,
             'va_number' => $this->va_number,
             'status' => $this->status,
             'payment_type' => $this->getPaymentType(),

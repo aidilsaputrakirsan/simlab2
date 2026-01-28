@@ -20,7 +20,7 @@ class PaymentProofRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'payment_proof' => 'required|mimes:jpg,jpeg,png|max:2048'
+            'payment_proof' => 'required|mimes:jpg,jpeg,png,pdf|max:2048'
         ];
     }
 
@@ -28,7 +28,7 @@ class PaymentProofRequest extends ApiRequest
     {
         return [
             'payment_proof.required' => 'Bukti pembayaran tidak boleh kosong.',
-            'payment_proof.mimes' => 'Bukti pembayaran harus berupa gambar dengan format jpg, jpeg, atau png.',
+            'payment_proof.mimes' => 'Bukti pembayaran harus berupa file dengan format jpg, jpeg, png, atau pdf.',
             'payment_proof.max' => 'Ukuran bukti pembayaran maksimal 2MB.',
         ];
     }

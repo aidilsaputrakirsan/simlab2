@@ -1,6 +1,8 @@
+import { useAuth } from '@/application/hooks/useAuth'
 import { TestingRequestApprovalView } from '@/application/testing-request/TestingRequestApprovalView'
 import { TestingRequestApprovalAction } from '@/domain/testing-request/TestingRequestApprovalAction'
 import { TestingRequestApprovalStatus } from '@/domain/testing-request/TestingRequestApprovalStatus'
+import { userRole } from '@/domain/User/UserRole'
 import { Button } from '@/presentation/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/presentation/components/ui/dialog'
 import { ScrollArea } from '@/presentation/components/ui/scroll-area'
@@ -16,8 +18,10 @@ interface TestingRequestStepperDialogProps {
 const TestingRequestStepperDialog: React.FC<TestingRequestStepperDialogProps> = ({
     testingRequestId
 }) => {
+    const { user } = useAuth()
     const [testingRequestSteps, setTestingRequestSteps] = useState<TestingRequestApprovalView[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const isPemohon = [userRole.Mahasiswa, userRole.Dosen, userRole.PihakLuar].includes(user?.role as userRole)
     const { testingRequestService } = useDepedencies()
 
     useEffect(() => {
@@ -107,12 +111,14 @@ const TestingRequestStepperDialog: React.FC<TestingRequestStepperDialogProps> = 
                                             {(step.status !== TestingRequestApprovalStatus.Pending) ? (
                                                 <>
 
-                                                    <div className="text-sm mt-2">
-                                                        <span className='font-semibold'>
-                                                            {step.role === 'pemohon' ? 'Diajukan oleh' : 'Diverifikasi oleh'}
-                                                        </span>
-                                                        : {step.approver ?? '—'}
-                                                    </div>
+                                                    {!(isPemohon && step.role === 'laboran') && (
+                                                        <div className="text-sm mt-2">
+                                                            <span className='font-semibold'>
+                                                                {step.role === 'pemohon' ? 'Diajukan oleh' : 'Diverifikasi oleh'}
+                                                            </span>
+                                                            : {step.approver ?? '—'}
+                                                        </div>
+                                                    )}
                                                     <span className="text-sm text-muted-foreground rounded-xl tracking-tight">
                                                         {step.approvedAt ? String(step.approvedAt.formatForInformation()) : ''}
                                                     </span>

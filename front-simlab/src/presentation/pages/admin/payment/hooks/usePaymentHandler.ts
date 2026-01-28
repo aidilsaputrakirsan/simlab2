@@ -85,18 +85,19 @@ export const usePaymentHandler = (
         refresh?.()
     }
 
-    const handleApproval = async () => {
+    const handleApproval = async (receiptFile?: File | null) => {
         if (!selectedPayment) return
 
         const res = await paymentService.verif(selectedPayment, {
-            action: 'approved'
+            action: 'approved',
+            receipt_file: receiptFile
         })
         toast.success(res.message)
         closeDialog('approval')
         refresh?.()
     }
 
-    const handleRejection = async () => {
+    const handleRejection = async (_receiptFile?: File | null) => {
         if (!selectedPayment) return
 
         const res = await paymentService.verif(selectedPayment, {

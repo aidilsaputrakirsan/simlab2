@@ -13,3 +13,8 @@ export interface PaymentTableParam {
     per_page: number,
     search: string,
 }
+
+export interface PaymentVerifDTO {
+    action: 'approved' | 'rejected';
+    receipt_file?: File | null;
+}

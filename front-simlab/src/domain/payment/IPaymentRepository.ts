@@ -12,5 +12,5 @@ export interface IPaymentRepository {
         payment_proof: string | File | null
     }): Promise<ApiResponse>
     getPaymentData(id: number): Promise<ApiResponse<Payment>>
-    verif(id: number, data:{action: 'approved' | 'rejected'}): Promise<ApiResponse>
+    verif(id: number, data:{action: 'approved' | 'rejected', receipt_file?: File | null}): Promise<ApiResponse>
 }

@@ -17,6 +17,7 @@ class Payment extends Model
         'amount',
         'invoice_file',
         'payment_proof',
+        'receipt_file',
         'va_number',
         'status',
     ];

@@ -15,6 +15,7 @@ export class Payment {
         readonly amount: number,
         readonly invoiceFile: string,
         readonly paymentProof: string,
+        readonly receiptFile: string,
         readonly vaNumber: string,
         readonly status: PaymentStatus,
         readonly paymentType: string,

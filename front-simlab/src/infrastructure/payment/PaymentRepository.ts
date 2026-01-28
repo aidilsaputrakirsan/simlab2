@@ -6,6 +6,18 @@ import { PaymentAPI, toDomain } from "./PaymentAPI";
 import { generateQueryStringFromObject } from "../Helper";
 
 export class PaymentRepository implements IPaymentRepository {
+    async generatePaymentNumber(): Promise<ApiResponse<{ payment_number: string }>> {
+        const response = await fetchApi(`/payments/generate-number`, {
+            method: 'GET'
+        });
+
+        const json = await response.json() as ApiResponse<{ payment_number: string }>;
+        if (response.ok) {
+            return json;
+        }
+        throw json;
+    }
+
     async getAll(params: { page: number, per_page: number, search: string }): Promise<PaginatedResponse<Payment>> {
         const queryString = generateQueryStringFromObject(params);
 
@@ -69,10 +81,12 @@ export class PaymentRepository implements IPaymentRepository {
         throw json
     }
 
-    async verif(id: number, data: { action: "approved" | "rejected"; }): Promise<ApiResponse> {
+    async verif(id: number, data: { action: "approved" | "rejected"; receipt_file?: File | null }): Promise<ApiResponse> {
+        const bodyFormData = jsonToFormData(data, 'PUT')
+
         const response = await fetchApi(`/payments/${id}/verif`, {
-            method: 'PUT',
-            body: JSON.stringify(data)
+            method: 'POST',
+            body: bodyFormData
         })
 
         const json = await response.json() as ApiResponse
