@@ -49,6 +49,8 @@ Route::resource('laboratory-materials', LaboratoryMaterialController::class)->on
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('laboratory-rooms', LaboratoryRoomController::class)->only(['index']);
+    Route::get('/laboratory-rooms/{id}/schedules', [LaboratoryRoomController::class, 'getScheduledSessions']);
+    Route::get('/dashboard/weekly-schedule', [LaboratoryRoomController::class, 'getWeeklyScheduleDashboard']);
     Route::resource('practicums', PracticumController::class)->only(['index']);
 
     // Spesific select API

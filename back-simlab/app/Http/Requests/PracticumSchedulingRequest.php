@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\PracticumSession;
+use App\Models\LaboratoryRoom;
 use Illuminate\Validation\Validator;
 
 class PracticumSchedulingRequest extends ApiRequest
@@ -34,6 +36,7 @@ class PracticumSchedulingRequest extends ApiRequest
     {
         $validator->after(function ($validator) {
             $this->validateSessionScheduleConflicts($validator);
+            $this->validateExistingScheduleConflicts($validator);
         });
     }
 
@@ -119,6 +122,65 @@ class PracticumSchedulingRequest extends ApiRequest
         // Dua session bertabrakan jika:
         // start1 < end2 AND start2 < end1
         return $start1 < $end2 && $start2 < $end1;
+    }
+
+    /**
+     * Validasi konflik jadwal dengan jadwal yang sudah ada di database
+     * Cek jadwal dengan status 'pending' dan 'approved'
+     */
+    protected function validateExistingScheduleConflicts(Validator $validator)
+    {
+        $classes = $this->input('classes', []);
+        $currentSchedulingId = $this->route('id'); // null jika create, ada nilai jika update
+
+        foreach ($classes as $classIndex => $class) {
+            $roomId = $class['laboratory_room_id'] ?? null;
+            $sessions = $class['sessions'] ?? [];
+            $room = $roomId ? LaboratoryRoom::find($roomId) : null;
+            $roomName = $room ? $room->name : 'Ruangan';
+
+            foreach ($sessions as $sessionIndex => $session) {
+                $startTime = $session['start_time'] ?? null;
+                $endTime = $session['end_time'] ?? null;
+
+                if (!$roomId || !$startTime || !$endTime) {
+                    continue;
+                }
+
+                // Query untuk cek konflik dengan jadwal existing
+                $conflictQuery = PracticumSession::query()
+                    ->whereHas('practicumClass', function ($q) use ($roomId) {
+                        $q->where('laboratory_room_id', $roomId);
+                    })
+                    ->whereHas('practicumClass.practicumScheduling', function ($q) use ($currentSchedulingId) {
+                        // Hanya cek jadwal dengan status pending atau approved
+                        $q->whereIn('status', ['pending', 'approved']);
+
+                        // Exclude jadwal sendiri jika mode edit
+                        if ($currentSchedulingId) {
+                            $q->where('id', '!=', $currentSchedulingId);
+                        }
+                    })
+                    // Cek overlap waktu: start1 < end2 AND start2 < end1
+                    ->where('start_time', '<', $endTime)
+                    ->where('end_time', '>', $startTime);
+
+                $existingSession = $conflictQuery->with(['practicumClass.practicumScheduling.practicum'])->first();
+
+                if ($existingSession) {
+                    $existingPracticum = $existingSession->practicumClass->practicumScheduling->practicum->name ?? 'Praktikum lain';
+                    $existingClass = $existingSession->practicumClass->name ?? '';
+                    $existingDate = date('d M Y', strtotime($existingSession->start_time));
+                    $existingStartTime = date('H:i', strtotime($existingSession->start_time));
+                    $existingEndTime = date('H:i', strtotime($existingSession->end_time));
+
+                    $validator->errors()->add(
+                        "classes.{$classIndex}.sessions.{$sessionIndex}.start_time",
+                        "Jadwal bertabrakan dengan {$existingPracticum} - {$existingClass} di {$roomName} pada {$existingDate} ({$existingStartTime} - {$existingEndTime})"
+                    );
+                }
+            }
+        }
     }
 
     public function messages()

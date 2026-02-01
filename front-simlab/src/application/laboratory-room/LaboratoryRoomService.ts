@@ -36,4 +36,12 @@ export class LaboratoryRoomService {
             data: laboratoryRooms.data ? laboratoryRooms.data.map(LaboratoryRoomSelectView.fromDomain) : undefined
         }
     }
+
+    async getScheduledSessions(roomId: number, params?: {
+        start_date?: string
+        end_date?: string
+        exclude_scheduling_id?: number
+    }) {
+        return await this.laboratoryRoomRepository.getScheduledSessions(roomId, params)
+    }
 }
