@@ -1,5 +1,6 @@
 import { AcademicYearService } from "@/application/academic-year/AcademicYearService"
 import { BookingService } from "@/application/booking/BookingService"
+import { DashboardService } from "@/application/dashboard/DashboardService"
 import { FacultyService } from "@/application/faculty/FacultyService"
 import { InstitutionService } from "@/application/institution/InstitutionService"
 import { LaboratoryEquipmentService } from "@/application/laboratory-equipment/LaboratoryEquipmentService"
@@ -39,6 +40,7 @@ type Services = {
     paymentService: PaymentService
     publicationCategoryService: PublicationCategoryService
     publicationService: PublicationService
+    dashboardService: DashboardService
 }
 
 const services: Services = {
@@ -60,7 +62,8 @@ const services: Services = {
     institutionService: new InstitutionService(),
     paymentService: new PaymentService(),
     publicationCategoryService: new PublicationCategoryService(),
-    publicationService: new PublicationService()
+    publicationService: new PublicationService(),
+    dashboardService: new DashboardService()
 }
 
 export const DepedencyContext = createContext<Services>(services)

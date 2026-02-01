@@ -42,7 +42,7 @@ class PaymentResource extends JsonResource
                     'name' => $this->user->name,
                     'email' => $this->user->email,
                     'study_program' => $this->user->studyProgram->name ?? null,
-                    'institution' => $this->user->institution ?? null,
+                    'institution' => $this->user->institution->name ?? null,
                 ];
             }),
         ];

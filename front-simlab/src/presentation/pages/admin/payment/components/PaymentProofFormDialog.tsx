@@ -56,13 +56,15 @@ const PaymentProofFormDialog: React.FC<PaymentProofFormDialogProps> = ({
     const [payment, setPayment] = useState<PaymentView>()
 
     useEffect(() => {
-        const loadSteps = async () => {
-            const res = await paymentService.getPaymentData(paymentId ?? 0)
+        if (!paymentId || !open) return
+
+        const loadPaymentData = async () => {
+            const res = await paymentService.getPaymentData(paymentId)
             setPayment(res.data)
         }
 
-        loadSteps()
-    }, [paymentId])
+        loadPaymentData()
+    }, [paymentId, open])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

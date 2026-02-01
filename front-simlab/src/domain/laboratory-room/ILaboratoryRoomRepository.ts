@@ -1,6 +1,7 @@
 import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types"
 import { LaboratoryRoom } from "./LaboratoryRoom"
 import { LaboratoryRoomSelect } from "./LaboratoryRoomSelect"
+import { RoomScheduleData } from "./RoomSchedule"
 
 export interface ILaboratoryRoomRepository {
     getAll(params: {
@@ -26,4 +27,9 @@ export interface ILaboratoryRoomRepository {
     }): Promise<ApiResponse<LaboratoryRoom>>
     deleteData(id: number): Promise<ApiResponse>
     getDataForSelect(): Promise<ApiResponse<LaboratoryRoomSelect[]>>
+    getScheduledSessions(roomId: number, params?: {
+        start_date?: string
+        end_date?: string
+        exclude_scheduling_id?: number
+    }): Promise<ApiResponse<RoomScheduleData>>
 }

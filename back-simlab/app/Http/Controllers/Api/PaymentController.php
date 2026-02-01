@@ -48,7 +48,7 @@ class PaymentController extends BaseController
     {
         try {
             $user = auth()->user();
-            $query = Payment::query()->with(['user', 'payable']);
+            $query = Payment::query()->with(['user.studyProgram', 'user.institution', 'payable']);
 
             // Search functionality
             if ($request->filled('search')) {

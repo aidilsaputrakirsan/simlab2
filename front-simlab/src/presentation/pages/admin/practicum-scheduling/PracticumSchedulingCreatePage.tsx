@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { useAuth } from '@/application/hooks/useAuth'
 import { useGSAP } from '@gsap/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Header from '@/presentation/components/Header';
 import { Label } from '@/presentation/components/ui/label';
 import { Button } from '@/presentation/components/ui/button';
@@ -24,6 +24,8 @@ import { useLaboratoryRoomSelect } from '../laboratory-room/hooks/useLaboratoryR
 import { usePracticumSelect } from '../practicum/hooks/usePracticumSelect';
 import { useUserSelect } from '../user/hooks/useUserSelect';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
+import { RoomScheduleInfo } from '@/presentation/components/custom/RoomScheduleInfo';
+import { RoomScheduleData } from '@/domain/laboratory-room/RoomSchedule';
 
 
 const PracticumSchedulingCreatePage = () => {
@@ -78,13 +80,38 @@ const PracticumSchedulingCreatePage = () => {
         ],
         major_id: majorId
     })
-    const { practicumSchedulingService } = useDepedencies()
+    const { practicumSchedulingService, laboratoryRoomService } = useDepedencies()
 
     const [practicumModules, setPracticumModules] = useState<PracticumModuleSelectView[]>([])
 
     const { id } = useParams<{ id: string }>()
     const practicumSchedulingId = Number(id)
     const isEditMode = !!practicumSchedulingId
+
+    // State untuk menyimpan jadwal ruangan per kelas (key: classIndex)
+    const [roomSchedulesMap, setRoomSchedulesMap] = useState<Record<number, RoomScheduleData | null>>({})
+    const [loadingRoomSchedules, setLoadingRoomSchedules] = useState<Record<number, boolean>>({})
+
+    // Fungsi untuk fetch jadwal ruangan
+    const fetchRoomSchedules = useCallback(async (classIndex: number, roomId: number) => {
+        if (!roomId) {
+            setRoomSchedulesMap(prev => ({ ...prev, [classIndex]: null }))
+            return
+        }
+
+        setLoadingRoomSchedules(prev => ({ ...prev, [classIndex]: true }))
+        try {
+            const response = await laboratoryRoomService.getScheduledSessions(roomId, {
+                exclude_scheduling_id: isEditMode ? practicumSchedulingId : undefined
+            })
+            setRoomSchedulesMap(prev => ({ ...prev, [classIndex]: response.data ?? null }))
+        } catch (error) {
+            console.error('Failed to fetch room schedules:', error)
+            setRoomSchedulesMap(prev => ({ ...prev, [classIndex]: null }))
+        } finally {
+            setLoadingRoomSchedules(prev => ({ ...prev, [classIndex]: false }))
+        }
+    }, [laboratoryRoomService, isEditMode, practicumSchedulingId])
     useEffect(() => {
         setPracticumModules(getPracticumModule(practicums))
     }, [formData.practicum_id])
@@ -96,22 +123,31 @@ const PracticumSchedulingCreatePage = () => {
                 const res = await practicumSchedulingService.getPracticumSchedulingDetail(practicumSchedulingId)
                 const data = res.data
                 if (data) {
+                    const classes = data.practicumClasses?.map((cls: any) => ({
+                        lecturer_id: cls.lecturerId,
+                        laboratory_room_id: cls.laboratoryRoomId,
+                        name: cls.name,
+                        practicum_assistant: cls.practicumAssistant,
+                        total_participant: cls.totalParticipant,
+                        total_group: cls.totalGroup,
+                        sessions: cls.practicumSessions?.map((sess: any) => ({
+                            practicum_module_id: sess.practicumModuleId,
+                            start_time: sess.startTime.date,
+                            end_time: sess.endTime.date
+                        })) || []
+                    })) || []
+
                     setFormData({
                         practicum_id: data.practicumId,
                         phone_number: String(data.phoneNumber),
-                        classes: data.practicumClasses?.map((cls: any) => ({
-                            lecturer_id: cls.lecturerId,
-                            laboratory_room_id: cls.laboratoryRoomId,
-                            name: cls.name,
-                            practicum_assistant: cls.practicumAssistant,
-                            total_participant: cls.totalParticipant,
-                            total_group: cls.totalGroup,
-                            sessions: cls.practicumSessions?.map((sess: any) => ({
-                                practicum_module_id: sess.practicumModuleId,
-                                start_time: sess.startTime.date,
-                                end_time: sess.endTime.date
-                            })) || []
-                        })) || []
+                        classes
+                    })
+
+                    // Fetch jadwal ruangan untuk setiap kelas yang sudah ada
+                    classes.forEach((cls: any, idx: number) => {
+                        if (cls.laboratory_room_id) {
+                            fetchRoomSchedules(idx, cls.laboratory_room_id)
+                        }
                     })
                 }
             } catch (e) {
@@ -258,7 +294,7 @@ const PracticumSchedulingCreatePage = () => {
                                                 name='name'
                                                 value={classes.name}
                                                 onChange={(e) => handleClassChange(e, cidx)}
-                                                placeholder='Nama Kelas'
+                                                placeholder='A / B / C / Z / -'
                                             />
                                             {errors[`classes.${cidx}.name`] && (
                                                 <span className="text-xs text-red-500 mt-1">{errors[`classes.${cidx}.name`]}</span>
@@ -312,12 +348,15 @@ const PracticumSchedulingCreatePage = () => {
                                                 options={laboratoryRooms}
                                                 value={classes.laboratory_room_id?.toString() || ''}
                                                 onChange={val => {
+                                                    const roomId = Number(val)
                                                     setFormData(prev => ({
                                                         ...prev,
                                                         classes: prev.classes.map((cls, idx) =>
-                                                            idx === cidx ? { ...cls, laboratory_room_id: Number(val) } : cls
+                                                            idx === cidx ? { ...cls, laboratory_room_id: roomId } : cls
                                                         )
                                                     }));
+                                                    // Fetch jadwal ruangan saat ruangan dipilih
+                                                    fetchRoomSchedules(cidx, roomId)
                                                 }}
                                                 placeholder="Pilih Ruangan Laboratorium"
                                                 optionLabelKey='name'
@@ -358,6 +397,17 @@ const PracticumSchedulingCreatePage = () => {
                                             )}
                                         </div>
                                     </div>
+
+                                    {/* Info jadwal ruangan yang sudah terpakai */}
+                                    {classes.laboratory_room_id && (
+                                        <div className='md:col-span-2 lg:col-span-3'>
+                                            <RoomScheduleInfo
+                                                roomSchedules={roomSchedulesMap[cidx] ?? null}
+                                                isLoading={loadingRoomSchedules[cidx] ?? false}
+                                            />
+                                        </div>
+                                    )}
+
                                     <div className='md:col-span-2 lg:col-span-3 overflow-hidden'>
                                         {(errors[`classes.${cidx}.sessions`]) && (
                                             <span className="text-xs text-red-500 mt-1">

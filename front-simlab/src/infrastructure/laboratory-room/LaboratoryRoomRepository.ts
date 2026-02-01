@@ -1,10 +1,12 @@
 import { ILaboratoryRoomRepository } from "../../domain/laboratory-room/ILaboratoryRoomRepository";
 import { LaboratoryRoom } from "../../domain/laboratory-room/LaboratoryRoom";
+import { RoomScheduleData } from "../../domain/laboratory-room/RoomSchedule";
 import { ApiResponse, PaginatedResponse } from "../../presentation/shared/Types";
 import { fetchApi } from "../ApiClient";
 import { LaboratoryRoomAPI, toDomain } from "./LaboratoryRoomAPI";
 import { generateQueryStringFromObject } from "../Helper";
 import { LaboratoryRoomSelectAPI, toDomain as toLaboratorySelect } from "./LaboratoryRoomSelectAPI";
+import { RoomScheduleDataAPI, toDomain as toRoomSchedule } from "./RoomScheduleAPI";
 import { LaboratoryRoomSelect } from "@/domain/laboratory-room/LaboratoryRoomSelect";
 
 export class LaboratoryRoomRepository implements ILaboratoryRoomRepository {
@@ -91,6 +93,26 @@ export class LaboratoryRoomRepository implements ILaboratoryRoomRepository {
             return {
                 ...json,
                 data: data.map(toLaboratorySelect)
+            }
+        }
+        throw json
+    }
+
+    async getScheduledSessions(roomId: number, params?: {
+        start_date?: string
+        end_date?: string
+        exclude_scheduling_id?: number
+    }): Promise<ApiResponse<RoomScheduleData>> {
+        const queryString = params ? generateQueryStringFromObject(params) : ''
+        const response = await fetchApi(`/laboratory-rooms/${roomId}/schedules?${queryString}`, { method: 'GET' })
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            const data = json.data as RoomScheduleDataAPI
+
+            return {
+                ...json,
+                data: toRoomSchedule(data)
             }
         }
         throw json

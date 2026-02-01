@@ -1,0 +1,388 @@
+No,Kategori,Jenis Pengujian/Layanan,Satuan,Harga Mahasiswa,Harga Civitas (Dosen/Tendik),Harga Eksternal
+1,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Abrasi,per sampel,0,0,200000
+2,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Berat Isi/Satuan,per sampel,0,0,125000
+3,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Berat Jenis Agregat Halus/Kasar,per sampel,0,0,100000
+4,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Gradasi Agregat Halus/Kasar,per sampel,0,0,200000
+5,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Kadar Lumpur Agregat Halus/Kasar,per sampel,0,0,200000
+6,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Kadar Organik Agregat Halus,per sampel,0,0,150000
+7,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Kelapukan,per sampel,0,0,200000
+8,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Kepipihan,per sampel,0,0,100000
+9,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Lolos Saringan 200 Agregat,per sampel,0,0,100000
+10,A,Pemeriksaan Material/Bahan Beton - Pemeriksaan Permeabilitas,per sampel,0,0,100000
+11,A,Penggujian AAS Flame (Li) (Tanpa preparasi),per sampel,29000,45000,55000
+12,A,Pengujian AAS Flame (Ag) (Tanpa preparasi),per sampel,29000,45000,55000
+13,A,Pengujian AAS Flame (Al) (Tanpa preparasi),per sampel,29000,45000,55000
+14,A,Pengujian AAS Flame (Cd) (Tanpa preparasi),per sampel,29000,45000,55000
+15,A,Pengujian AAS Flame (Co) (Tanpa preparasi),per sampel,29000,45000,55000
+16,A,Pengujian AAS Flame (Cu) (Tanpa preparasi),per sampel,29000,45000,55000
+17,A,Pengujian AAS Flame (Fe) (Tanpa preparasi),per sampel,29000,45000,55000
+18,A,Pengujian AAS Flame (Hg) (Tanpa preparasi),per sampel,29000,60000,70000
+19,A,Pengujian AAS Flame (K) (Tanpa preparasi),per sampel,29000,45000,55000
+20,A,Pengujian AAS Flame (Mn) (Tanpa preparasi),per sampel,29000,45000,55000
+21,A,Pengujian AAS Flame (Ni) (Tanpa preparasi),per sampel,29000,45000,55000
+22,A,Pengujian AAS Flame (Ni) (Tanpa preparasi),per sampel,29000,45000,55000
+23,A,Pengujian AAS Flame (Pb) (Tanpa preparasi),per sampel,29000,45000,55000
+24,A,Pengujian AAS Flame (Zn) (Tanpa preparasi),per sampel,29000,45000,55000
+25,A,Pengujian Abrasi Agregat Kasar,per sampel,0,0,150000
+26,A,Pengujian Analisis Butiran Kecil - Hidrometer,per sampel,0,0,300000
+27,A,Pengujian Analisis Gradasi,per sampel,0,0,200000
+28,A,Pengujian Analisis Kadar Abu,per sampel,50000,75000,80000
+29,A,Pengujian Analisis Kadar Air,per sampel,43000,50000,72000
+30,A,Pengujian Aspal - Aspal Penetrasi,per sampel,0,0,150000
+31,A,Pengujian Aspal - Berat Jenis Aspal,per sampel,0,0,150000
+32,A,Pengujian Bending Logam,per sampel,50000,90000,200000
+33,A,Pengujian Bending Non Logam,per sampel,40000,80000,150000
+34,A,Pengujian Berat Isi Agregat Halus/Kasar,per sampel,0,0,125000
+35,A,Pengujian Berat Jenis Agregat Halus/Kasar,per sampel,0,0,150000
+36,A,Pengujian BET/SAA (Full Isoterm & Surface area),per sampel,340000,400000,800000
+37,A,Pengujian BET/SAA (Uji Surface Area),per sampel,170000,200000,350000
+38,A,Pengujian BOD,per sampel,80000,120000,180000
+39,A,Pengujian COD,per sampel,45000,60000,100000
+40,A,Pengujian Cylic Voltametry dengan Pontesiostat,per sampel,150000,250000,500000
+41,A,Pengujian Dimensi Tulangan Beton,per sampel,60000,80000,140000
+42,A,Pengujian Direct Shear - Geser Langsung,per sampel,0,0,250000
+43,A,Pengujian DO,per sampel,26000,30000,60000
+44,A,Pengujian DSC/TGA <1200OC,per sampel,500000,600000,700000
+45,A,Pengujian DSC/TGA <300OC,per sampel,190000,280000,300000
+46,A,Pengujian DSC/TGA <600OC,per sampel,200000,300000,400000
+47,A,Pengujian Duktilitas Aspal,per sampel,0,0,150000
+48,A,Pengujian ED-XRF (Energy Dispersive X-Ray Fluorescence Spectrometers),per sampel,208000,350000,500000
+49,A,Pengujian EDX,per spektrum,213000,250000,350000
+50,A,Pengujian Emission Gas Analyzer,per titik,35000,75000,150000
+51,A,Pengujian FTIR (ATR-ZnSe - Tanpa Interpretasi data),per sampel,51000,75000,100000
+52,A,Pengujian FTIR +Identifikasi Library (ATR-ZnSe - Tanpa Interpretasi data),per sampel,102000,120000,120000
+53,A,Pengujian Gas Chromatography (GC) tanpa Deret Standar,per sampel,128000,150000,235000
+54,A,Pengujian Geoteknik Laboratorium - Bulk Density - Berat Volume,per sampel,0,0,200000
+55,A,Pengujian Geoteknik Laboratorium - CBR Soaked (Terendam),per sampel,0,0,300000
+56,A,Pengujian Geoteknik Laboratorium - CBR Unsoaked (Tak Terendam),per sampel,0,0,250000
+57,A,Pengujian Geoteknik Laboratorium - Plastic Limit - Batas Plastis,per sampel,0,0,100000
+58,A,Pengujian Geoteknik Laboratorium Konsolidasi - Penurunan,per sampel,0,0,250000
+59,A,Pengujian Geoteknik Laboratorium Pemadatan Modifikasi,per sampel,0,0,300000
+60,A,Pengujian Geoteknik Laboratorium Pemadatan Standar,per sampel,0,0,300000
+61,A,Pengujian Geoteknik Lapangan - CBR Lapangan / Field CBR Test Set,per titik,0,0,500000
+62,A,Pengujian Geoteknik Lapangan - Dynamic Cone Penetration - Analisis Nilai CBR,per hari,0,0,400000
+63,A,Pengujian Gumpalan Lempung & Butiran Mudah Pecah,per sampel,50000,75000,150000
+64,A,Pengujian Hammer Test,per hari,0,0,200000
+65,A,Pengujian HPLC (include standar),per sampel,97000,250000,300000
+66,A,Pengujian HPLC (tanpa standar dan dengan fase gerak),per sampel,64000,75000,150000
+67,A,Pengujian HPLC (tanpa standar dan tanpa fase gerak),per jam,64000,75000,150000
+68,A,Pengujian Impak,per sampel,85000,100000,200000
+69,A,Pengujian Impak plastik dan komposit (Charpy - izod),per sampel,40000,60000,120000
+70,A,Pengujian Indeks Kelonjongan Agregat,per sampel,0,0,200000
+71,A,Pengujian Kadar Air Agregat Halus/Kasar,per sampel,0,0,100000
+72,A,Pengujian Kadar Besi (Fe) Pada Air dengan Spektro UV-Vis,per sampel,30000,50000,70000
+73,A,Pengujian Kadar Etanol dengan Gas Chromatography (GC),per sampel,128000,150000,235000
+74,A,Pengujian Kadar MBAS/surfaktan (mg/L) pada Air dengan Spektro UV-Vis,per sampel,40000,70000,85000
+75,A,Pengujian Kadar Organik Agregat Halus,per sampel,0,0,150000
+76,A,Pengujian Kadar Phospat (PO4-P) (mg/L) pada Air dengan Spektro UV-Vis,per sampel,26000,40000,45000
+77,A,Pengujian Karoten,per sampel,85000,100000,140000
+78,A,Pengujian Kehilangan Berat,per sampel,0,0,150000
+79,A,Pengujian Kekerasan Brinell,per tiga titik,85000,100000,200000
+80,A,Pengujian Kekerasan Rockwell,per tiga titik,85000,100000,200000
+81,A,Pengujian Kekerasan Vickers,per tiga titik,100000,150000,220000
+82,A,Pengujian Kelekatan Agregat Terhadap Aspal,per sampel,0,0,150000
+83,A,Pengujian Kuat Tarik Baja Tulangan (Diameter 10-16),per sampel,40000,80000,200000
+84,A,Pengujian Kuat Tekan Beton - Paving - Mortar - Bata Ringan,per sampel,45000,85000,160000
+85,A,Pengujian Lentur Balok,per sampel,40000,100000,300000
+86,A,Pengujian Linear Polarization Test dengan Potensiostat,per sampel,200000,250000,500000
+87,A,Pengujian Liquid Limit - Batas Cair,per sampel,0,0,100000
+88,A,Pengujian Long/Cross Section,per m²,0,0,150000
+89,A,Pengujian Marshall Aspal,per sampel,50000,80000,200000
+90,A,Pengujian Material/Bahan Jalan - Persentase Butiran Pecah,per sampel,0,0,150000
+91,A,Pengujian Metalografi (5 gambar),per spesimen,150000,200000,250000
+92,A,Pengujian Metalografi + Grain Size dengan Inverted Microscope,per spesimen,510000,600000,1250000
+93,A,Pengujian Mikroskop Optik Biologi (5 gambar),per sampel,90000,125000,150000
+94,A,Pengujian NDT Penetrant,per sampel,30000,50000,100000
+95,A,Pengujian Near-infrared (NIR) spectroscopy (Proximat),per sampel,55000,75000,100000
+96,A,Pengujian Optical Emission Spectroscop (OES) Matrix : Fe - Al. Cu - Ni dan Ti (belum termasuk preparasi),per spesimen,264000,310000,400000
+97,A,Pengujian Partikel Pipih Agregat,per sampel,0,0,100000
+98,A,Pengujian Pemadatan Aspal,per sampel,0,0,150000
+99,A,Pengujian Penyerapan Agregat Halus/Kasar,per sampel,0,0,100000
+100,A,Pengujian Poligon,per m²,0,0,200000
+101,A,Pengujian Sand Cone - Pemadatan Tanah,per hari,0,0,250000
+102,A,Pengujian SEM (Exclude Coating - 3 gambar) maksimal perbesaran 20.000x,per sampel,175000,215000,320000
+103,A,Pengujian SEM-EDX (Exclude Coating - 3 sprektrum),per sampel,315000,365000,600000
+104,A,Pengujian SEM-EDX + Mapping (Exclude Coating - 3 Area),per sampel,450000,525000,800000
+105,A,Pengujian Sensor dan Material Elektronik,per hari,215000,250000,800000
+106,A,Pengujian Serat Kasar,per sampel,70000,100000,200000
+107,A,Pengujian Shirangke Limit - Batas Susut,per sampel,0,0,150000
+108,A,Pengujian Sondir 5 ton - Cone Penetration Test (CPT),per hari,0,0,2500000
+109,A,Pengujian Specific Gravity - Berat Jenis,per sampel,0,0,150000
+110,A,Pengujian Spektofotometer UV-Vis (Scanning Panjang Gelombang),per sampel,15000,20000,35000
+111,A,Pengujian Spektofotometer UV-Vis (Uji Absorbansi),per sampel,10000,15000,25000
+112,A,Pengujian Swelling - Uji Pengembangan,per sampel,0,0,250000
+113,A,Pengujian Tarik Biomaterial,per sampel,38000,50000,100000
+114,A,Pengujian Tarik Logam,per sampel,50000,90000,200000
+115,A,Pengujian Tarik Non Logam,per sampel,40000,80000,150000
+116,A,Pengujian TDS,per sampel,43000,50000,100000
+117,A,Pengujian Tekan,per sampel,50000,90000,200000
+118,A,Pengujian Tekan Biomaterial,per sampel,26000,30000,60000
+119,A,Pengujian Titik Lembek Aspal,per sampel,0,0,150000
+120,A,Pengujian Titik Nyala dan Bakar Aspal,per sampel,0,0,250000
+121,A,Pengujian Topografi,per m²,85000,100000,300000
+122,A,Pengujian Total Fenol,per sampel,120000,150000,300000
+123,A,Pengujian Total Tanin,per sampel,120000,150000,300000
+124,A,Pengujian Triaxial - CU,per sampel,0,0,500000
+125,A,Pengujian Triaxial - UU,per sampel,0,0,250000
+126,A,Pengujian Unconfined Compression Strength,per sampel,0,0,300000
+127,A,Pengujian Volumetri,per sampel,0,0,200000
+128,A,Pengujian Water Content - Kadar Air,per sampel,0,0,100000
+129,A,Pengujian XRD Full Pattern,per sampel,90000,125000,250000
+130,A,Pengujian XRD Short Range (Max. 50 derajat),per sampel,45000,75000,150000
+131,A,Pengujian-Preparasi Coating SEM (Max. 7 sampel),per running 7 sampel/30sec @I=10 mA,220000,260000,525000
+132,B,Jasa analisis data FTIR,per sampel,105000,175000,400000
+133,B,Jasa analisis data XRD,per sampel,150000,200000,500000
+134,B,Jasa cetak 3D ABS,per gram,1500,2000,3000
+135,B,Jasa cetak 3D PETG,per gram,1000,1500,2500
+136,B,Jasa cetak 3D PLA,per gram,1000,1500,2000
+137,B,Jasa cetak PCB double layer FR4,per cm2,1500,2000,3000
+138,B,Jasa cetak PCB double layer pertinax,per cm2,1000,1500,2500
+139,B,Jasa cetak PCB single layer FR4,per cm2,500,1000,1500
+140,B,Jasa cetak PCB single layer pertinax,per cm2,500,1000,1500
+141,B,Jasa CNC laser cutting kayu dan akrilik max 5mm,per jam,25000,36000,60000
+142,B,Jasa CNC Milling 3 Axis,per cm3,100000,150000,250000
+143,B,Jasa Database Adminstrator,orang/jam,0,0,200000
+144,B,Jasa Mesin potong plat CNC Plasma Cutting,per cm2,4000,5000,50000
+145,B,Jasa Network Engineer,orang/jam,0,0,200000
+146,B,Jasa Preparasi sampel AAS non destruktif microwave,per sampel,43000,50000,80000
+147,B,Jasa Programmer Android,orang/jam,0,0,200000
+148,B,Jasa Programmer Web,orang/jam,0,0,200000
+149,B,Jasa System Administrator,orang/jam,0,0,200000
+150,B,Layanan Cetak Lembar A3 Hitam Putih,per lembar,1500,2000,3000
+151,B,Layanan Cetak Lembar A3 Warna,per lembar,2000,3000,4000
+152,B,Layanan Cetak Lembar A4 Hitam Putih,per lembar,500,1000,1500
+153,B,Layanan Cetak Lembar A4 Warna,per lembar,1000,1500,2000
+154,B,Layanan Pembuatan Layout Peta Hasil Analisa,per layout peta,0,0,450000
+155,B,Layanan Pengolahan dan Interpretasi Peta,per jenis analisis,0,0,500000
+156,B,Layanan Penyewaan Document Camera,per hari,0,0,100000
+157,B,Layanan Permintaan Data Digital Hasil Olahan Maksimal 2 Atribut,per shapefile,0,0,500000
+158,B,Layanan Preparasi Sampel Uji Air dengan Spektro UV-Vis,per sampel,70000,100000,150000
+159,B,Layanan Produksi Water Purifier Production (Akuadest),per liter,0,0,5000
+160,B,Layanan Produksi Water Purifier Production (Demin),per liter,0,0,10000
+161,B,Layanan Sewa Full Set Studio Foto,per jam,0,0,350000
+162,B,Layanan Survey Koordinat oleh Tenaga Ahli,per orang hari,0,0,200000
+163,B,Survey Deteksi Struktur Bawah Tanah (Tanpa Operator),per hari,1275000,1500000,2600000
+164,B,Survey Down Hole Seismic (PASI GEA 24) (Tanpa Operator),per hari,213000,250000,1000000
+165,B,Survey Geolistrik (Tanpa Operator),per hari,213000,250000,685000
+166,B,Survey Inventaris Jalan (Tanpa Operator) (12 jam),per titik,0,0,150000
+167,B,Survey Kecepatan (Kecepatan Rerata Ruang),per jam,0,0,250000
+168,B,Survey Kecepatan Kendaraan (Tanpa Operator),per jam,0,0,250000
+169,B,Survey Lalu Lintas (12 jam) (Tanpa Operator),per titik,0,0,150000
+170,B,Survey Mikroseismic (PASI Gemini) (Tanpa Operator),per hari,213000,250000,1000000
+171,B,Survey Seismic Refraksi + Down Hole Menggunakan (PASI GEA 24) (Tanpa Operator),per hari,213000,250000,2000000
+172,B,Survey Sesimic Refraksi 24 Channel (Tanpa Operator),per hari,213000,250000,1500000
+173,C,Sewa Hand Stacker,per hari,0,0,25000
+174,C,Sewa Heating Mantle,per jam,0,0,7000
+175,C,Sewa Heating Mantle,per hari (max. 8 jam),0,0,30000
+176,C,Sewa 3D Printer tanpa filamen,per jam,13000,15000,25000
+177,C,Sewa Alat Flue Gas Analyzer ECOM-J2KN-Pro,per hari,900000,1250000,1500000
+178,C,Sewa Alat Gelas Kimia,per unit/per bulan,0,0,5000
+179,C,Sewa alat In Situ Metallography dengan polish,per jam,170000,200000,500000
+180,C,Sewa alat In Situ Metallography tanpa polish,per jam,170000,200000,500000
+181,C,Sewa alat NDT Eddy Current tanpa test block,per jam,45000,50000,150000
+182,C,Sewa alat NDT Magnetic Testing,per jam,128000,150000,300000
+183,C,Sewa alat NDT Ultrasonic Testing,per jam,150000,175000,350000
+184,C,Sewa Antropometri (Dengan Operator),per orang,80000,110000,150000
+185,C,Sewa Antropometri,per orang,15000,30000,100000
+186,C,Sewa Antropometri Kit,per hari,0,0,50000
+187,C,Sewa Asphalt Compactor,per jam,0,0,80000
+188,C,Sewa Auto Soxhlet Fat Extractor,per jam,0,0,20000
+189,C,Sewa Autoclave,per running alat,0,0,30000
+190,C,Sewa Bak Ukur,per hari,0,0,35000
+191,C,Sewa Ball mill (table top),per jam,12000,17000,50000
+192,C,Sewa Cabinet dryer,per jam,0,0,10000
+193,C,Sewa Centrifuge (15 ml - rpm 45000),per hari (max. 8 jam),0,0,45000
+194,C,Sewa Centrifuge (15mL / 10.000 rpm dingin),per jam,9000,10000,38000
+195,C,Sewa Centrifuge 14000 rpm (swing and fixed),per jam,0,0,37000
+196,C,Sewa Cetakan Mortar,per hari,0,0,70000
+197,C,Sewa Clamp on Power Logger,per hari,213000,250000,460000
+198,C,Sewa COD reactor,per jam,0,0,20000
+199,C,Sewa Colony Counter,Per jam,0,0,20000
+200,C,Sewa Core Drill,per hari,0,0,400000
+201,C,Sewa Counting,per hari,0,0,5000
+202,C,Sewa Current Meter,per hari,70000,100000,200000
+203,C,Sewa Desikator,per bulan,0,0,10000
+204,C,Sewa Digital Caliper,per jam,0,0,20000
+205,C,Sewa Distilasi Minyak Aatsiri,per kg simplisia,0,0,200000
+206,C,Sewa DO Meter,per hari,43000,50000,170000
+207,C,Sewa Double pipe heat exchanger (floor),per jam,0,0,30000
+208,C,Sewa Driving Car Simulator,per hari,110000,150000,175000
+209,C,Sewa Drone DJI Matric 350 RTK,per hari,3000000,3500000,7500000
+210,C,Sewa Drone DJI Mavic 3 Enterprise Multispectral,per hari,1700000,2000000,3000000
+211,C,Sewa Earth Ground Tester,per hari,43000,50000,150000
+212,C,Sewa Echosounder Garmin (GPS+Tranducer),per hari,106000,125000,250000
+213,C,Sewa Extruder Elektric,per jam,0,0,15000
+214,C,Sewa Fermentor,per hari (max. 8 jam),0,0,500000
+215,C,Sewa Flokulator/ Jar Test,Per jam,0,0,10000
+216,C,Sewa Flow Table Electric,per hari,0,0,120000
+217,C,Sewa Freeze dryer,per jam,10000,15000,50000
+218,C,Sewa Freeze dryer,per hari,85000,100000,400000
+219,C,Sewa Freezer untuk Penyimpanan Sampel,per hari,5000,10000,20000
+220,C,Sewa Function Generator,per hari,0,0,50000
+221,C,Sewa Furnace,per jam,0,0,45000
+222,C,Sewa Gas Chromatography,per jam,20000,40000,100000
+223,C,Sewa GNSS Mobile,per hari,150000,200000,350000
+224,C,Sewa GPS Garmin Monterrra (Hand GPS) Alat,per hari,0,0,50000
+225,C,Sewa GPS Geodetic,per hari,170000,200000,1000000
+226,C,Sewa Hammer Test,per hari,0,0,80000
+227,C,Sewa Hand Boring,per hari,0,0,1000000
+228,C,Sewa Hand Palet Truck,per hari,0,0,20000
+229,C,Sewa Hidrometer 152H,per hari,0,0,40000
+230,C,Sewa High Speed Camera,per hari,425000,500000,1000000
+231,C,Sewa Homogenaizer Ultrasonic,per jam,3000,5000,10000
+232,C,Sewa Hotplate dan Magnetic Stirrer,per jam,0,0,7000
+233,C,Sewa Hotplate dan Magnetic Stirrer,per hari (max. 8 jam),0,0,47000
+234,C,Sewa HVAS,per titik,425000,750000,1000000
+235,C,Sewa Inkubator Mikrobiologi,per jam,0,0,10000
+236,C,Sewa Insulation Continuity Tester (Megger Tester),per hari,213000,250000,500000
+237,C,Sewa Inverted Microscope,per jam,50000,100000,200000
+238,C,Sewa Komputer,per unit per hari,0,0,60000
+239,C,Sewa Komputer (High Spec),per unit per hari,0,0,125000
+240,C,Sewa Kulkas,per hari (max.8 jam),0,0,20000
+241,C,Sewa Laminar air flow,per jam,0,0,30000
+242,C,Sewa Lemari Asam,per jam,0,0,100000
+243,C,Sewa Manekin CPR Half,per hari,85000,100000,200000
+244,C,Sewa Marshall Compression Machine,per hari,0,0,100000
+245,C,Sewa Megafuge 8R centrifuge (-10-40 C),per jam,17000,20000,40000
+246,C,Sewa Mesh Ayakan,per jam,0,0,5000
+247,C,Sewa Mesin bubut,per cm,10000,12000,28500
+248,C,Sewa Mesin bubut 2 Meter,per jam,43000,50000,100000
+249,C,Sewa Mesin las Listrik MIG,per jam,30000,35000,82500
+250,C,Sewa Mesin las listrik SMAW,per jam,20000,27500,75000
+251,C,Sewa Mesin las listrik TIG,per jam,30000,35000,82500
+252,C,Sewa Mesin Mixer Daging,per jam,0,0,10000
+253,C,Sewa Mesin pencetak pelet,per kilo,0,0,15000
+254,C,Sewa Mesin penepung multiguna,per jam,0,0,10000
+255,C,Sewa Mesin pengaduk pakan,per kilo,0,0,10000
+256,C,Sewa Mesin Polish,per jam,20000,25000,50000
+257,C,Sewa Mesin potong plat CNC Plasma Cutting,per jam,50000,75000,150000
+258,C,Sewa Mesin universal milling,per jam,43000,50000,100000
+259,C,Sewa Mesin Vacuum Sealer,per jam,0,0,10000
+260,C,Sewa Meteran Dorong,per hari,0,0,25000
+261,C,Sewa Micro Centrifuge,per jam,0,0,30000
+262,C,Sewa MiCRO Centrifuge (1,5 ml - max 18 ml - rpm 10.000),per hari (max. 8 jam),0,0,80000
+263,C,Sewa Microvawe Digester,per running (maks. 20 sampel),0,0,92000
+264,C,Sewa Mikropipet,per hari,0,0,2000
+265,C,Sewa Mikroskop Optik Biologi / Metalografi tanpa operator,per jam,9000,10000,40000
+266,C,Sewa Mikroskop Optik Biologi / Metalografi tanpa operator (Include larutan etsa 100 mL),per jam,11000,30000,70000
+267,C,Sewa Mini Mill,per jam,0,0,60000
+268,C,Sewa Mixer Marvell,per jam,0,0,5000
+269,C,Sewa Mold Beton 15x30 cm / 10x20 cm,per hari,0,0,70000
+270,C,Sewa Mold California Bearing Ratio (CBR),per hari,0,0,50000
+271,C,Sewa Molen Concrete Mixer Diesel,per hari,0,0,250000
+272,C,Sewa Molen Listrik,per hari,0,0,100000
+273,C,Sewa Multi gas detector,per hari,90000,100000,200000
+274,C,Sewa Multimeter Digital,per hari,0,0,50000
+275,C,Sewa NDT Ultrasonic,per sampel,213000,250000,600000
+276,C,Sewa Neraca Analitik,per jam,0,0,20000
+277,C,Sewa Neraca Presisi,per jam,0,0,15000
+278,C,Sewa OES (Optical Emission Spectroscop) Matrix : Fe - Al. Cu - Ni dan Ti,per hari,510000,600000,700000
+279,C,Sewa Orbital Shaker,per jam,0,0,15000
+280,C,Sewa Osiloskop,per hari,0,0,110000
+281,C,Sewa Oven,per jam,0,0,20000
+282,C,Sewa Oven,per hari (max.8 jam),0,0,160000
+283,C,Sewa Overhead Stirrer,per hari (max.8 jam),0,0,50000
+284,C,Sewa Overhead Stirrer,per jam,0,0,5000
+285,C,Sewa Penggunaan Galvano Include Elektroda Referance,per minggu (5 hari x 24 jam),680000,800000,1000000
+286,C,Sewa Penggunaan Galvano Exclude Elektroda Referance,per minggu (5 hari x 24 jam),300000,500000,650000
+287,C,Sewa pH Meter,per jam,0,0,15000
+288,C,Sewa Plate & Frame Filter Press,per jam,0,0,20000
+289,C,Sewa Pompa Vakum,per running (maks. 30 min),0,0,100000
+290,C,Sewa Power Supply AC/DC,per jam,0,0,50000
+291,C,Sewa Power Supply AC/DC 12V/5A,per hari,0,0,70000
+292,C,Sewa Refractometer,per hari,0,0,45000
+293,C,Sewa Refrigerated Bath Circulator,per jam,0,0,20000
+294,C,Sewa RFID Stock Warehouse,per hari,160000,242000,350000
+295,C,Sewa Roll Meter 100m,per hari,0,0,25000
+296,C,Sewa Rotary dryer,per jam,0,0,91000
+297,C,Sewa Rotary evaporator,per jam,5000,10000,40000
+298,C,Sewa Ruang Laboratorium Untuk Penelitian S1,per semester,0,0,1000000
+299,C,Sewa Ruang Laboratorium Untuk Penelitian S2- S3,per semester,0,0,1000000
+300,C,Sewa Ruang Laboratorium Untuk Penelitian Umum/ Nonakademik,per semester,0,0,1000000
+301,C,Sewa Ruang untuk workshop/ seminar/diskusi/ pelatihan,per jam,0,0,150000
+302,C,Sewa Ruang Untuk Workshop/Seminar/Diskusi/ Pelatihan/Praktikum/Ujian,per jam,0,0,150000
+303,C,Sewa Sand Cone,per hari,0,0,100000
+304,C,Sewa Self Contained Breathing Apparatus (dengan isi),per hari,100000,150000,300000
+305,C,Sewa Self Contained Breathing Apparatus (tanpa isi),per hari,80000,100000,200000
+306,C,Sewa Sepeda statis,per hari,53000,85000,130000
+307,C,Sewa Set alat distilasi,per hari,0,0,25000
+308,C,Sewa Set Alat Titrasi,per unit/per bulan,0,0,10000
+309,C,Sewa Sieve Sheaker (Mesin Ayakan),per jam,0,0,15000
+310,C,Sewa Slump Test Set,per jam,0,0,8000
+311,C,Sewa Sound Level Meter,per hari,0,0,150000
+312,C,Sewa Spectrum Analyzer,per hari,0,0,250000
+313,C,Sewa Speed Gun,per hari,0,0,50000
+314,C,Sewa Spektrofotometer Ultra Violet - Visible (UV-Vis),per jam,10000,20000,40000
+315,C,Sewa Spektrofotometer UV-Vis Single Beam,per jam,10000,15000,30000
+316,C,Sewa Spray Dryer,per jam,85000,100000,250000
+317,C,Sewa Steel Beam Mold,per hari,0,0,80000
+318,C,Sewa Tandu,per hari,0,0,50000
+319,C,Sewa Tensi meter Omron,per hari,0,0,50000
+320,C,Sewa Theodolit,per hari,0,0,100000
+321,C,Sewa Timbangan 200 kg,per jam,0,0,20000
+322,C,Sewa Timbangan Analitik / Presisi,per hari,0,0,50000
+323,C,Sewa Timbangan Analitik 1 kg,per jam,0,0,15000
+324,C,Sewa Timbangan Analitik 2 kg,per jam,0,0,15000
+325,C,Sewa Timbangan Analitikk 6 kg,per jam,0,0,15000
+326,C,Sewa Timbangan Kapasitas 100 kg,per jam,0,0,15000
+327,C,Sewa Timbangan Kapasitas 150 kg,per jam,0,0,10000
+328,C,Sewa Timbangan Kapasitas 25 kg,per jam,0,0,10000
+329,C,Sewa Timbangan ketelitian (0.0001g),per jam,0,0,25000
+330,C,Sewa Timbangan ketelitian (0.01g),per jam,0,0,15000
+331,C,Sewa Torque Meter,per hari,0,0,40000
+332,C,Sewa Total Station,per hari,0,0,250000
+333,C,Sewa Tripod,per hari,0,0,35000
+334,C,Sewa Tubular Furnace,per jam,43000,50000,100000
+335,C,Sewa Turbidimeter,per jam,0,0,10000
+336,C,Sewa Ultrasonic Bath,per jam,0,0,10000
+337,C,Sewa Ultrasonic Bath,per hari (max. 8 jam),0,0,45000
+338,C,Sewa Ultrasonic Pulse Velocity Tester,per hari,170000,200000,450000
+339,C,Sewa Vacum Concentration (SpeedVac),per jam,17000,20000,50000
+340,C,Sewa Vacuum Pump Filtration,per running (maks. 30 min),0,0,10000
+341,C,Sewa Vibration Meter,per hari,60000,100000,200000
+342,C,Sewa Vibratory Sieve shaker,per jam,0,0,20000
+343,C,Sewa Vicat,per hari,0,0,100000
+344,C,Sewa Virtual Private Server (VPS),per bulan,0,0,4950000
+345,C,Sewa Viscometer Capillary Oswald,Per hari (max. 8 jam),0,0,50000
+346,C,Sewa Vortex,per hari,0,0,52000
+347,C,Sewa Water Bath,per hari,22000,32500,100000
+348,C,Sewa Waterpass (Auto Level),per hari,0,0,100000
+349,C,Sewa Wetbulb Globe Temperature,per hari,20000,50000,75000
+350,D,Praktikum Ergonomi & Antropometri (Tanpa Asisten Praktikum),per peserta,37000,56000,80000
+351,D,Praktikum Fisika Dasar 1 (Modul Gaya Sentripetal) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+352,D,Praktikum Fisika Dasar 1 (Modul Gelombang) (Tanpa Asisten Praktikum),per peserta,0,0,100000
+353,D,Praktikum Fisika Dasar 1 (Modul Gerak Jatuh Bebas) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+354,D,Praktikum Fisika Dasar 1 (Modul Gerak Rotasi) (Tanpa Asisten Praktikum),per peserta,0,0,100000
+355,D,Praktikum Fisika Dasar 1 (Modul GLB dan GLBB) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+356,D,Praktikum Fisika Dasar 1 (Modul Koefisien Muai Panjang) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+357,D,Praktikum Fisika Dasar 1 (Modul Modulus Elastisitas) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+358,D,Praktikum Fisika Dasar 1 (Modul Pengukuran dan Ketidakpastian) (Tanpa Asisten Praktikum),per peserta,0,0,75000
+359,D,Praktikum Fisika Dasar 1 (Modul Praktikum Fisika Modul Kalorimeter) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+360,D,Praktikum Fisika Dasar 1 (Modul Praktikum Fisika Modul Momen Inersia) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+361,D,Praktikum Fisika Dasar 1 (Modul Resonansi) (Tanpa Asisten Praktikum),per peserta,0,0,80000
+362,D,Praktikum Fisika Dasar 1 (Modul Tetapan Gaya Pegas) (Tanpa Asisten Praktikum),per peserta,0,0,70000
+363,D,Praktikum Fisika Dasar 1 (Modul Viskositas Zat Cair) (Tanpa Asisten Praktikum),per peserta,0,0,125000
+364,D,Praktikum Fisika Dasar 2 (Modul Medan Magnet dalam Selenoida) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+365,D,Praktikum Fisika Dasar 2 (Modul Difraksi dan Interferensi) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+366,D,Praktikum Fisika Dasar 2 (Modul Hukum Kirchoff) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+367,D,Praktikum Fisika Dasar 2 (Modul Induksi Motor Listrik) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+368,D,Praktikum Fisika Dasar 2 (Modul Jembatan Wheatstone) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+369,D,Praktikum Fisika Dasar 2 (Modul Rangkaian Resistor - dan Induktor) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+370,D,Praktikum Fisika Dasar 2 (Modul Rangkaian Resistor - dan Kapasitor) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+371,D,Praktikum Fisika Dasar 2 (Modul Rangkaian Resistor - Induktor - dan Kapasitor) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+372,D,Praktikum Fisika Dasar 2 (Modul Rangkaian Seri dan Paralel) (Tanpa Asisten Praktikum),per peserta,0,0,40000
+373,D,Praktikum Fisika Dasar 2 (Modul Reaktansi Kapasitif) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+374,D,Praktikum Fisika Dasar 2 (Modul Voltameter) (Tanpa Asisten Praktikum),per peserta,0,0,50000
+375,D,Praktikum Microcontroller (Tanpa Asisten Praktikum),per peserta,0,0,30000
+376,D,Praktikum Rangkaian Digital (Tanpa Asisten Praktikum),per peserta,0,0,30000
+377,D,Praktikum Rangkaian Elektronika 1 (Tanpa Asisten Praktikum),per peserta,0,0,30000
+378,D,Praktikum Rangkaian Listrik 1 (Tanpa Asisten Praktikum),per peserta,0,0,30000
+379,D,Praktikum/ Penelitian S1/S2/S3/Umum (per peserta),per minggu,0,0,120000
+380,D,Praktikum/ Penelitian S1/S2/S3/Umum (per peserta),per bulan,0,0,450000
+381,D,Praktikum/ Penelitian S1/S2/S3/Umum (per peserta),per semester,0,0,2700000
+382,D,Praktikum/ Penelitian SD/SMP/SMA (per peserta),per minggu,0,0,120000
+383,D,Praktikum/ Penelitian SD/SMP/SMA (per peserta),per bulan,0,0,450000
+384,D,Praktikum/ Penelitian SD/SMP/SMA (per peserta),per semester,0,0,2700000
+385,D,Pelatihan Basic PLC Sertifikasi OMRON,per peserta,2000000,2800000,3500000
+386,D,Pelatihan dan Sertifikasi program komputer,per peserta,80000,100000,1500000
+387,D,Pelatihan Operasi dan Monitor Pembangkit Listrik Energi Terbarukan Off-Grid,per peserta,1000000,1800000,2800000
