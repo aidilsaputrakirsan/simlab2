@@ -9,4 +9,8 @@ export class DashboardService {
     }) {
         return await this.dashboardRepository.getWeeklySchedule(params)
     }
+
+    async getAdminPengujianDashboard() {
+        return await this.dashboardRepository.getAdminPengujianDashboard()
+    }
 }

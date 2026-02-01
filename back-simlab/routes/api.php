@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AcademicYearController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FacultyController;
 use App\Http\Controllers\Api\InstitutionController;
 use App\Http\Controllers\Api\LaboratoryEquipmentController;
@@ -51,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('laboratory-rooms', LaboratoryRoomController::class)->only(['index']);
     Route::get('/laboratory-rooms/{id}/schedules', [LaboratoryRoomController::class, 'getScheduledSessions']);
     Route::get('/dashboard/weekly-schedule', [LaboratoryRoomController::class, 'getWeeklyScheduleDashboard']);
+    Route::get('/dashboard/admin-pengujian', [DashboardController::class, 'adminPengujian'])->middleware('role:admin_pengujian');
     Route::resource('practicums', PracticumController::class)->only(['index']);
 
     // Spesific select API

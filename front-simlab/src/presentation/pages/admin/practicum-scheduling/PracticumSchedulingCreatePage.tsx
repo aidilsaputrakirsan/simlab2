@@ -294,7 +294,7 @@ const PracticumSchedulingCreatePage = () => {
                                                 name='name'
                                                 value={classes.name}
                                                 onChange={(e) => handleClassChange(e, cidx)}
-                                                placeholder='Nama Kelas'
+                                                placeholder='A / B / C / Z / -'
                                             />
                                             {errors[`classes.${cidx}.name`] && (
                                                 <span className="text-xs text-red-500 mt-1">{errors[`classes.${cidx}.name`]}</span>

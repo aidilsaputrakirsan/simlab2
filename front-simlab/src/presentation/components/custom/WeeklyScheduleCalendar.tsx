@@ -148,20 +148,12 @@ export const WeeklyScheduleCalendar: React.FC<WeeklyScheduleCalendarProps> = ({
     return (
         <Card>
             <CardHeader className="pb-3">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <CardTitle className="flex items-center gap-2">
-                        <Calendar className="h-5 w-5" />
-                        Jadwal Praktikum Mingguan
-                    </CardTitle>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <Combobox
-                            options={roomSelectOptions}
-                            value={selectedRoomId?.toString() || '0'}
-                            onChange={(val) => onRoomFilter(val === '0' ? null : Number(val))}
-                            placeholder="Filter Ruangan"
-                            optionLabelKey="name"
-                            optionValueKey="id"
-                        />
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <CardTitle className="flex items-center gap-2">
+                            <Calendar className="h-5 w-5" />
+                            Jadwal Praktikum Mingguan
+                        </CardTitle>
                         <div className="flex items-center gap-2">
                             <Button variant="outline" size="icon" onClick={handlePrevWeek}>
                                 <ChevronLeft className="h-4 w-4" />
@@ -174,8 +166,18 @@ export const WeeklyScheduleCalendar: React.FC<WeeklyScheduleCalendarProps> = ({
                             </Button>
                         </div>
                     </div>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="text-sm text-muted-foreground">{formatWeekRange}</p>
+                        <Combobox
+                            options={roomSelectOptions}
+                            value={selectedRoomId?.toString() || '0'}
+                            onChange={(val) => onRoomFilter(val === '0' ? null : Number(val))}
+                            placeholder="Filter Ruangan"
+                            optionLabelKey="name"
+                            optionValueKey="id"
+                        />
+                    </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">{formatWeekRange}</p>
             </CardHeader>
             <CardContent className="overflow-x-auto">
                 <div className="min-w-[800px]">
@@ -205,7 +207,7 @@ export const WeeklyScheduleCalendar: React.FC<WeeklyScheduleCalendarProps> = ({
                         <div key={room.roomId} className="mb-4">
                             {/* Room Name */}
                             <div className="grid grid-cols-[120px_repeat(7,1fr)] gap-1 mb-1">
-                                <div className="text-xs font-semibold p-2 bg-secondary rounded flex items-center">
+                                <div className="text-xs font-semibold p-2 bg-primary text-primary-foreground rounded flex items-center">
                                     {room.roomName}
                                 </div>
                                 {data.dates.map((dateInfo) => (

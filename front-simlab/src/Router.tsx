@@ -472,7 +472,7 @@ export const router = createBrowserRouter([
                     {
                         path: ':id/detail',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Mahasiswa, userRole.Dosen, userRole.AdminPengujian, userRole.Kooprodi]}>
+                            <ProtectedRoute allowedRoles={[userRole.KepalaLabJurusan, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.Mahasiswa, userRole.Dosen, userRole.AdminPengujian, userRole.Kooprodi, userRole.PihakLuar]}>
                                 <TestingRequestDetailPage />
                             </ProtectedRoute>
                         )

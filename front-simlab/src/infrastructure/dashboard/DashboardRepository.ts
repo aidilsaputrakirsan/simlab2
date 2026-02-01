@@ -1,3 +1,4 @@
+import { AdminPengujianDashboardData } from "@/domain/dashboard/AdminPengujianDashboard"
 import { WeeklyScheduleData } from "@/domain/dashboard/WeeklySchedule"
 import { ApiResponse } from "@/presentation/shared/Types"
 import { fetchApi } from "../ApiClient"
@@ -19,6 +20,19 @@ export class DashboardRepository {
             return {
                 ...json,
                 data: toDomain(data)
+            }
+        }
+        throw json
+    }
+
+    async getAdminPengujianDashboard(): Promise<ApiResponse<AdminPengujianDashboardData>> {
+        const response = await fetchApi(`/dashboard/admin-pengujian`, { method: 'GET' })
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            return {
+                ...json,
+                data: json.data as AdminPengujianDashboardData
             }
         }
         throw json
