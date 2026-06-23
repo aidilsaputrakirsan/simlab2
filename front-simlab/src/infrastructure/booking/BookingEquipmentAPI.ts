@@ -6,6 +6,7 @@ export type BookingEquipmentAPI = {
     quantity: number;
     equipment_name: string,
     unit: string;
+    location?: string;
     price: number;
     subtotal: number;
 }
@@ -25,6 +26,10 @@ export function toDomain(api: BookingEquipmentAPI): BookingEquipment {
 
     if (api.unit) {
         bookingEquipment.setUnit(api.unit)
+    }
+
+    if (api.location) {
+        bookingEquipment.setLocation(api.location)
     }
 
     return bookingEquipment

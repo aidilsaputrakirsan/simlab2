@@ -225,4 +225,25 @@ export class BookingRepository implements IBookingRepository {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
     }
+
+    async downloadDocument(id: number): Promise<void> {
+        const response = await fetchApi(`/bookings/${id}/document`, { method: 'GET' });
+
+        if (!response.ok) {
+            throw new Error('Gagal membuka dokumen peminjaman');
+        }
+
+        // Buka PDF di tab baru untuk preview (browser tetap menyediakan opsi unduh)
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        // Beri jeda agar tab baru sempat memuat sebelum URL di-revoke
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+    }
 }
