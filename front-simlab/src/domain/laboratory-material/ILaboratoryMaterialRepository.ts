@@ -18,6 +18,9 @@ export interface ILaboratoryMaterialRepository {
         expiry_date: Date | undefined;
         description: string;
         refill_date: Date | undefined;
+        student_price: number | null;
+        lecturer_price: number | null;
+        external_price: number | null;
     }): Promise<ApiResponse>
     updateData(id: number, data: {
         code: string;
@@ -29,6 +32,15 @@ export interface ILaboratoryMaterialRepository {
         expiry_date: Date | undefined;
         description: string;
         refill_date: Date | undefined;
+        student_price: number | null;
+        lecturer_price: number | null;
+        external_price: number | null;
     }): Promise<ApiResponse>
     deleteData(id: number): Promise<ApiResponse>
+    importData(file: File): Promise<ApiResponse<{
+        imported: number;
+        skipped: { row: number; code: string }[];
+        failed: { row: number; errors: string[] }[];
+    }>>
+    downloadTemplate(): Promise<void>
 }

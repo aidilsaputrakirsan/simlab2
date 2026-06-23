@@ -85,8 +85,9 @@ export const useBooking = ({
             setIsHasDraftBooking(true)
         }
     }
-    const storeBookingRoomNEquipment = (id: number, dto: BookingRoomNEquipmentInputDTO) => service.storeBookingRoomNEquipment(id, dto)
+    const storeBookingRoomNEquipment = (id: number, dto: BookingRoomNEquipmentInputDTO) => service.storeBookingEquipmentMaterial(id, dto)
     const storeBookingEquipment = (id: number, equipments: { id: number, quantity: number }[]) => service.storeBookingEquipment(id, equipments)
+    const getBookingSteps = (id: number) => service.getBookingSteps(id)
     const verifyBooking = async (booking_id: number, data: BookingVerifyDTO): Promise<ApiResponse> => service.verifyBooking(booking_id, data)
 
     return {
@@ -99,6 +100,7 @@ export const useBooking = ({
         getBookingDetail,
         storeBookingRoomNEquipment,
         storeBookingEquipment,
+        getBookingSteps,
         getDataForVerification,
         getReportData,
         verifyBooking

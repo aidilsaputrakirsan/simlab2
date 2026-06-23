@@ -6,9 +6,10 @@ import { LaboratoryMaterialInputDTO } from "@/application/laboratory-material/La
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
 import LaboratoryMaterialFormDialog from "./components/LaboratoryMaterialFormDialog";
+import LaboratoryMaterialImportDialog from "./components/LaboratoryMaterialImportDialog";
 import LaboratoryMaterialDetailDialog from "./components/LaboratoryMaterialDetailDialog";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useLaboratoryMaterialDataTable } from "./hooks/useLaboratoryMaterialDataTable";
@@ -34,6 +35,7 @@ const LaboratoryMaterialPage = () => {
     } = useLaboratoryMaterialDataTable()
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [isImportOpen, setIsImportOpen] = useState<boolean>(false)
     const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false)
     const [selectedLaboratoryMaterial, setSelectedLaboratoryMaterial] = useState<LaboratoryMaterialView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
@@ -86,7 +88,11 @@ const LaboratoryMaterialPage = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Menu Bahan Laboratorium</CardTitle>
-                        <CardAction>
+                        <CardAction className="flex gap-2">
+                            <Button variant={"outline"} onClick={() => setIsImportOpen(true)}>
+                                Import
+                                <Upload />
+                            </Button>
                             <Button variant={"default"} onClick={() => openAdd()}>
                                 Tambah
                                 <Plus />
@@ -122,6 +128,10 @@ const LaboratoryMaterialPage = () => {
                 laboratoryMaterial={selectedLaboratoryMaterial}
                 open={isDetailOpen}
                 onOpenChange={setIsDetailOpen} />
+            <LaboratoryMaterialImportDialog
+                open={isImportOpen}
+                onOpenChange={setIsImportOpen}
+                onImported={refresh} />
         </>
     )
 }

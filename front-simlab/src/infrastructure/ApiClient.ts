@@ -27,7 +27,6 @@ export async function fetchApi(endpoint: string, options: RequestOptions = {}) {
     });
 
     // Wrap response to handle non-JSON errors gracefully
-    const originalJson = response.json.bind(response);
     response.json = async () => {
         const text = await response.clone().text();
         try {

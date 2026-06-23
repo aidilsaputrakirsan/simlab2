@@ -20,6 +20,7 @@ export class PracticumClassView {
             identityNum: string
         },
         readonly laboratoryRoomName?: string,
+        readonly laboratoryRoomPic?: string,
     ) { }
 
     static fromDomain(entity: PracticumClass): PracticumClassView {
@@ -40,6 +41,7 @@ export class PracticumClassView {
                 identityNum: entity.getLecturer()!.identityNumber
             } : undefined,
             entity.getLaboratoryRoomName(),
+            entity.getLaboratoryRoomPic(),
         )
     }
 }

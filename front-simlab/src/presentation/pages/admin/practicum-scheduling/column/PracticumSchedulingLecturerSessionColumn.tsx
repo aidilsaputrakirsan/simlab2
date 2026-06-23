@@ -7,7 +7,7 @@ export const PracticumSchedulingLecturerSessionColumn = (handleOpenLecturerNotes
     const columns: ColumnDef<PracticumSessionView>[] = [
         {
             header: 'Modul Praktikum',
-            cell: ({ row }) => `${row.original.practicumModule?.name}`,
+            cell: ({ row }) => `${row.original.practicumModule ?? ''}`,
         },
         {
             header: 'Jadwal Praktikum',

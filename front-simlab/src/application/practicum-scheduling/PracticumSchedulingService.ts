@@ -3,6 +3,7 @@ import { PracticumSchedulingEquipmentNMaterialInputDTO, PracticumSchedulingInput
 import { PracticumSchedulingView } from "./PracticumSchedulingView";
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { PracticumApprovalView } from "./PracticumApprovalView";
+import { PracticumStepperView } from "./PracticumStepperView";
 
 export class PracticumSchedulingService {
     private readonly practicumSchedulingRepository = new PracticumSchedulingRepository()
@@ -82,6 +83,14 @@ export class PracticumSchedulingService {
 
     async isStillHaveDraftPracticum(): Promise<ApiResponse> {
         return await this.practicumSchedulingRepository.isStillHaveDraftPracticum()
+    }
+
+    async getPracticumSteps(id: number): Promise<ApiResponse<PracticumStepperView[]>> {
+        const response = await this.practicumSchedulingRepository.getPracticumSteps(id);
+        return {
+            ...response,
+            data: response.data ? response.data.map(PracticumStepperView.fromDomain) : []
+        };
     }
 
     async getTestingRequestApprovals(id: number): Promise<ApiResponse<PracticumApprovalView[]>> {

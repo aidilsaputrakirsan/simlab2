@@ -122,8 +122,8 @@ const ApproveWithLaboratoryMaterialRealizationDialog: React.FC<ApproveWithLabora
                       {practicumScheduling.practicumSchedulingMaterials?.map((material, index) => (
                         <TableRow key={material.id ?? index}>
                           <TableCell>{index + 1}</TableCell>
-                          <TableCell>{material.laboratoryMaterial?.materialName}</TableCell>
-                          <TableCell>{material.quantity} {material.laboratoryMaterial?.unit}</TableCell>
+                          <TableCell>{material.materialName}</TableCell>
+                          <TableCell>{material.quantity} {material.unit}</TableCell>
                           <TableCell>
                             <Input
                               type='number'

@@ -11,13 +11,13 @@ export interface IMajorReporsitory {
     }): Promise<PaginatedResponse<Major>>
     createData(data: {
         faculty_id: number | null;
-        code: string;
-        name: string;
+        code: string | null;
+        name: string | null;
     }): Promise<ApiResponse<Major>>
     updateData(id: number, data: {
         faculty_id: number | null;
-        code: string;
-        name: string;
+        code: string | null;
+        name: string | null;
     }): Promise<ApiResponse<Major>>
     deleteData(id: number): Promise<ApiResponse>
     getDataForSelect(): Promise<ApiResponse<MajorSelect[]>>

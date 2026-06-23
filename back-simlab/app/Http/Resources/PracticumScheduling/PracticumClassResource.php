@@ -25,6 +25,8 @@ class PracticumClassResource extends JsonResource
             'laboratory_room_name' => $this->whenLoaded('laboratoryRoom', function () {
                 return $this->laboratoryRoom->name;
             }),
+            // PIC / penanggung jawab ruangan (null-safe agar tetap aman bila relasi tak dimuat)
+            'laboratory_room_pic' => $this->laboratoryRoom?->user?->name,
             'lecturer_id' => $this->lecturer_id,
             'lecturer' => $this->whenLoaded('lecturer', function () {
                 return [

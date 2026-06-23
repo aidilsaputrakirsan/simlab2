@@ -1,6 +1,6 @@
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useUserDataTable } from '../hooks/useUserDataTable'
 import { userRole } from '@/domain/User/UserRole'
 import { UserView } from '@/application/user/UserView'

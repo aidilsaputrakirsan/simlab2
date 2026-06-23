@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom'
 import Header from './components/Header'
 import LatestPublication from './sections/LatestPublication'
 import LaboratoryEquipment from './sections/LaboratoryEquipment'

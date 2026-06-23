@@ -44,26 +44,8 @@ class PracticumSchedulingRequest extends ApiRequest
     {
         $classes = $this->input('classes', []);
 
-        // Validasi 0: Cek modul praktikum tidak boleh duplikat dalam satu kelas
-        foreach ($classes as $classIndex => $class) {
-            $sessions = $class['sessions'] ?? [];
-            $moduleIds = [];
-
-            foreach ($sessions as $sessionIndex => $session) {
-                $moduleId = $session['practicum_module_id'] ?? null;
-
-                if ($moduleId && in_array($moduleId, $moduleIds)) {
-                    $validator->errors()->add(
-                        "classes.{$classIndex}.sessions.{$sessionIndex}.practicum_module_id",
-                        "Modul praktikum yang sama tidak boleh digunakan lebih dari sekali dalam satu kelas."
-                    );
-                }
-
-                if ($moduleId) {
-                    $moduleIds[] = $moduleId;
-                }
-            }
-        }
+        // Catatan: Satu modul praktikum BOLEH digunakan untuk beberapa pertemuan
+        // dalam satu kelas, sehingga tidak ada validasi duplikasi modul di sini.
 
         // Validasi 1: Cek tabrakan session dalam satu class
         foreach ($classes as $classIndex => $class) {

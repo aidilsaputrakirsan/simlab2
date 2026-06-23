@@ -2,8 +2,7 @@ import {
     WeeklyScheduleData,
     DateInfo,
     TimeSlot,
-    RoomSchedule,
-    ScheduleSlot
+    RoomSchedule
 } from "@/domain/dashboard/WeeklySchedule"
 
 export interface TimeSlotAPI {

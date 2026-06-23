@@ -56,7 +56,7 @@ export const PublicationViewDialog = ({ publication }: PublicationViewDialogProp
                                 <span className="font-semibold">Penulis:</span> {publication.writerName}
                             </div>
                             <div>
-                                <span className="font-semibold">Tanggal:</span> {publication.formattedDate}
+                                <span className="font-semibold">Tanggal:</span> {publication.createdAt.formatForInformation()}
                             </div>
                         </div>
                     </div>

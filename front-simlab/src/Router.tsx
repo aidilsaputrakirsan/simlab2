@@ -227,7 +227,7 @@ export const router = createBrowserRouter([
             {
                 path: 'praktikum',
                 element: (
-                    <ProtectedRoute allowedRoles={[userRole.Admin]}>
+                    <ProtectedRoute allowedRoles={[userRole.Admin, userRole.KepalaLabJurusan]}>
                         <PracticumPage />
                     </ProtectedRoute>
                 )
@@ -235,7 +235,7 @@ export const router = createBrowserRouter([
             {
                 path: 'modul-praktikum',
                 element: (
-                    <ProtectedRoute allowedRoles={[userRole.Admin]}>
+                    <ProtectedRoute allowedRoles={[userRole.Admin, userRole.KepalaLabJurusan]}>
                         <PracticumModulePage />
                     </ProtectedRoute>
                 )

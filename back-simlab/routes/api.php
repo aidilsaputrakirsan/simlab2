@@ -103,13 +103,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Study Program Route
         Route::resource('study-programs', StudyProgramController::class);
 
-        // Practicum
-        Route::resource('practicums', PracticumController::class)->except(['index']);
-
-        // Practicum Module
-        Route::put('/practicum-modules/{id}/toggle-status', [PracticumModuleController::class, 'toggleStatus']);
-        Route::resource('practicum-modules', PracticumModuleController::class);
-
         // User: admin, kepala_lab_terpadu, Koorpro, Kepala Lab Unit, laboran, Dosen, Mahasiswa, External
         Route::put('/users/{user}/restore-dosen', [UserController::class, 'restoreToDosen']);
         Route::put('/users/{user}/toggle-manager', [UserController::class, 'toggleManager']);
@@ -119,9 +112,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('testing-categories', TestingCategoryController::class);
     });
 
+    // Master Praktikum & Modul Praktikum: admin + kepala lab jurusan
+    Route::middleware(['role:admin|kepala_lab_jurusan'])->group(function () {
+        // Practicum
+        Route::resource('practicums', PracticumController::class)->except(['index']);
+
+        // Practicum Module
+        Route::put('/practicum-modules/{id}/toggle-status', [PracticumModuleController::class, 'toggleStatus']);
+        Route::resource('practicum-modules', PracticumModuleController::class);
+    });
+
     Route::middleware(['role:admin|laboran'])->group(function () {
         Route::resource('laboratory-rooms', LaboratoryRoomController::class)->except(['index']);
         Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->except(['index']);
+        // Import Master Bahan (harus didefinisikan sebelum resource agar tidak tertangkap {id})
+        Route::get('/laboratory-materials/import/template', [LaboratoryMaterialController::class, 'downloadTemplate']);
+        Route::post('/laboratory-materials/import', [LaboratoryMaterialController::class, 'import']);
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 

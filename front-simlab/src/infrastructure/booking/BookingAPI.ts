@@ -35,6 +35,7 @@ export type BookingAPI = {
         is_mahasiswa: boolean
     };
     laboran: {
+        id: number,
         name: string,
         email: string
     };
@@ -89,7 +90,7 @@ export function toDomain(api: BookingAPI): Booking {
     }
 
     if (api.laboran) {
-        const laboran = new Laboran(api.laboran.name, api.laboran.email)
+        const laboran = new Laboran(api.laboran.id, api.laboran.name, api.laboran.email)
         booking.setLaboran(laboran);
     }
 

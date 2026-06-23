@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\LaboratoryMaterialTemplateExport;
 use App\Http\Requests\LaboratoryMaterialRequest;
+use App\Imports\LaboratoryMaterialImport;
 use App\Models\LaboratoryMaterial;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaboratoryMaterialController extends BaseController
 {
@@ -62,6 +65,40 @@ class LaboratoryMaterialController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError('Failed to update Laboratory Material', [$e->getMessage()], 500);
         }
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.file' => 'File tidak valid.',
+            'file.mimes' => 'Format file harus .xlsx.',
+        ]);
+
+        try {
+            $import = new LaboratoryMaterialImport();
+            Excel::import($import, $request->file('file'));
+            $summary = $import->getSummary();
+
+            $message = "Import selesai: {$summary['imported']} bahan ditambahkan";
+            if (count($summary['skipped']) > 0) {
+                $message .= ', ' . count($summary['skipped']) . ' dilewati (kode sudah ada)';
+            }
+            if (count($summary['failed']) > 0) {
+                $message .= ', ' . count($summary['failed']) . ' gagal';
+            }
+
+            return $this->sendResponse($summary, $message);
+        } catch (\Exception $e) {
+            return $this->sendError('Gagal mengimport data bahan laboratorium', [$e->getMessage()], 500);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new LaboratoryMaterialTemplateExport(), 'template_import_bahan.xlsx');
     }
 
     public function destroy($id)

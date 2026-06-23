@@ -108,18 +108,19 @@ class PracticumSchedulingController extends BaseController
         try {
             $user = auth()->user();
 
-            $query = PracticumScheduling::query()->with(['user', 'practicum', 'academicYear']);
+            $query = PracticumScheduling::query()->with([
+                'user',
+                'practicum',
+                'academicYear',
+                // Selalu muat relasi bahan agar nama bahan tampil di dialog verifikasi
+                'practicumSchedulingMaterials.laboratoryMaterial',
+            ]);
             $query->where('academic_year_id', $this->activeAcademicYear->id);
             $query->where('status', '<>', 'draft');
 
             if ($user->role === 'laboran') {
                 // Restrict to assignments for this laboran
                 $query->where('laboran_id', $user->id);
-
-                // Eager-load additional relations laboran needs for verification details
-                $query->with([
-                    'practicumSchedulingMaterials.laboratoryMaterial',
-                ]);
             }
 
             // Search functionality
@@ -427,7 +428,7 @@ class PracticumSchedulingController extends BaseController
                 'laboran',
                 'practicum',
                 'practicumClasses.practicumSessions.practicumModule',
-                'practicumClasses.laboratoryRoom',
+                'practicumClasses.laboratoryRoom.user',
                 'practicumSchedulingEquipments.equipmentable',
                 'practicumSchedulingMaterials.laboratoryMaterial'
             ]);
