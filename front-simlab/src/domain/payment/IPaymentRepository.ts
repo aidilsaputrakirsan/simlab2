@@ -2,6 +2,7 @@ import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types"
 import { Payment } from "./Payment"
 
 export interface IPaymentRepository {
+    generatePaymentNumber(): Promise<ApiResponse<{ payment_number: string }>>
     getAll(params: {page: number, per_page: number, search: string}): Promise<PaginatedResponse<Payment>>
     createPayment(id: number, data: {
         payment_number: string | null,

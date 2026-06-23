@@ -173,6 +173,7 @@ const ManagementPracticumSchedulingDetailPage = () => {
                                             <Item title={'Dosen Pengampu'} value={cls.lecturer?.name} />
                                             <Item title={'Asisten Dosen'} value={cls.practicumAssistant} />
                                             <Item title={'Ruangan Praktikum'} value={cls.laboratoryRoomName} />
+                                            <Item title={'PIC Ruangan'} value={cls.laboratoryRoomPic} />
                                             <Item title={'Total Partisipan'} value={cls.totalParticipant} />
                                             <Item title={'Total Kelompok'} value={cls.totalGroup} />
                                         </div>

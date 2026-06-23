@@ -4,6 +4,7 @@ import { Lecturer } from "../shared/value-object/Lecturer";
 
 export class PracticumClass {
     private laboratoryRoomName?: string
+    private laboratoryRoomPic?: string
     private lecturer?: Lecturer
 
     constructor(
@@ -23,12 +24,20 @@ export class PracticumClass {
         this.laboratoryRoomName = name
     }
 
+    setLaboratoryRoomPic(pic: string) {
+        this.laboratoryRoomPic = pic
+    }
+
     setLecturer(lecturerData: Lecturer) {
         this.lecturer = lecturerData
     }
 
     getLaboratoryRoomName(): string | undefined {
         return this.laboratoryRoomName
+    }
+
+    getLaboratoryRoomPic(): string | undefined {
+        return this.laboratoryRoomPic
     }
 
     getLecturer(): Lecturer | undefined {

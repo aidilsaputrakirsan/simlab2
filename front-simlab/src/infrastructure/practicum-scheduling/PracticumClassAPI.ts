@@ -17,6 +17,7 @@ export type PracticumClassAPI = {
         identity_num: string
     },
     laboratory_room_name?: string,
+    laboratory_room_pic?: string,
     lecturer_id: number,
     laboratory_room_id: number,
     practicum_sessions: PracticumSessionAPI[]
@@ -38,6 +39,10 @@ export function toDomain(api: PracticumClassAPI): PracticumClass {
 
     if (api.laboratory_room_name) {
         practicumClass.setLaboratoryRoomName(api.laboratory_room_name)
+    }
+
+    if (api.laboratory_room_pic) {
+        practicumClass.setLaboratoryRoomPic(api.laboratory_room_pic)
     }
 
     if (api.lecturer) {

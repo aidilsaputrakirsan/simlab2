@@ -28,7 +28,6 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
 
     async createData(data: {
         code: string;
-        laboratory_room_id: number | undefined;
         material_name: string;
         brand: string;
         stock: number;
@@ -37,6 +36,9 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
         expiry_date: Date | undefined;
         description: string;
         refill_date: Date | undefined;
+        student_price: number | null;
+        lecturer_price: number | null;
+        external_price: number | null;
     }): Promise<ApiResponse> {
         const response = await fetchApi('/laboratory-materials', {
             method: 'POST',
@@ -52,7 +54,6 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
 
     async updateData(id: number, data: {
         code: string;
-        laboratory_room_id: number | undefined;
         material_name: string;
         brand: string;
         stock: number;
@@ -61,6 +62,9 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
         expiry_date: Date | undefined;
         description: string;
         refill_date: Date | undefined;
+        student_price: number | null;
+        lecturer_price: number | null;
+        external_price: number | null;
     }): Promise<ApiResponse> {
         const response = await fetchApi(`/laboratory-materials/${id}`, {
             method: 'PUT',
@@ -85,5 +89,43 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
         }
 
         throw json
+    }
+
+    async importData(file: File): Promise<ApiResponse<{
+        imported: number;
+        skipped: { row: number; code: string }[];
+        failed: { row: number; errors: string[] }[];
+    }>> {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const response = await fetchApi('/laboratory-materials/import', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const json = await response.json()
+        if (response.ok) {
+            return json
+        }
+        throw json
+    }
+
+    async downloadTemplate(): Promise<void> {
+        const response = await fetchApi('/laboratory-materials/import/template', { method: 'GET' });
+
+        if (!response.ok) {
+            throw new Error('Gagal mengunduh template')
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'template_import_bahan.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     }
 }

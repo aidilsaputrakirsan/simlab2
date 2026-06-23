@@ -5,6 +5,7 @@ import { fetchApi, jsonToFormData } from "../ApiClient";
 import { BookingAPI, toDomain } from "./BookingAPI";
 import { BookingType } from "@/domain/booking/BookingType";
 import { BookingStepperAPI, toDomain as toBookingStepperDomain } from "./BookingStepperAPI";
+import { BookingStepper } from "@/domain/booking/BookingStepper";
 import { BookingApproval } from "@/domain/booking/BookingApproval";
 import { generateQueryStringFromObject } from "../Helper";
 
@@ -114,6 +115,19 @@ export class BookingRepository implements IBookingRepository {
     }
 
     async getBookingApprovals(id: number): Promise<ApiResponse<BookingApproval[]>> {
+        const response = await fetchApi(`/bookings/${id}/approvals`, { method: 'GET' });
+        const json = await response.json();
+        if (response.ok) {
+            const list = json['data'] as BookingStepperAPI[];
+            return {
+                ...json,
+                data: list?.map(toBookingStepperDomain) || []
+            }
+        }
+        throw json;
+    }
+
+    async getBookingSteps(id: number): Promise<ApiResponse<BookingStepper[]>> {
         const response = await fetchApi(`/bookings/${id}/approvals`, { method: 'GET' });
         const json = await response.json();
         if (response.ok) {

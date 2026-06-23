@@ -3,6 +3,7 @@ import { BookingInputDTO, BookingReportTableParam, BookingRoomNEquipmentInputDTO
 import { ApiResponse, PaginatedResponse } from "@/presentation/shared/Types";
 import { BookingView } from "./BookingView";
 import { BookingApprovalView } from "./BookingApprovalView";
+import { BookingStepperView } from "./BookingStepperView";
 
 export class BookingService {
     private readonly bookingRepository = new BookingRepository()
@@ -60,6 +61,14 @@ export class BookingService {
         return {
             ...response,
             data: response.data ? response.data.map(BookingApprovalView.fromDomain) : []
+        };
+    }
+
+    async getBookingSteps(id: number): Promise<ApiResponse<BookingStepperView[]>> {
+        const response = await this.bookingRepository.getBookingSteps(id);
+        return {
+            ...response,
+            data: response.data ? response.data.map(BookingStepperView.fromDomain) : []
         };
     }
 

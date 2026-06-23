@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import { useAuth } from '@/application/hooks/useAuth'
 import { useGSAP } from '@gsap/react'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Header from '@/presentation/components/Header';
 import { Label } from '@/presentation/components/ui/label';
 import { Button } from '@/presentation/components/ui/button';

@@ -18,3 +18,9 @@ export interface LaboratoryMaterialTableParams {
     per_page: number,
     search: string,
 }
+
+export interface LaboratoryMaterialImportSummary {
+    imported: number;
+    skipped: { row: number; code: string }[];
+    failed: { row: number; errors: string[] }[];
+}

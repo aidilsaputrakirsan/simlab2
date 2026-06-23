@@ -30,6 +30,8 @@ const PaymentStatusBadge = ({ status, payableStatus }: { status: PaymentStatus, 
         [PaymentStatus.Pending]: { label: "Menunggu Verifikasi", variant: "outline" },
         [PaymentStatus.Approved]: { label: "Disetujui", variant: "default" },
         [PaymentStatus.Rejected]: { label: "Ditolak", variant: "destructive" },
+        [PaymentStatus.Paid]: { label: "Dibayar", variant: "default" },
+        [PaymentStatus.Verified]: { label: "Terverifikasi", variant: "default" },
     };
 
     const config = statusConfig[status] || { label: status, variant: "secondary" as const };

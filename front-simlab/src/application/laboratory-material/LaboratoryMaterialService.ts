@@ -26,4 +26,12 @@ export class LaboratoryMaterialService {
     async deleteData(id: number) {
         return await this.laboratoryMaterialRepository.deleteData(id)
     }
+
+    async importData(file: File) {
+        return await this.laboratoryMaterialRepository.importData(file)
+    }
+
+    async downloadTemplate() {
+        return await this.laboratoryMaterialRepository.downloadTemplate()
+    }
 }

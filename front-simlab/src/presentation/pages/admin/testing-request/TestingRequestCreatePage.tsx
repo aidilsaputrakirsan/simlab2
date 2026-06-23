@@ -6,7 +6,7 @@ import { Button } from '@/presentation/components/ui/button';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { Input } from '@/presentation/components/ui/input';
 import { ArrowLeft, Plus, Trash } from 'lucide-react';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTestingRequestForm } from './hooks/useTestingRequestForm';
 import { Textarea } from '@/presentation/components/ui/textarea';

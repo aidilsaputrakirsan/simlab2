@@ -1,6 +1,6 @@
 import { LaboratoryEquipmentView } from '@/application/laboratory-equipment/LaboratoryEquipmentView'
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const LaboratoryEquipment = () => {

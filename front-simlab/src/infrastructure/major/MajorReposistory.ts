@@ -30,8 +30,8 @@ export class MajorRepository implements IMajorReporsitory {
 
     async createData(data: {
         faculty_id: number | null;
-        code: string;
-        name: string;
+        code: string | null;
+        name: string | null;
     }): Promise<ApiResponse<Major>> {
         const response = await fetchApi('/majors', {
             method: 'POST',
@@ -51,8 +51,8 @@ export class MajorRepository implements IMajorReporsitory {
 
     async updateData(id: number, data: {
         faculty_id: number | null;
-        code: string;
-        name: string;
+        code: string | null;
+        name: string | null;
     }): Promise<ApiResponse<Major>> {
         const response = await fetchApi(`/majors/${id}`, {
             method: 'PUT',

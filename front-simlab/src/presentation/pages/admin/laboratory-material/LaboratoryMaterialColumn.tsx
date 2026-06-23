@@ -12,7 +12,6 @@ export const LaboratoryMaterialColumn = ({ openModal, openConfirm, openModalDeta
     { header: 'Kode Asset', accessorKey: 'code' as keyof LaboratoryMaterialView },
     { header: 'Nama Bahan', accessorKey: 'materialName' as keyof LaboratoryMaterialView },
     { header: 'Jumlah', accessorKey: 'stock' as keyof LaboratoryMaterialView, cell: ({ row }) => (<span>{row.original.stock} - {row.original.unit}</span>)},
-    { header: 'Lokasi', accessorKey: 'laboratorRoom' as keyof LaboratoryMaterialView, cell: ({ row }) => row.original.laboratoryRoom?.name },
     { header: 'Tanggal Kadaluarsa', accessorKey: 'expiryDate' as keyof LaboratoryMaterialView, cell: ({ row }) => {
         const date = new Date(row.original.expiryDate)
         const formatted = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;

@@ -7,6 +7,8 @@ import { fetchApi } from "../ApiClient";
 import { generateQueryStringFromObject } from "../Helper";
 import { PracticumApproval } from "@/domain/practicum-scheduling/PracticumApproval";
 import { PracticumApprovalAPI, toDomain as toPracticumApproval } from "./PracticumApprovalAPI";
+import { PracticumStepper } from "@/domain/practicum-scheduling/PracticumStepper";
+import { PracticumStepperAPI, toDomain as toPracticumStepper } from "./PracticumStepperAPI";
 
 export class PracticumSchedulingRepository implements IPracticumSchedulingRepository {
     async getAll(params: { page: number; per_page: number; search: string; }): Promise<PaginatedResponse<PracticumScheduling>> {
@@ -205,6 +207,19 @@ export class PracticumSchedulingRepository implements IPracticumSchedulingReposi
         }
 
         throw json
+    }
+
+    async getPracticumSteps(id: number): Promise<ApiResponse<PracticumStepper[]>> {
+        const response = await fetchApi(`/practicum-schedule/${id}/approvals`, { method: 'GET' });
+        const json = await response.json();
+        if (response.ok) {
+            const list = json['data'] as PracticumStepperAPI[];
+            return {
+                ...json,
+                data: list?.map(toPracticumStepper) || []
+            }
+        }
+        throw json;
     }
 
     async getTestingRequestApprovals(id: number): Promise<ApiResponse<PracticumApproval[]>> {

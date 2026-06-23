@@ -1,6 +1,6 @@
 import { PublicationView } from '@/application/publication/PublicationView';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 
 const LatestPublication = () => {
