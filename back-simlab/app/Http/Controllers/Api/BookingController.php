@@ -35,6 +35,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class BookingController extends BaseController
 {
@@ -472,13 +474,84 @@ class BookingController extends BaseController
     {
         try {
             // Mendapatkan data booking (peminjaman) berdasarkan id
-            $booking = Booking::with(['user.studyProgram', 'user.institution', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial', 'payment'])->findOrFail($id);
+            $booking = Booking::with(['user.studyProgram', 'user.institution', 'laboratoryRoom', 'laboran', 'equipments.laboratoryEquipment.laboratoryRoom', 'materials.laboratoryMaterial', 'payment'])->findOrFail($id);
 
             return $this->sendResponse(new BookingResource($booking), 'Booking Retrieved Successfully');
         } catch (ModelNotFoundException $e) {
             return $this->sendError("Booking Not Found", [], 404);
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve booking', [$e->getMessage()], 500);
+        }
+    }
+
+    public function downloadDocument($id)
+    {
+        try {
+            $booking = Booking::with([
+                'user.studyProgram',
+                'user.institution',
+                'academicYear',
+                'laboratoryRoom',
+                'laboran',
+                'equipments.laboratoryEquipment',
+            ])->findOrFail($id);
+
+            $tz = config('app.timezone');
+            $start = $booking->start_time ? Carbon::parse($booking->start_time)->setTimezone($tz) : null;
+            $end = $booking->end_time ? Carbon::parse($booking->end_time)->setTimezone($tz) : null;
+
+            $equipmentList = '-';
+            if ($booking->equipments && $booking->equipments->isNotEmpty()) {
+                $equipmentList = $booking->equipments->values()->map(function ($eq, $i) {
+                    $name = $eq->laboratoryEquipment?->equipment_name ?? '-';
+                    $unit = $eq->laboratoryEquipment?->unit ?? '';
+                    return ($i + 1) . '. ' . $name . ' : ' . $eq->quantity . ' ' . $unit;
+                })->implode('  ');
+            }
+
+            $studyProgram = $booking->user?->studyProgram?->name
+                ?? $booking->user?->institution?->name
+                ?? '-';
+
+            // Logo ITK di-embed sebagai base64 agar aman dirender dompdf
+            $logoPath = public_path('img/itk_logo.png');
+            $logo = file_exists($logoPath)
+                ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+                : null;
+
+            $data = [
+                'logo' => $logo,
+                'academicYear' => $booking->academicYear?->name ?? '-',
+                'name' => $booking->user?->name ?? '-',
+                'identity' => $booking->user?->identity_num ?? '-',
+                'studyProgram' => $studyProgram,
+                'phone' => $booking->phone_number ?? '-',
+                'purpose' => $booking->purpose ?: '-',
+                'activityName' => $booking->activity_name ?: '-',
+                'supervisor' => $booking->supervisor ?: '-',
+                'supervisorEmail' => $booking->supervisor_email ?: '-',
+                'totalParticipant' => $booking->total_participant ? $booking->total_participant . ' Orang' : '-',
+                'participantList' => $booking->participant_list ?: '-',
+                'dateRange' => $start && $end
+                    ? $start->format('d-m-Y') . ' s/d ' . $end->format('d-m-Y')
+                    : '-',
+                'timeRange' => $start && $end
+                    ? $start->format('H:i:s') . ' s/d ' . $end->format('H:i:s') . ' WITA'
+                    : '-',
+                'equipmentList' => $equipmentList,
+                'room' => $booking->laboratoryRoom?->name ?? '-',
+                'offsite' => $booking->is_allowed_offsite ? 'Diperbolehkan' : 'Tidak Diperbolehkan',
+                'laboran' => $booking->laboran?->name ?? '-',
+            ];
+
+            $pdf = Pdf::loadView('pdf.booking-loan-card', $data)->setPaper('a4', 'portrait');
+
+            // stream() => Content-Disposition: inline, sehingga PDF bisa di-preview di tab browser
+            return $pdf->stream('Surat Peminjaman - ' . ($booking->user?->name ?? 'Peminjam') . '.pdf');
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError('Booking Not Found', [], 404);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to generate booking document', [$e->getMessage()], 500);
         }
     }
 
@@ -532,7 +605,7 @@ class BookingController extends BaseController
             $this->createBookingPayment($booking);
 
             DB::commit();
-            $booking->load(['user.studyProgram', 'user.institution', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
+            $booking->load(['user.studyProgram', 'user.institution', 'equipments.laboratoryEquipment.laboratoryRoom', 'materials.laboratoryMaterial']);
             $this->sendToSupervisor($booking);
             return $this->sendResponse($booking, 'Pengajuan peminjaman ruangan, alat & bahan berhasil diajukan');
         } catch (ModelNotFoundException $e) {
@@ -573,7 +646,7 @@ class BookingController extends BaseController
             $this->createBookingPayment($booking);
 
             DB::commit();
-            $booking->load(['equipments.laboratoryEquipment', 'user.studyProgram', 'user.institution']);
+            $booking->load(['equipments.laboratoryEquipment.laboratoryRoom', 'user.studyProgram', 'user.institution']);
             $this->sendToSupervisor($booking);
             return $this->sendResponse($booking, 'Peminjaman berhasi diajukan');
         } catch (ModelNotFoundException $e) {
@@ -674,7 +747,7 @@ class BookingController extends BaseController
     private function createBookingPayment(Booking $booking)
     {
         // Reload to get fresh data with prices
-        $booking->load(['user', 'laboratoryRoom', 'equipments.laboratoryEquipment', 'materials.laboratoryMaterial']);
+        $booking->load(['user', 'laboratoryRoom', 'equipments.laboratoryEquipment.laboratoryRoom', 'materials.laboratoryMaterial']);
 
         // Only create payment if there are paid items
         if (!$booking->hasPaidItems) {

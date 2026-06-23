@@ -23,6 +23,8 @@ class BookingEquipmentResource extends JsonResource
             'unit' => $this->whenLoaded('laboratoryEquipment', function () {
                 return $this->laboratoryEquipment->unit;
             }),
+            // Lokasi alat = ruangan tempat alat berada (null-safe agar aman bila relasi tak dimuat)
+            'location' => $this->laboratoryEquipment?->laboratoryRoom?->name,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'subtotal' => $this->price * $this->quantity

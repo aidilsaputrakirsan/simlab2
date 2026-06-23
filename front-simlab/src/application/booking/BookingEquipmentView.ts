@@ -8,7 +8,8 @@ export class BookingEquipmentView {
         readonly price: number,
         readonly subtotal: number,
         readonly equipmentName?: string,
-        readonly unit?: string
+        readonly unit?: string,
+        readonly location?: string
     ) { }
 
     static fromDomain(entity: BookingEquipment): BookingEquipmentView {
@@ -19,7 +20,8 @@ export class BookingEquipmentView {
             entity.price,
             entity.subtotal,
             entity.getEquipmentName(),
-            entity.getUnit()
+            entity.getUnit(),
+            entity.getLocation()
         )
     }
 

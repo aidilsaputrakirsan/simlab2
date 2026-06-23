@@ -1,6 +1,7 @@
 export class BookingEquipment {
     private equipmentName?: string
     private unit?: string
+    private location?: string
     constructor(
         readonly id: number,
         readonly laboratoryEquipmentId: number,
@@ -23,5 +24,13 @@ export class BookingEquipment {
 
     getEquipmentName(): string | undefined {
         return this.equipmentName
+    }
+
+    setLocation(location: string) {
+        this.location = location
+    }
+
+    getLocation(): string | undefined {
+        return this.location
     }
 }

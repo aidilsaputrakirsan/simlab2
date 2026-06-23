@@ -101,4 +101,8 @@ export class BookingService {
     async exportReport(type: 'room' | 'equipment' | 'material' | 'all', format: 'xlsx' | 'csv' | 'xls' = 'xlsx'): Promise<void> {
         return await this.bookingRepository.exportReport(type, format);
     }
+
+    async downloadDocument(id: number): Promise<void> {
+        return await this.bookingRepository.downloadDocument(id);
+    }
 }

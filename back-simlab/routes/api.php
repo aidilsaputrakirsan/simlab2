@@ -155,6 +155,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // booking (peminjaman)
     Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|admin_pengujian'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
+        Route::get('/{id}/document', [BookingController::class, 'downloadDocument']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|admin|kepala_lab_jurusan'], function () {

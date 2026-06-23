@@ -7,6 +7,11 @@ export const BookingEquipmentColumn = (): ColumnDef<BookingEquipmentView>[] => [
       header: 'Alat',
     },
     {
+      accessorKey: 'location',
+      header: 'Lokasi Alat',
+      cell: ({ row }) => row.original.location ?? '-'
+    },
+    {
       accessorKey: 'quantity',
       header: 'Qty',
       cell: ({ row }) => `${row.original.quantity} ${row.original.unit}`

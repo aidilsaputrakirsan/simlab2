@@ -7,7 +7,7 @@ import { BookingView } from '@/application/booking/BookingView';
 import Header from '@/presentation/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 import { Button } from '@/presentation/components/ui/button';
-import { ArrowLeft, Eye, Upload } from 'lucide-react';
+import { ArrowLeft, Eye, FileDown, Upload } from 'lucide-react';
 import { useAuth } from '@/application/hooks/useAuth';
 import { Skeleton } from '@/presentation/components/ui/skeleton';
 import Item from '@/presentation/components/Item';
@@ -36,12 +36,24 @@ export const BookingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const bookingId = Number(id);
   const { getBookingDetail } = useBooking({});
-  const { paymentService } = useDepedencies();
+  const { paymentService, bookingService } = useDepedencies();
 
   // Booking Detail State
   const [booking, setBooking] = useState<BookingView>();
   const [bookingLoading, setBookingLoading] = useState<boolean>(false);
   const [isReuploadDialogOpen, setIsReuploadDialogOpen] = useState<boolean>(false);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+
+  const handleDownloadDocument = async () => {
+    setIsDownloading(true);
+    try {
+      await bookingService.downloadDocument(bookingId);
+    } catch {
+      toast.error('Gagal mengunduh dokumen peminjaman');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   const navigate = useNavigate();
 
   const backTo =
@@ -114,10 +126,21 @@ export const BookingDetailPage: React.FC = () => {
       <div className="flex flex-col gap-4 p-4 pt-0" ref={sectionRef}>
         <div className="flex items-center justify-between flex-col-reverse sm:flex-row mb-2 gap-2">
           <BookingStepperDialog bookingId={bookingId} />
-          <Button className="gap-2 w-full sm:w-fit" onClick={() => navigate(backTo)}>
-            <ArrowLeft className="w-4 h-4" />
-            Kembali
-          </Button>
+          <div className="flex gap-2 w-full sm:w-fit">
+            <Button
+              variant="outline"
+              className="gap-2 w-full sm:w-fit"
+              onClick={handleDownloadDocument}
+              disabled={isDownloading}
+            >
+              <FileDown className="w-4 h-4" />
+              {isDownloading ? 'Mengunduh...' : 'Download Dokumen'}
+            </Button>
+            <Button className="gap-2 w-full sm:w-fit" onClick={() => navigate(backTo)}>
+              <ArrowLeft className="w-4 h-4" />
+              Kembali
+            </Button>
+          </div>
         </div>
         <div className='flex flex-col gap-4'>
           {/* Informasi Umum */}

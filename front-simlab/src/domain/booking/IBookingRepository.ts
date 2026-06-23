@@ -73,4 +73,6 @@ export interface IBookingRepository {
     ): Promise<ApiResponse>
 
     exportReport(type: 'room' | 'equipment' | 'material' | 'all', format?: 'xlsx' | 'csv' | 'xls'): Promise<void>
+
+    downloadDocument(id: number): Promise<void>
 }
