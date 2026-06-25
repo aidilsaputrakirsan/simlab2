@@ -43,6 +43,10 @@ export interface PracticumSchedulingEquipmentNMaterialInputDTO {
         quantity: number | null,
         unit: string
     }[];
+    proposedMaterials: {
+        name: string
+        quantity: number | null
+    }[];
 }
 
 export interface PracticumSchedulingSessionConductedDTO {

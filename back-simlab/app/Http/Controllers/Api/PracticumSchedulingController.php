@@ -12,6 +12,7 @@ use App\Models\PracticumApproval;
 use App\Models\PracticumScheduling;
 use App\Models\PracticumSchedulingEquipment;
 use App\Models\PracticumSchedulingMaterial;
+use App\Models\PracticumSchedulingProposedMaterial;
 use App\Models\AcademicYear;
 use App\Models\Event;
 use App\Models\LaboratoryEquipment;
@@ -400,6 +401,8 @@ class PracticumSchedulingController extends BaseController
             $this->storeProposedEquipments($practicumScheduling, $data['proposedEquipments'] ?? []);
             // Insert materials
             $this->storeMaterials($practicumScheduling, $data['practicumSchedulingMaterials'] ?? []);
+            // Insert proposed materials (bahan usulan di luar sistem)
+            $this->storeProposedMaterials($practicumScheduling, $data['proposedMaterials'] ?? []);
 
             // Update status jika draft
             if ($practicumScheduling->status === 'draft') {
@@ -430,7 +433,8 @@ class PracticumSchedulingController extends BaseController
                 'practicumClasses.practicumSessions.practicumModule',
                 'practicumClasses.laboratoryRoom.user',
                 'practicumSchedulingEquipments.equipmentable',
-                'practicumSchedulingMaterials.laboratoryMaterial'
+                'practicumSchedulingMaterials.laboratoryMaterial',
+                'proposedMaterials'
             ]);
             // Apply conditional relationship filter if the user is a dosen
             if ($user->role === 'dosen') {
@@ -619,6 +623,17 @@ class PracticumSchedulingController extends BaseController
                 'practicum_scheduling_id' => $scheduling->id,
                 'laboratory_material_id' => $mt['id'],
                 'quantity' => $mt['quantity'] * $scheduling->total_groups
+            ]);
+        }
+    }
+
+    private function storeProposedMaterials($scheduling, array $proposedMaterials)
+    {
+        foreach ($proposedMaterials as $p) {
+            PracticumSchedulingProposedMaterial::create([
+                'practicum_scheduling_id' => $scheduling->id,
+                'name' => $p['name'],
+                'quantity' => $p['quantity'] * $scheduling->total_groups,
             ]);
         }
     }

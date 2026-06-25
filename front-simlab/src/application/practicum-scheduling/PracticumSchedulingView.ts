@@ -20,6 +20,7 @@ export class PracticumSchedulingView {
         readonly practicumClasses: PracticumClassView[],
         readonly practicumSchedulingEquipments: PracticumSchedulingEquipmentView[],
         readonly practicumSchedulingMaterials: PracticumSchedulingMaterialView[],
+        readonly proposedMaterials: PracticumSchedulingMaterialView[],
         readonly requestor?: Requestor,
         readonly laboran?: Laboran,
         readonly canVerif?: number,
@@ -38,6 +39,7 @@ export class PracticumSchedulingView {
             entity.getPracticumClasses().map(PracticumClassView.fromDomain),
             entity.getPracticumSchedulingEquipments().map(PracticumSchedulingEquipmentView.fromDomain),
             entity.getPracticumSchedulingMaterials().map(PracticumSchedulingMaterialView.fromDomain),
+            entity.getProposedMaterials().map(PracticumSchedulingMaterialView.fromDomain),
             entity.getRequestor(),
             entity.getLaboran(),
             entity.getCanVerif()

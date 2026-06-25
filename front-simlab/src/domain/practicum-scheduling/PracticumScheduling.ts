@@ -13,6 +13,7 @@ export class PracticumScheduling {
     private canVerif?: number
     private practicumSchedulingEquipments: PracticumSchedulingEquipment[] = []
     private practicumSchedulingMaterials: PracticumSchedulingMaterial[] = []
+    private proposedMaterials: PracticumSchedulingMaterial[] = []
     private practicumClasses: PracticumClass[] = []
 
     constructor(
@@ -46,6 +47,10 @@ export class PracticumScheduling {
         this.practicumSchedulingMaterials = items
     }
 
+    setProposedMaterials(items: PracticumSchedulingMaterial[]) {
+        this.proposedMaterials = items
+    }
+
     setPracticumClasses(items: PracticumClass[]) {
         this.practicumClasses = items
     }
@@ -68,6 +73,10 @@ export class PracticumScheduling {
 
     getPracticumSchedulingMaterials(): PracticumSchedulingMaterial[] {
         return this.practicumSchedulingMaterials
+    }
+
+    getProposedMaterials(): PracticumSchedulingMaterial[] {
+        return this.proposedMaterials
     }
 
     getPracticumClasses(): PracticumClass[] {

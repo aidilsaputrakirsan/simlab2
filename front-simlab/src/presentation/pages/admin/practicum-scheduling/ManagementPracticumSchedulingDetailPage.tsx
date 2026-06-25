@@ -70,8 +70,9 @@ const ManagementPracticumSchedulingDetailPage = () => {
 
     const equipments = practicumScheduling?.practicumSchedulingEquipments || [];
     const materials = practicumScheduling?.practicumSchedulingMaterials || [];
+    const proposedMaterials = practicumScheduling?.proposedMaterials || [];
     const hasEquipment = Array.isArray(equipments) && equipments.length > 0;
-    const hasMaterial = Array.isArray(materials) && materials.length > 0;
+    const hasMaterial = (Array.isArray(materials) && materials.length > 0) || proposedMaterials.length > 0;
 
     const handleConductedStatus = async (information: string) => {
         if (!practicumSchedulingId) return;
@@ -149,7 +150,7 @@ const ManagementPracticumSchedulingDetailPage = () => {
                                                 <div className={`flex flex-col`}>
                                                     <span className='font-semibold'>Daftar Pengajuan Bahan</span>
                                                     <PracticumSchedulingMaterialDialog
-                                                        data={materials} />
+                                                        data={materials} proposedData={proposedMaterials} />
                                                 </div>
                                             )}
                                         </div>

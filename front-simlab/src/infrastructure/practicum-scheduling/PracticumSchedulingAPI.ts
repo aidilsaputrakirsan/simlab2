@@ -1,6 +1,7 @@
 import { PracticumScheduling } from "@/domain/practicum-scheduling/PracticumScheduling";
 import { PracticumSchedulingEquipmentAPI, toDomain as toPracticumSchedulingEquipment } from "./PracticumSchedulingEquipmentAPI";
 import { PracticumSchedulingMaterialAPI, toDomain as toPracticumSchedulingMaterial } from "./PracticumSchedulingMaterialAPI";
+import { PracticumSchedulingMaterial } from "@/domain/practicum-scheduling/PracticumSchedulingMaterial";
 import { Time } from "@/domain/time/Time";
 import { PracticumSchedulingStatus } from "@/domain/practicum-scheduling/PracticumSchedulingStatus";
 import { PracticumClassAPI, toDomain as toPracticumClass } from "./PracticumClassAPI";
@@ -32,6 +33,7 @@ export type PracticumSchedulingAPI = {
     practicum_classes: PracticumClassAPI[];
     practicum_scheduling_equipments: PracticumSchedulingEquipmentAPI[];
     practicum_scheduling_materials: PracticumSchedulingMaterialAPI[];
+    proposed_materials?: { id: number; name: string; quantity: number }[];
 }
 
 export function toDomain(api: PracticumSchedulingAPI): PracticumScheduling {
@@ -79,6 +81,14 @@ export function toDomain(api: PracticumSchedulingAPI): PracticumScheduling {
             (item) => toPracticumSchedulingMaterial(item)
         )
         practicumScheduling.setPracticumSchedlingMaterials(items)
+    }
+
+    if (api.proposed_materials) {
+        // Bahan usulan: tidak punya unit & realisasi, dipetakan ke entity yang sama
+        const items = api.proposed_materials.map(
+            (item) => new PracticumSchedulingMaterial(item.id, item.name, '', item.quantity, 0)
+        )
+        practicumScheduling.setProposedMaterials(items)
     }
 
     return practicumScheduling

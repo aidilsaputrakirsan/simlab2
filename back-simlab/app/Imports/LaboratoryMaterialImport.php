@@ -2,73 +2,133 @@
 
 namespace App\Imports;
 
+use App\Exports\LaboratoryMaterialTemplateExport;
 use App\Models\LaboratoryMaterial;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
-class LaboratoryMaterialImport implements ToCollection, WithHeadingRow
+class LaboratoryMaterialImport implements ToCollection, WithMultipleSheets
 {
-    /** @var int Jumlah baris yang berhasil ditambahkan */
+    /** Jumlah baris header pada template (judul, nama kolom, petunjuk, catatan) */
+    private const HEADER_ROWS = 4;
+
+    /** Pemetaan posisi kolom (0-indeks) template -> field sistem */
+    private const COLS = [
+        'code'           => 0,  // Kode Asset *
+        'material_name'  => 1,  // Nama Bahan *
+        'brand'          => 2,  // Merek
+        'stock'          => 3,  // Jumlah Bahan *
+        'unit'           => 4,  // Satuan *
+        'purchase_date'  => 5,  // Tanggal Pembelian
+        'expiry_date'    => 6,  // Tanggal Kadaluarsa
+        'refill_date'    => 7,  // Tanggal Restock Terakhir
+        'student_price'  => 8,  // Harga Mahasiswa
+        'lecturer_price' => 9,  // Harga Dosen
+        'external_price' => 10, // Harga External
+        'description'    => 11, // Keterangan
+    ];
+
+    /** Satuan yang diterima (sesuai spesifikasi template) */
+    private const UNITS = ['mL', 'L', 'gram', 'mg', 'kg', 'Pcs', 'Botol', 'Ampul', 'Set', 'Pak', 'Galon', 'Rol'];
+
+    /** Jumlah baris yang ditambahkan (kode baru) */
     public int $imported = 0;
 
-    /** @var array<int, array{row:int, code:mixed}> Baris yang dilewati karena kode sudah ada */
-    public array $skipped = [];
+    /** Jumlah baris yang diperbarui (kode sudah ada / upsert) */
+    public int $updated = 0;
 
-    /** @var array<int, array{row:int, errors:array}> Baris yang gagal karena tidak valid */
+    /** @var array<int, array{row:int, errors:array}> */
     public array $failed = [];
+
+    /** Hanya proses sheet pertama (data); sheet ke-2 adalah lembar spesifikasi. */
+    public function sheets(): array
+    {
+        return [0 => $this];
+    }
 
     public function collection(Collection $rows)
     {
-        foreach ($rows as $index => $row) {
-            // +2: 1 untuk baris heading, 1 karena index dimulai dari 0
-            $rowNumber = $index + 2;
-            $data = $row->toArray();
+        // Validasi struktur: pastikan file memakai template yang benar
+        if (!$this->headerMatches($rows)) {
+            $this->failed[] = [
+                'row' => 2,
+                'errors' => ['Format file tidak sesuai template. Pastikan memakai "Template Import Bahan Laboratorium" tanpa mengubah nama/urutan kolom. Silakan unduh ulang via tombol "Download Template".'],
+            ];
+            return;
+        }
 
-            // Lewati baris yang benar-benar kosong
-            if (collect($data)->filter(fn ($v) => $v !== null && $v !== '')->isEmpty()) {
+        foreach ($rows as $index => $row) {
+            // Lewati baris header tetap (judul, nama kolom, petunjuk, catatan)
+            if ($index < self::HEADER_ROWS) {
                 continue;
             }
 
-            $get = fn ($key) => (isset($data[$key]) && $data[$key] !== '') ? $data[$key] : null;
+            $cells = $row->values()->toArray();
+
+            // Lewati baris yang benar-benar kosong
+            if (collect($cells)->filter(fn ($v) => $v !== null && $v !== '')->isEmpty()) {
+                continue;
+            }
+
+            $get = fn (string $key) => $this->cell($cells, self::COLS[$key]);
+
+            $rowNumber = $index + 1; // nomor baris pada Excel (1-indeks)
+
+            $data = [
+                'code'          => $get('code'),
+                'material_name' => $get('material_name'),
+                'stock'         => $get('stock'),
+                'unit'          => $get('unit'),
+            ];
 
             $validator = Validator::make($data, [
-                'code' => 'required',
+                'code'          => 'required',
                 'material_name' => 'required',
-                'stock' => 'required|integer|min:0',
-                'unit' => 'required',
-                'purchase_date' => 'required',
-                'refill_date' => 'required',
-                'expiry_date' => 'nullable',
-                'student_price' => 'nullable|integer|min:0',
-                'lecturer_price' => 'nullable|integer|min:0',
-                'external_price' => 'nullable|integer|min:0',
+                'stock'         => 'required|numeric|gt:0',
+                'unit'          => 'required',
             ], [
-                'code.required' => 'Kolom code wajib diisi.',
-                'material_name.required' => 'Kolom material_name wajib diisi.',
-                'stock.required' => 'Kolom stock wajib diisi.',
-                'stock.integer' => 'Kolom stock harus berupa angka.',
-                'unit.required' => 'Kolom unit wajib diisi.',
-                'purchase_date.required' => 'Kolom purchase_date wajib diisi.',
-                'refill_date.required' => 'Kolom refill_date wajib diisi.',
+                'code.required'          => 'Kolom Kode Asset wajib diisi.',
+                'material_name.required' => 'Kolom Nama Bahan wajib diisi.',
+                'stock.required'         => 'Kolom Jumlah Bahan wajib diisi.',
+                'stock.numeric'          => 'Kolom Jumlah Bahan harus berupa angka.',
+                'stock.gt'               => 'Kolom Jumlah Bahan harus lebih dari 0.',
+                'unit.required'          => 'Kolom Satuan wajib diisi.',
             ]);
 
-            // Validasi tanggal dilakukan manual karena nilai dari Excel bisa berupa serial number
+            // Normalisasi & validasi Satuan terhadap daftar yang diterima
+            $unit = $this->normalizeUnit($get('unit'));
+            if ($get('unit') !== null && $unit === null) {
+                $validator->after(fn ($v) => $v->errors()->add(
+                    'unit',
+                    'Satuan tidak valid. Pilih salah satu: ' . implode(', ', self::UNITS) . '.'
+                ));
+            }
+
+            // Validasi harga (opsional, default 0) jika diisi
+            foreach (['student_price' => 'Harga Mahasiswa', 'lecturer_price' => 'Harga Dosen', 'external_price' => 'Harga External'] as $key => $label) {
+                $val = $get($key);
+                if ($val !== null && !is_numeric($val)) {
+                    $validator->after(fn ($v) => $v->errors()->add($key, "Kolom {$label} harus berupa angka."));
+                }
+            }
+
+            // Parsing tanggal (nullable). Bila diisi tapi format salah -> error.
             $purchaseDate = $this->parseDate($get('purchase_date'));
-            $refillDate = $this->parseDate($get('refill_date'));
-            $expiryDate = $get('expiry_date') !== null ? $this->parseDate($get('expiry_date')) : null;
+            $expiryDate   = $this->parseDate($get('expiry_date'));
+            $refillDate   = $this->parseDate($get('refill_date'));
 
             if ($get('purchase_date') !== null && $purchaseDate === null) {
-                $validator->after(fn ($v) => $v->errors()->add('purchase_date', 'Format purchase_date tidak valid (gunakan YYYY-MM-DD).'));
-            }
-            if ($get('refill_date') !== null && $refillDate === null) {
-                $validator->after(fn ($v) => $v->errors()->add('refill_date', 'Format refill_date tidak valid (gunakan YYYY-MM-DD).'));
+                $validator->after(fn ($v) => $v->errors()->add('purchase_date', 'Format Tanggal Pembelian tidak valid (gunakan YYYY-MM-DD).'));
             }
             if ($get('expiry_date') !== null && $expiryDate === null) {
-                $validator->after(fn ($v) => $v->errors()->add('expiry_date', 'Format expiry_date tidak valid (gunakan YYYY-MM-DD).'));
+                $validator->after(fn ($v) => $v->errors()->add('expiry_date', 'Format Tanggal Kadaluarsa tidak valid (gunakan YYYY-MM-DD).'));
+            }
+            if ($get('refill_date') !== null && $refillDate === null) {
+                $validator->after(fn ($v) => $v->errors()->add('refill_date', 'Format Tanggal Restock Terakhir tidak valid (gunakan YYYY-MM-DD).'));
             }
 
             if ($validator->fails()) {
@@ -76,34 +136,88 @@ class LaboratoryMaterialImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // Lewati jika kode sudah ada di database
-            if (LaboratoryMaterial::where('code', $get('code'))->exists()) {
-                $this->skipped[] = ['row' => $rowNumber, 'code' => $get('code')];
-                continue;
+            // Upsert berdasarkan Kode Asset: perbarui bila kode sudah ada, insert bila baru
+            $material = LaboratoryMaterial::updateOrCreate(
+                ['code' => $get('code')],
+                [
+                    'material_name'  => $get('material_name'),
+                    'brand'          => $get('brand'),
+                    'stock'          => (int) $get('stock'),
+                    'unit'           => $unit,
+                    'purchase_date'  => $purchaseDate,
+                    'expiry_date'    => $expiryDate,
+                    'description'    => $get('description'),
+                    'refill_date'    => $refillDate,
+                    'student_price'  => (int) ($get('student_price') ?? 0),
+                    'lecturer_price' => (int) ($get('lecturer_price') ?? 0),
+                    'external_price' => (int) ($get('external_price') ?? 0),
+                ]
+            );
+
+            if ($material->wasRecentlyCreated) {
+                $this->imported++;
+            } else {
+                $this->updated++;
             }
-
-            LaboratoryMaterial::create([
-                'code' => $get('code'),
-                'material_name' => $get('material_name'),
-                'brand' => $get('brand'),
-                'stock' => (int) $get('stock'),
-                'unit' => $get('unit'),
-                'purchase_date' => $purchaseDate,
-                'expiry_date' => $expiryDate,
-                'description' => $get('description'),
-                'refill_date' => $refillDate,
-                'student_price' => (int) ($get('student_price') ?? 0),
-                'lecturer_price' => (int) ($get('lecturer_price') ?? 0),
-                'external_price' => (int) ($get('external_price') ?? 0),
-            ]);
-
-            $this->imported++;
         }
     }
 
-    /**
-     * Konversi nilai tanggal dari Excel (serial number atau string) menjadi Y-m-d.
-     */
+    /** Pastikan baris header (baris ke-2) cocok dengan template resmi. */
+    private function headerMatches(Collection $rows): bool
+    {
+        $headerRow = $rows->get(1); // index 1 = baris ke-2 Excel
+        if (!$headerRow) {
+            return false;
+        }
+
+        $cells = $headerRow->values()->toArray();
+        $expected = LaboratoryMaterialTemplateExport::HEADERS;
+
+        // Cek 5 kolom inti (Kode Asset, Nama Bahan, Merek, Jumlah Bahan, Satuan)
+        foreach ([0, 1, 2, 3, 4] as $i) {
+            if ($this->normalizeHeader($cells[$i] ?? null) !== $this->normalizeHeader($expected[$i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** Normalkan label header: buang tanda '*', spasi, dan kapitalisasi. */
+    private function normalizeHeader($value): string
+    {
+        $s = is_string($value) ? $value : (string) ($value ?? '');
+        return strtolower(trim(str_replace('*', '', $s)));
+    }
+
+    /** Ambil nilai sel berdasarkan posisi; string kosong dianggap null. */
+    private function cell(array $cells, int $pos)
+    {
+        $val = $cells[$pos] ?? null;
+        if (is_string($val)) {
+            $val = trim($val);
+        }
+        return ($val === null || $val === '') ? null : $val;
+    }
+
+    /** Normalkan satuan ke kapitalisasi kanonik; null jika di luar daftar. */
+    private function normalizeUnit($unit): ?string
+    {
+        if ($unit === null || $unit === '') {
+            return null;
+        }
+
+        $u = trim((string) $unit);
+        foreach (self::UNITS as $canonical) {
+            if (strcasecmp($u, $canonical) === 0) {
+                return $canonical;
+            }
+        }
+
+        return null;
+    }
+
+    /** Konversi nilai tanggal (serial Excel atau string) menjadi Y-m-d, atau null. */
     private function parseDate($value): ?string
     {
         if ($value === null || $value === '') {
@@ -125,8 +239,8 @@ class LaboratoryMaterialImport implements ToCollection, WithHeadingRow
     {
         return [
             'imported' => $this->imported,
-            'skipped' => $this->skipped,
-            'failed' => $this->failed,
+            'updated'  => $this->updated,
+            'failed'   => $this->failed,
         ];
     }
 }

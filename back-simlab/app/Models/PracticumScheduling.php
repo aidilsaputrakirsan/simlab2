@@ -50,6 +50,10 @@ class PracticumScheduling extends BaseModel
         return $this->hasMany(PracticumSchedulingMaterial::class, 'practicum_scheduling_id');
     }
 
+    public function proposedMaterials() {
+        return $this->hasMany(PracticumSchedulingProposedMaterial::class, 'practicum_scheduling_id');
+    }
+
     public function practicumApprovals() {
         return $this->hasMany(PracticumApproval::class, 'practicum_scheduling_id');
     }

@@ -7,7 +7,8 @@ export function usePracticumSchedulingEquipmentMaterial() {
     const [formData, setFormData] = useState<PracticumSchedulingEquipmentNMaterialInputDTO>({
         practicumSchedulingEquipments: [],
         proposedEquipments: [],
-        practicumSchedulingMaterials: []
+        practicumSchedulingMaterials: [],
+        proposedMaterials: []
     })
 
     const handleSelectItem = useCallback((type: 'laboratory_equipment' | 'laboratory_material', data: LaboratoryEquipmentView | LaboratoryMaterialView) => {
@@ -109,6 +110,47 @@ export function usePracticumSchedulingEquipmentMaterial() {
         }))
     }, [])
 
+    // === Proposed Material (bahan usulan) handlers ===
+    const handleAddProposedMaterial = useCallback(() => {
+        setFormData(prev => ({
+            ...prev,
+            proposedMaterials: [
+                ...prev.proposedMaterials,
+                { name: '', quantity: null }
+            ]
+        }))
+    }, [])
+
+    const handleChangeProposedMaterial = useCallback((index: number, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { type, name, value } = e.target as HTMLInputElement & { name: string };
+        if (type === 'number') {
+            let newValue = value;
+            if (newValue.length > 1 && newValue.startsWith('0')) {
+                newValue = newValue.replace(/^0+/, '');
+                if (newValue === '') newValue = '0';
+            }
+
+            const parsed = newValue === '' ? null : Number(newValue);
+            setFormData(prev => ({
+                ...prev,
+                proposedMaterials: prev.proposedMaterials.map((item, i) => i === index ? { ...item, [name]: parsed } : item)
+            }))
+            return;
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            proposedMaterials: prev.proposedMaterials.map((item, i) => i === index ? { ...item, [name]: value } : item)
+        }))
+    }, [])
+
+    const handleRemoveProposedMaterial = useCallback((index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            proposedMaterials: prev.proposedMaterials.filter((_, i) => i !== index)
+        }))
+    }, [])
+
     return {
         formData,
         setFormData,
@@ -118,5 +160,8 @@ export function usePracticumSchedulingEquipmentMaterial() {
         handleAddProposedItem,
         handleChangeProposedItem,
         handleRemoveProposedItem,
+        handleAddProposedMaterial,
+        handleChangeProposedMaterial,
+        handleRemoveProposedMaterial,
     }
 }

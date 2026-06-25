@@ -34,6 +34,10 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
             'practicumSchedulingMaterials' => 'sometimes|array',
             'practicumSchedulingMaterials.*.id' => 'required|distinct|exists:laboratory_materials,id',
             'practicumSchedulingMaterials.*.quantity' => 'required|integer|min:1',
+
+            'proposedMaterials' => 'sometimes|array',
+            'proposedMaterials.*.name' => 'required|string|max:255|distinct',
+            'proposedMaterials.*.quantity' => 'required|integer|min:1',
         ];
     }
 
@@ -67,6 +71,16 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
             'proposedEquipments.*.quantity.required' => 'Jumlah alat usulan wajib diisi.',
             'proposedEquipments.*.quantity.integer' => 'Jumlah alat usulan harus berupa angka.',
             'proposedEquipments.*.quantity.min' => 'Jumlah alat usulan minimal 1.',
+
+            // Bahan usulan (proposedMaterials)
+            'proposedMaterials.array' => 'Data bahan usulan harus berupa array.',
+            'proposedMaterials.*.name.required' => 'Nama bahan usulan wajib diisi.',
+            'proposedMaterials.*.name.string' => 'Nama bahan usulan harus berupa teks.',
+            'proposedMaterials.*.name.max' => 'Nama bahan usulan maksimal 255 karakter.',
+            'proposedMaterials.*.name.distinct' => 'Terdapat duplikasi nama bahan usulan.',
+            'proposedMaterials.*.quantity.required' => 'Jumlah bahan usulan wajib diisi.',
+            'proposedMaterials.*.quantity.integer' => 'Jumlah bahan usulan harus berupa angka.',
+            'proposedMaterials.*.quantity.min' => 'Jumlah bahan usulan minimal 1.',
         ];
     }
 }

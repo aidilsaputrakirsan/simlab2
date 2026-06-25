@@ -85,6 +85,15 @@ class PracticumSchedulingResource extends JsonResource
             'practicum_scheduling_materials' => $this->whenLoaded('practicumSchedulingMaterials', function () {
                 return PracticumSchedulingMaterialResource::collection($this->practicumSchedulingMaterials);
             }),
+            'proposed_materials' => $this->whenLoaded('proposedMaterials', function () {
+                return $this->proposedMaterials->map(function ($material) {
+                    return [
+                        'id' => $material->id,
+                        'name' => $material->name,
+                        'quantity' => $material->quantity,
+                    ];
+                });
+            }),
         ];
     }
 }

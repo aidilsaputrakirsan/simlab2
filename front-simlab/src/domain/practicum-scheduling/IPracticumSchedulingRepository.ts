@@ -61,6 +61,7 @@ export interface IPracticumSchedulingRepository {
         practicumSchedulingEquipments: { id: number, quantity: number | null }[],
         proposedEquipments: { name: string, quantity: number | null }[],
         practicumSchedulingMaterials: { id: number, quantity: number | null }[],
+        proposedMaterials: { name: string, quantity: number | null }[],
     }): Promise<ApiResponse>
 
     setSessionConducted(id: number, data: {

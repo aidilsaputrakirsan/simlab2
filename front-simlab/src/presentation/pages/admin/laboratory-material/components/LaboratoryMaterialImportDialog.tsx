@@ -65,7 +65,7 @@ const LaboratoryMaterialImportDialog = ({ open, onOpenChange, onImported }: Prop
                 <DialogHeader>
                     <DialogTitle>Import Bahan Laboratorium</DialogTitle>
                     <DialogDescription>
-                        Unggah file Excel (.xlsx) sesuai template. Baris dengan kode yang sudah ada akan dilewati.
+                        Unggah file Excel (.xlsx) sesuai template. Baris dengan Kode Asset yang sudah ada akan diperbarui (upsert).
                     </DialogDescription>
                 </DialogHeader>
 
@@ -88,17 +88,10 @@ const LaboratoryMaterialImportDialog = ({ open, onOpenChange, onImported }: Prop
                                     {summary.imported} bahan berhasil ditambahkan
                                 </p>
 
-                                {summary.skipped.length > 0 && (
-                                    <div>
-                                        <p className='font-medium text-amber-600'>
-                                            {summary.skipped.length} baris dilewati (kode sudah ada):
-                                        </p>
-                                        <ul className='list-disc pl-5 text-muted-foreground'>
-                                            {summary.skipped.map((s, i) => (
-                                                <li key={i}>Baris {s.row} — kode "{s.code}"</li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                {summary.updated > 0 && (
+                                    <p className='font-medium text-amber-600'>
+                                        {summary.updated} bahan diperbarui (kode sudah ada)
+                                    </p>
                                 )}
 
                                 {summary.failed.length > 0 && (

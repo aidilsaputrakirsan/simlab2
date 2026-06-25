@@ -93,7 +93,7 @@ export class LaboratoryMaterialRepository implements ILaboratoryMaterialReposito
 
     async importData(file: File): Promise<ApiResponse<{
         imported: number;
-        skipped: { row: number; code: string }[];
+        updated: number;
         failed: { row: number; errors: string[] }[];
     }>> {
         const formData = new FormData()

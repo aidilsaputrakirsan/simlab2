@@ -46,7 +46,10 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
         handleSelectItem,
         handleAddProposedItem,
         handleRemoveProposedItem,
-        handleChangeProposedItem
+        handleChangeProposedItem,
+        handleAddProposedMaterial,
+        handleRemoveProposedMaterial,
+        handleChangeProposedMaterial
     } = usePracticumSchedulingEquipmentMaterial()
 
     const { errors, processErrors } = useValidationErrors()
@@ -85,7 +88,8 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
     const hasEquipmentErrors = Object.keys(errors).some(k => k.startsWith('practicumSchedulingEquipments'));
     const hasProposedEquipmentErrors = Object.keys(errors).some(k => k.startsWith('proposedEquipments'));
     const hasMaterialErrors = Object.keys(errors).some(k => k.startsWith('practicumSchedulingMaterials'));
-    const getQuantityError = (type: 'practicumSchedulingEquipments' | 'practicumSchedulingMaterials' | 'proposedEquipments', index: number) =>
+    const hasProposedMaterialErrors = Object.keys(errors).some(k => k.startsWith('proposedMaterials'));
+    const getQuantityError = (type: 'practicumSchedulingEquipments' | 'practicumSchedulingMaterials' | 'proposedEquipments' | 'proposedMaterials', index: number) =>
         errors[`${type}.${index}.quantity`] || errors[`${type}.${index}.id`] || errors[`${type}.${index}`];
 
     return (
@@ -249,33 +253,73 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
                                         />
                                     )}
                                 </div>
-                                <div>
-                                    <div className='font-semibold text-sm mb-2'>Daftar Bahan yang dibutuhkan / Kelompok</div>
-                                    {errors['practicumSchedulingMaterials'] && (
-                                        <p className='mb-2 text-xs italic text-red-500'>{errors['practicumSchedulingMaterials']}</p>
-                                    )}
-                                    {!errors['practicumSchedulingMaterials'] && hasMaterialErrors && (
-                                        <p className='mb-2 text-xs italic text-red-500'>Periksa kembali input bahan yang dipilih.</p>
-                                    )}
-                                    <div className='flex flex-col gap-3'>
-                                        {formData.practicumSchedulingMaterials.length === 0 && <p className='text-sm text-muted-foreground'>Belum ada bahan yang dipilih. Klik tombol Pilih pada tabel.</p>}
-                                        {formData.practicumSchedulingMaterials.map((mt, index) => {
-                                            return (
-                                                <div key={mt.id} className='flex flex-col gap-1 border rounded-md px-5 py-3 bg-background'>
-                                                    <div className='grid grid-cols-1 sm:grid-cols-4 items-center gap-5'>
-                                                        <p className='md:max-w-40 w-full text-sm font-medium break-words'>{mt.name}</p>
-                                                        <div className='flex gap-2 w-full items-center sm:col-span-2'>
-                                                            <Input type='number' min={0} value={mt.quantity || ''} placeholder='Jumlah' onChange={(e) => handleChangeItem('laboratory_material', mt.id, Number(e.target.value))} />
-                                                            <span className='text-sm font-medium w-fit text-nowrap'>{mt.unit}</span>
+                                <div className='flex flex-col gap-5'>
+                                    <div>
+                                        <div className='font-semibold text-sm mb-2'>Daftar Bahan yang dibutuhkan / Kelompok</div>
+                                        {errors['practicumSchedulingMaterials'] && (
+                                            <p className='mb-2 text-xs italic text-red-500'>{errors['practicumSchedulingMaterials']}</p>
+                                        )}
+                                        {!errors['practicumSchedulingMaterials'] && hasMaterialErrors && (
+                                            <p className='mb-2 text-xs italic text-red-500'>Periksa kembali input bahan yang dipilih.</p>
+                                        )}
+                                        <div className='flex flex-col gap-3'>
+                                            {formData.practicumSchedulingMaterials.length === 0 && <p className='text-sm text-muted-foreground'>Belum ada bahan yang dipilih. Klik tombol Pilih pada tabel.</p>}
+                                            {formData.practicumSchedulingMaterials.map((mt, index) => {
+                                                return (
+                                                    <div key={mt.id} className='flex flex-col gap-1 border rounded-md px-5 py-3 bg-background'>
+                                                        <div className='grid grid-cols-1 sm:grid-cols-4 items-center gap-5'>
+                                                            <p className='md:max-w-40 w-full text-sm font-medium break-words'>{mt.name}</p>
+                                                            <div className='flex gap-2 w-full items-center sm:col-span-2'>
+                                                                <Input type='number' min={0} value={mt.quantity || ''} placeholder='Jumlah' onChange={(e) => handleChangeItem('laboratory_material', mt.id, Number(e.target.value))} />
+                                                                <span className='text-sm font-medium w-fit text-nowrap'>{mt.unit}</span>
+                                                            </div>
+                                                            <Button type='button' variant='destructive' className='w-full md:w-fit sm:ml-auto' size='sm' onClick={() => handleRemoveItem('laboratory_material', mt.id)}>Hapus</Button>
                                                         </div>
-                                                        <Button type='button' variant='destructive' className='w-full md:w-fit sm:ml-auto' size='sm' onClick={() => handleRemoveItem('laboratory_material', mt.id)}>Hapus</Button>
+                                                        {hasMaterialErrors && (
+                                                            <p className='text-xs italic text-red-500'>{errors[`practicumSchedulingMaterials.${index}.quantity`]}</p>
+                                                        )}
                                                     </div>
-                                                    {hasMaterialErrors && (
-                                                        <p className='text-xs italic text-red-500'>{errors[`practicumSchedulingMaterials.${index}.quantity`]}</p>
-                                                    )}
-                                                </div>
-                                            )
-                                        })}
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='font-semibold text-sm'>Daftar bahan yang diajukan</div>
+                                        {errors['proposedMaterials'] && (
+                                            <p className='mb-2 text-xs italic text-red-500'>{errors['proposedMaterials']}</p>
+                                        )}
+                                        {!errors['proposedMaterials'] && hasProposedMaterialErrors && (
+                                            <p className='mb-2 text-xs italic text-red-500'>Periksa kembali input bahan yang diajukan.</p>
+                                        )}
+                                        <div className='flex flex-col gap-3'>
+                                            {formData.proposedMaterials.length === 0 && <p className='text-sm text-muted-foreground'>Ajukan apabila terdapat bahan yang tidak terdaftar pada sistem SIMLAB</p>}
+                                            {formData.proposedMaterials.map((mt, index) => {
+                                                const rowError = getQuantityError('proposedMaterials', index)
+                                                return (
+                                                    <div key={index} className='flex flex-col gap-1 border rounded-md px-5 py-3 bg-background'>
+                                                        <div className='flex flex-col gap-5'>
+                                                            <div className='grid grid-cols-3 gap-5'>
+                                                                <div className='flex flex-col gap-2 col-span-2'>
+                                                                    <Label>Nama Bahan <span className="text-red-500">*</span></Label>
+                                                                    <Input type='text' name='name' min={0} value={mt.name || ''} placeholder='Masukkan nama bahan' onChange={(e) => {
+                                                                        handleChangeProposedMaterial(index, e)
+                                                                    }} />
+                                                                </div>
+                                                                <div className='flex flex-col gap-2'>
+                                                                    <Label>Jumlah Bahan <span className="text-red-500">*</span></Label>
+                                                                    <Input type='number' name='quantity' min={0} value={mt.quantity || ''} placeholder='Jumlah' onChange={(e) => {
+                                                                        handleChangeProposedMaterial(index, e)
+                                                                    }} />
+                                                                </div>
+                                                            </div>
+                                                            <Button type='button' variant='destructive' size='sm' className='w-full sm:ml-auto' onClick={() => handleRemoveProposedMaterial(index)}>Hapus</Button>
+                                                        </div>
+                                                        {rowError && <p className='text-xs italic text-red-500'>{rowError}</p>}
+                                                    </div>
+                                                )
+                                            })}
+                                            <Button type='button' variant='secondary' size='sm' className='w-fit ml-auto' onClick={handleAddProposedMaterial}><Plus /> Ajukan Bahan</Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

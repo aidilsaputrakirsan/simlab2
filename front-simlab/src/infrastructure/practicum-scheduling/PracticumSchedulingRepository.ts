@@ -124,7 +124,7 @@ export class PracticumSchedulingRepository implements IPracticumSchedulingReposi
         throw json['message']
     }
 
-    async storePracticumSchedulingEquipmentMaterial(id: number, data: { practicumSchedulingEquipments: { id: number; quantity: number | null; }[]; proposedEquipments: { name: string; quantity: number | null; }[]; practicumSchedulingMaterials: { id: number; quantity: number | null; }[]; }): Promise<ApiResponse> {
+    async storePracticumSchedulingEquipmentMaterial(id: number, data: { practicumSchedulingEquipments: { id: number; quantity: number | null; }[]; proposedEquipments: { name: string; quantity: number | null; }[]; practicumSchedulingMaterials: { id: number; quantity: number | null; }[]; proposedMaterials: { name: string; quantity: number | null; }[]; }): Promise<ApiResponse> {
         const response = await fetchApi(`/practicum-schedule/${id}/equipment-material`, {
             method: 'POST',
             body: JSON.stringify(data)

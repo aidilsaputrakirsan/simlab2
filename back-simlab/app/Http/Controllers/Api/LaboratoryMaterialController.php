@@ -83,8 +83,8 @@ class LaboratoryMaterialController extends BaseController
             $summary = $import->getSummary();
 
             $message = "Import selesai: {$summary['imported']} bahan ditambahkan";
-            if (count($summary['skipped']) > 0) {
-                $message .= ', ' . count($summary['skipped']) . ' dilewati (kode sudah ada)';
+            if ($summary['updated'] > 0) {
+                $message .= ', ' . $summary['updated'] . ' diperbarui';
             }
             if (count($summary['failed']) > 0) {
                 $message .= ', ' . count($summary['failed']) . ' gagal';
@@ -98,7 +98,7 @@ class LaboratoryMaterialController extends BaseController
 
     public function downloadTemplate()
     {
-        return Excel::download(new LaboratoryMaterialTemplateExport(), 'template_import_bahan.xlsx');
+        return Excel::download(new LaboratoryMaterialTemplateExport(), 'Template_Import_Bahan_Laboratorium.xlsx');
     }
 
     public function destroy($id)

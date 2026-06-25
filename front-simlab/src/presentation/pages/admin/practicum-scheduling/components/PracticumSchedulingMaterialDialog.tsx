@@ -5,14 +5,31 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { ScrollArea } from '@/presentation/components/ui/scroll-area';
 import { DataTable } from '@/presentation/components/custom/Datatable';
 import { PracticumScheduleMaterialColumn } from '../column/PracticumScheduleMaterialColumn';
+import { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 
 interface PracticumSchedulingMaterialDialogProps {
     data: PracticumSchedulingMaterialView[]
+    proposedData?: PracticumSchedulingMaterialView[]
 }
 
+// Kolom khusus bahan usulan: hanya Nama & Qty (tanpa realisasi)
+const proposedMaterialColumn: ColumnDef<PracticumSchedulingMaterialView>[] = [
+    {
+        id: 'name',
+        header: 'Bahan',
+        cell: ({ row }) => row.original.materialName || '-',
+    },
+    {
+        accessorKey: 'quantity',
+        header: 'Qty',
+        cell: ({ row }) => row.original.quantity,
+    },
+];
+
 const PracticumSchedulingMaterialDialog: React.FC<PracticumSchedulingMaterialDialogProps> = ({
-    data
+    data,
+    proposedData = []
 }) => {
     return (
         <Dialog>
@@ -24,11 +41,26 @@ const PracticumSchedulingMaterialDialog: React.FC<PracticumSchedulingMaterialDia
             <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Daftar Bahan yang Dipinjam</DialogTitle>
-                    <DialogDescription>Berikut merupakan daftar bahan yang diajukan untuk semua kelas. Harap hubungi kepala jurusan yang mengajukan untuk pembagian bahan per kelas</DialogDescription>
+                    <DialogDescription>Berikut merupakan daftar bahan serta usulan bahan yang diajukan untuk semua kelas. Harap hubungi kepala jurusan yang mengajukan untuk pembagian bahan per kelas</DialogDescription>
                 </DialogHeader>
                 <ScrollArea className='h-full max-h-[70vh]'>
-                    <div className='p-1'>
-                        <DataTable columns={PracticumScheduleMaterialColumn()} data={data} loading={false} />
+                    <div className='p-1 flex flex-col gap-5'>
+                        <div>
+                            <span className='font-semibold'>Bahan Laboratorium </span>
+                            {data.length > 0 ? (
+                                <DataTable columns={PracticumScheduleMaterialColumn()} data={data} loading={false} />
+                            ) : (
+                                <p className='mb-2 text-sm text-muted-foreground'>Tidak ada bahan dari daftar inventaris.</p>
+                            )}
+                        </div>
+                        <div>
+                            <span className='font-semibold'>Usulan Bahan Laboratorium </span>
+                            {proposedData.length > 0 ? (
+                                <DataTable columns={proposedMaterialColumn} data={proposedData} loading={false} />
+                            ) : (
+                                <p className='mb-2 text-sm text-muted-foreground'>Tidak ada bahan usulan.</p>
+                            )}
+                        </div>
                     </div>
                 </ScrollArea>
                 <DialogFooter>

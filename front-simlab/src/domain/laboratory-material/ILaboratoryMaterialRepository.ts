@@ -39,7 +39,7 @@ export interface ILaboratoryMaterialRepository {
     deleteData(id: number): Promise<ApiResponse>
     importData(file: File): Promise<ApiResponse<{
         imported: number;
-        skipped: { row: number; code: string }[];
+        updated: number;
         failed: { row: number; errors: string[] }[];
     }>>
     downloadTemplate(): Promise<void>

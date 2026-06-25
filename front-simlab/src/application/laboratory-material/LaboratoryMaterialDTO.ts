@@ -21,6 +21,6 @@ export interface LaboratoryMaterialTableParams {
 
 export interface LaboratoryMaterialImportSummary {
     imported: number;
-    skipped: { row: number; code: string }[];
+    updated: number;
     failed: { row: number; errors: string[] }[];
 }
