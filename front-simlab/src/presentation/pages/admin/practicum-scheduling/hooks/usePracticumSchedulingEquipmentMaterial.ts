@@ -68,7 +68,7 @@ export function usePracticumSchedulingEquipmentMaterial() {
             ...prev,
             proposedEquipments: [
                 ...prev.proposedEquipments,
-                { name: '', quantity: null }
+                { name: '', quantity: '' }
             ]
         }))
     }, [])
@@ -116,7 +116,7 @@ export function usePracticumSchedulingEquipmentMaterial() {
             ...prev,
             proposedMaterials: [
                 ...prev.proposedMaterials,
-                { name: '', quantity: null }
+                { name: '', quantity: '' }
             ]
         }))
     }, [])

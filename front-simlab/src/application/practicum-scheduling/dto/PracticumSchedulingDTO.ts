@@ -35,7 +35,7 @@ export interface PracticumSchedulingEquipmentNMaterialInputDTO {
     }[];
     proposedEquipments: {
         name: string
-        quantity: number | null
+        quantity: string
     }[];
     practicumSchedulingMaterials: {
         id: number,
@@ -45,7 +45,7 @@ export interface PracticumSchedulingEquipmentNMaterialInputDTO {
     }[];
     proposedMaterials: {
         name: string
-        quantity: number | null
+        quantity: string
     }[];
 }
 

@@ -633,7 +633,8 @@ class PracticumSchedulingController extends BaseController
             PracticumSchedulingProposedMaterial::create([
                 'practicum_scheduling_id' => $scheduling->id,
                 'name' => $p['name'],
-                'quantity' => $p['quantity'] * $scheduling->total_groups,
+                // Jumlah usulan berupa teks bebas (angka + satuan), disimpan apa adanya
+                'quantity' => $p['quantity'],
             ]);
         }
     }

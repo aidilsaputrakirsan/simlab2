@@ -28,7 +28,7 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
 
             'proposedEquipments' => 'sometimes|array',
             'proposedEquipments.*.name' => 'required|string|max:255|distinct',
-            'proposedEquipments.*.quantity' => 'required|integer|min:1',
+            'proposedEquipments.*.quantity' => 'required|string|max:100',
 
             // Bahan (materials) tidak required, hanya validasi jika ada
             'practicumSchedulingMaterials' => 'sometimes|array',
@@ -37,7 +37,7 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
 
             'proposedMaterials' => 'sometimes|array',
             'proposedMaterials.*.name' => 'required|string|max:255|distinct',
-            'proposedMaterials.*.quantity' => 'required|integer|min:1',
+            'proposedMaterials.*.quantity' => 'required|string|max:100',
         ];
     }
 
@@ -69,8 +69,7 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
             'proposedEquipments.*.name.max' => 'Nama alat usulan maksimal 255 karakter.',
             'proposedEquipments.*.name.distinct' => 'Terdapat duplikasi nama alat usulan.',
             'proposedEquipments.*.quantity.required' => 'Jumlah alat usulan wajib diisi.',
-            'proposedEquipments.*.quantity.integer' => 'Jumlah alat usulan harus berupa angka.',
-            'proposedEquipments.*.quantity.min' => 'Jumlah alat usulan minimal 1.',
+            'proposedEquipments.*.quantity.max' => 'Jumlah alat usulan maksimal 100 karakter.',
 
             // Bahan usulan (proposedMaterials)
             'proposedMaterials.array' => 'Data bahan usulan harus berupa array.',
@@ -79,8 +78,7 @@ class PracticumEquipmenMaterialRequest extends ApiRequest
             'proposedMaterials.*.name.max' => 'Nama bahan usulan maksimal 255 karakter.',
             'proposedMaterials.*.name.distinct' => 'Terdapat duplikasi nama bahan usulan.',
             'proposedMaterials.*.quantity.required' => 'Jumlah bahan usulan wajib diisi.',
-            'proposedMaterials.*.quantity.integer' => 'Jumlah bahan usulan harus berupa angka.',
-            'proposedMaterials.*.quantity.min' => 'Jumlah bahan usulan minimal 1.',
+            'proposedMaterials.*.quantity.max' => 'Jumlah bahan usulan maksimal 100 karakter.',
         ];
     }
 }

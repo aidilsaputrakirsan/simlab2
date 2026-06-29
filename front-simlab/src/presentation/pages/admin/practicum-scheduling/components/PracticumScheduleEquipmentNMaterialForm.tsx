@@ -202,8 +202,8 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
                                                                     }} />
                                                                 </div>
                                                                 <div className='flex flex-col gap-2'>
-                                                                    <Label>Jumlah Alat <span className="text-red-500">*</span></Label>
-                                                                    <Input type='number' name='quantity' min={0} value={eq.quantity || ''} placeholder='Jumlah' onChange={(e) => {
+                                                                    <Label>Jumlah & Satuan <span className="text-red-500">*</span></Label>
+                                                                    <Input type='text' name='quantity' value={eq.quantity || ''} placeholder='mis. 2 set' onChange={(e) => {
                                                                         handleChangeProposedItem(index, e)
                                                                     }} />
                                                                 </div>
@@ -306,8 +306,8 @@ const PracticumScheduleEquipmentNMaterialForm: React.FC<PracticumScheduleEquipme
                                                                     }} />
                                                                 </div>
                                                                 <div className='flex flex-col gap-2'>
-                                                                    <Label>Jumlah Bahan <span className="text-red-500">*</span></Label>
-                                                                    <Input type='number' name='quantity' min={0} value={mt.quantity || ''} placeholder='Jumlah' onChange={(e) => {
+                                                                    <Label>Jumlah & Satuan <span className="text-red-500">*</span></Label>
+                                                                    <Input type='text' name='quantity' value={mt.quantity || ''} placeholder='mis. 500 ml' onChange={(e) => {
                                                                         handleChangeProposedMaterial(index, e)
                                                                     }} />
                                                                 </div>

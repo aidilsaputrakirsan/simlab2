@@ -5,7 +5,7 @@ import { PracticumSchedulingEquipmentType } from "@/domain/practicum-scheduling/
 export type PracticumSchedulingEquipmentAPI = {
     id: number;
     practicum_scheduling_id: number;
-    quantity: number;
+    quantity: number | string;
     created_at: string;
     updated_at: string;
     name: string;

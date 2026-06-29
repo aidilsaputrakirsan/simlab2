@@ -6,7 +6,7 @@ export class PracticumSchedulingEquipmentView {
     constructor(
         readonly id: number,
         readonly practicumSchedulingId: number,
-        readonly quantity: number,
+        readonly quantity: number | string,
         readonly createdAt: TimeView,
         readonly updatedAt: TimeView,
         readonly name: string,

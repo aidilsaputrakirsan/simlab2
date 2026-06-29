@@ -59,9 +59,9 @@ export interface IPracticumSchedulingRepository {
     getPracticumSchedulingData(id: number): Promise<ApiResponse<PracticumScheduling>>
     storePracticumSchedulingEquipmentMaterial(id: number, data: {
         practicumSchedulingEquipments: { id: number, quantity: number | null }[],
-        proposedEquipments: { name: string, quantity: number | null }[],
+        proposedEquipments: { name: string, quantity: string }[],
         practicumSchedulingMaterials: { id: number, quantity: number | null }[],
-        proposedMaterials: { name: string, quantity: number | null }[],
+        proposedMaterials: { name: string, quantity: string }[],
     }): Promise<ApiResponse>
 
     setSessionConducted(id: number, data: {

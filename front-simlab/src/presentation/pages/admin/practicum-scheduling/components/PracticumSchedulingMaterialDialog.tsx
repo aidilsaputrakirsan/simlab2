@@ -8,22 +8,24 @@ import { PracticumScheduleMaterialColumn } from '../column/PracticumScheduleMate
 import { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 
+type ProposedMaterial = { id: number; name: string; quantity: string }
+
 interface PracticumSchedulingMaterialDialogProps {
     data: PracticumSchedulingMaterialView[]
-    proposedData?: PracticumSchedulingMaterialView[]
+    proposedData?: ProposedMaterial[]
 }
 
-// Kolom khusus bahan usulan: hanya Nama & Qty (tanpa realisasi)
-const proposedMaterialColumn: ColumnDef<PracticumSchedulingMaterialView>[] = [
+// Kolom khusus bahan usulan: Nama & Jumlah (teks bebas: angka + satuan), tanpa realisasi
+const proposedMaterialColumn: ColumnDef<ProposedMaterial>[] = [
     {
         id: 'name',
         header: 'Bahan',
-        cell: ({ row }) => row.original.materialName || '-',
+        cell: ({ row }) => row.original.name || '-',
     },
     {
         accessorKey: 'quantity',
-        header: 'Qty',
-        cell: ({ row }) => row.original.quantity,
+        header: 'Jumlah',
+        cell: ({ row }) => row.original.quantity || '-',
     },
 ];
 

@@ -494,7 +494,11 @@ class BookingController extends BaseController
                 'laboratoryRoom',
                 'laboran',
                 'equipments.laboratoryEquipment',
+                'approvals',
             ])->findOrFail($id);
+
+            // Catatan = informasi yang diisi laboran saat verifikasi peminjaman
+            $catatan = optional($booking->approvals->firstWhere('action', 'verified_by_laboran'))->information;
 
             $tz = config('app.timezone');
             $start = $booking->start_time ? Carbon::parse($booking->start_time)->setTimezone($tz) : null;
@@ -541,6 +545,7 @@ class BookingController extends BaseController
                 'equipmentList' => $equipmentList,
                 'room' => $booking->laboratoryRoom?->name ?? '-',
                 'offsite' => $booking->is_allowed_offsite ? 'Diperbolehkan' : 'Tidak Diperbolehkan',
+                'catatan' => $catatan ?: '-',
                 'laboran' => $booking->laboran?->name ?? '-',
             ];
 

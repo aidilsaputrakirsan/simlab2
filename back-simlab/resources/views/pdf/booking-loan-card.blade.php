@@ -69,6 +69,7 @@
         <tr><td class="label">Daftar Alat Yang Dibutuhkan</td><td class="sep">:</td><td>{{ $equipmentList }}</td></tr>
         <tr><td class="label">Ruangan Penggunaan Alat:</td><td class="sep">:</td><td>{{ $room }}</td></tr>
         <tr><td class="label">Penggunaan Alat Diluar Laboratorium</td><td class="sep">:</td><td>{{ $offsite }}</td></tr>
+        <tr><td class="label">Catatan</td><td class="sep">:</td><td>{{ $catatan }}</td></tr>
         <tr><td colspan="3" class="center-bold">DIIJINKAN</td></tr>
         <tr>
             <td colspan="2" class="sign-area">
