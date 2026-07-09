@@ -42,16 +42,18 @@ const BookingReturnAction: React.FC<BookingReturnActionProps> = ({
             {booking.isRequestorCanReturn && (
                 <Button variant={'success'} onClick={() => openReturnConfirmation?.(booking.id)}>Kembalikan Alat</Button>
             )}
-            <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadDocument}
-                disabled={isDownloading}
-                title="Download Dokumen Peminjaman"
-            >
-                <FileDown />
-                {isDownloading ? 'Mengunduh...' : 'Dokumen'}
-            </Button>
+            {booking.isVerifiedByLaboran && (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadDocument}
+                    disabled={isDownloading}
+                    title="Download Dokumen Peminjaman"
+                >
+                    <FileDown />
+                    {isDownloading ? 'Mengunduh...' : 'Dokumen'}
+                </Button>
+            )}
             <NavLink to={`/panel/peminjaman/${booking.id}/detail`}>
                 <Button variant="secondary" size="sm">Detail</Button>
             </NavLink>

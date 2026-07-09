@@ -8,7 +8,8 @@ import { BookingApprovalView } from "./BookingApprovalView";
 import { Requestor } from "@/domain/shared/value-object/Requestor";
 import { Laboran } from "@/domain/shared/value-object/Laboran";
 import { PaymentStatus } from "@/domain/payment/PaymentStatus";
-
+import { BookingApprovalAction } from "@/domain/booking/BookingApprovalAction";
+import { BookingApprovalStatus } from "@/domain/booking/BookingApprovalStatus";
 export class BookingView {
     constructor(
         readonly id: number,
@@ -116,5 +117,13 @@ export class BookingView {
     formatPrice(price: number | undefined): string {
         if (!price) return 'Rp 0'
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)
+    }
+
+    get isVerifiedByLaboran(): boolean {
+        return this.bookingApproval.some(
+            (approval) =>
+                approval.action === BookingApprovalAction.VerifiedByLaboran &&
+                approval.status === BookingApprovalStatus.Approved
+        );
     }
 }

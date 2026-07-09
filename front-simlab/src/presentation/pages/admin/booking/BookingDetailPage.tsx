@@ -127,15 +127,17 @@ export const BookingDetailPage: React.FC = () => {
         <div className="flex items-center justify-between flex-col-reverse sm:flex-row mb-2 gap-2">
           <BookingStepperDialog bookingId={bookingId} />
           <div className="flex gap-2 w-full sm:w-fit">
-            <Button
-              variant="outline"
-              className="gap-2 w-full sm:w-fit"
-              onClick={handleDownloadDocument}
-              disabled={isDownloading}
-            >
-              <FileDown className="w-4 h-4" />
-              {isDownloading ? 'Mengunduh...' : 'Download Dokumen'}
-            </Button>
+            {booking.isVerifiedByLaboran && (
+              <Button
+                variant="outline"
+                className="gap-2 w-full sm:w-fit"
+                onClick={handleDownloadDocument}
+                disabled={isDownloading}
+              >
+                <FileDown className="w-4 h-4" />
+                {isDownloading ? 'Mengunduh...' : 'Download Dokumen'}
+              </Button>
+            )}
             <Button className="gap-2 w-full sm:w-fit" onClick={() => navigate(backTo)}>
               <ArrowLeft className="w-4 h-4" />
               Kembali

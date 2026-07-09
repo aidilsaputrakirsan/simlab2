@@ -17,6 +17,12 @@ class BookingResource extends JsonResource
         return parent::collection($resource);
     }
 
+    public static function makeWithApprovals($resource)
+    {
+        static::$approvals = true;
+        return new static($resource);
+    }
+
     public static function collectionRequestor($resource)
     {
         static::$isRequestor = true;
