@@ -1,25 +1,20 @@
 <?php
 
-use App\Http\Controllers\Api\BookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes — SPA React (single-domain)
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+| Semua rute non-/api menyajikan index.html hasil build React.
+| Panggilan API tetap ditangani routes/api.php (prefix /api).
+| File statis (assets, gambar) disajikan langsung oleh Apache.
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/', function () {
-    return view('welcome');
+    return response()->file(public_path('index.html'));
 })->name('login');
 
-// Route::get('/exports/booking', [BookingController::class, 'bookingExport']);
+Route::get('/{any}', function () {
+    return response()->file(public_path('index.html'));
+})->where('any', '^(?!api).*$');
