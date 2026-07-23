@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\PracticumSession;
 use App\Models\LaboratoryRoom;
+use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 
 class PracticumSchedulingRequest extends ApiRequest
@@ -122,12 +123,23 @@ class PracticumSchedulingRequest extends ApiRequest
             $roomName = $room ? $room->name : 'Ruangan';
 
             foreach ($sessions as $sessionIndex => $session) {
-                $startTime = $session['start_time'] ?? null;
-                $endTime = $session['end_time'] ?? null;
+                $rawStartTime = $session['start_time'] ?? null;
+                $rawEndTime = $session['end_time'] ?? null;
 
-                if (!$roomId || !$startTime || !$endTime) {
+                if (!$roomId || !$rawStartTime || !$rawEndTime) {
                     continue;
                 }
+
+                // Frontend mengirim ISO 8601 UTC (hasil Date.toISOString()), sedangkan
+                // kolom start_time/end_time disimpan dalam timezone aplikasi — lihat
+                // PracticumSchedulingController::storePracticumClass yang memakai
+                // konversi yang sama persis saat menyimpan.
+                //
+                // Tanpa konversi ini perbandingan meleset sebesar offset timezone
+                // (WITA = UTC+8), sehingga mis. Sesi 4 (15:50-17:30) terbaca sebagai
+                // 07:50-09:30 dan dianggap bentrok dengan Sesi 1 (07:30-10:00).
+                $startTime = Carbon::parse($rawStartTime)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                $endTime = Carbon::parse($rawEndTime)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
 
                 // Query untuk cek konflik dengan jadwal existing
                 $conflictQuery = PracticumSession::query()
