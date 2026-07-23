@@ -33,7 +33,7 @@ export const usePracticumSchedulingByLecturerDataTable = () => {
         setTotalPages(response.last_page ?? 0)
         setTotalItems(response.total ?? 0)
         setIsLoading(false)
-    }, [])
+    }, [currentPage, perPage, debounceSearchTerm])
 
     useEffect(() => {
         getData();
