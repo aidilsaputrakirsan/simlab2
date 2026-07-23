@@ -41,6 +41,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 // Universal Api
+Route::get('/users/statistics', [UserController::class, 'getUserStatistics']);
 Route::get('/study-programs/select', [StudyProgramController::class, 'getDataForSelect']);
 Route::get('/institutions/select', [InstitutionController::class, 'getDataForSelect']);
 Route::get('publications/content/{slug}', [PublicationController::class, 'getBySlug']);
@@ -131,7 +132,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('laboratory-materials', LaboratoryMaterialController::class)->except(['index']);
     });
 
-    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_pengujian|kepala_lab_jurusan'], function () {
+    Route::group(['prefix' => 'testing-requests', 'as' => 'testing-requests', 'middleware' => 'role:kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|admin_pengujian|kepala_lab_jurusan|koorprodi'], function () {
         Route::get('/{id}/detail', [TestingRequestController::class, 'getTestingRequestData']);
         Route::get('/{id}/approvals', [TestingRequestController::class, 'getTestingRequestApproval']);
         Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|koorprodi|kepala_lab_jurusan'], function () {
@@ -152,13 +153,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
+    // laporan peminjaman (paginated, per jenis peminjaman)
+    Route::get('/bookings-report', [BookingController::class, 'getBookingsReport'])
+        ->middleware('role:admin|laboran|kepala_lab_terpadu|kepala_lab_jurusan|admin_pengujian');
+
     // booking (peminjaman)
-    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|admin_pengujian'], function () {
+    Route::group(['prefix' => 'bookings', 'as' => 'bookings', 'middleware' => 'role:admin|kepala_lab_terpadu|laboran|dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|admin_pengujian|koorprodi'], function () {
         Route::get('/{id}/detail', [BookingController::class, 'getBookingData']);
         Route::get('/{id}/document', [BookingController::class, 'downloadDocument']);
         Route::get('/{id}/approvals', [BookingController::class, 'getBookingApprovals']);
 
-        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|admin|kepala_lab_jurusan'], function () {
+        Route::group(['middleware' => 'role:mahasiswa|dosen|pihak_luar|admin|kepala_lab_jurusan|koorprodi'], function () {
             Route::get('/', [BookingController::class, 'index']);
             Route::post('/', [BookingController::class, 'store']);
             Route::get('/have-draft', [BookingController::class, 'isStillHaveDraftBooking']);
@@ -176,7 +181,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/verify-return', [BookingController::class, 'bookingReturnVerification']);
         });
 
-        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar|kepala_lab_jurusan'], function () {
+        Route::group(['middleware' => 'role:dosen|mahasiswa|pihak_luar|kepala_lab_jurusan|koorprodi'], function () {
             Route::post('/{id}/confirm-return', [BookingController::class, 'bookingReturnConfirmation']);
         });
     });

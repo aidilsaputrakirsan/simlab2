@@ -372,7 +372,7 @@ export const router = createBrowserRouter([
                     {
                         path: ':id/detail',
                         element: (
-                            <ProtectedRoute allowedRoles={[userRole.Admin, userRole.Dosen, userRole.Mahasiswa, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.PihakLuar, userRole.KepalaLabJurusan, userRole.AdminPengujian]}>
+                            <ProtectedRoute allowedRoles={[userRole.Admin, userRole.Dosen, userRole.Mahasiswa, userRole.KepalaLabTerpadu, userRole.Laboran, userRole.PihakLuar, userRole.KepalaLabJurusan, userRole.AdminPengujian, userRole.Kooprodi]}>
                                 <BookingProvider>
                                     <BookingDetailPage />
                                 </BookingProvider>

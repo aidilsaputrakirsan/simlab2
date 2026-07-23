@@ -15,6 +15,7 @@ import BookingStepperDialog from './components/BookingStepperDialog';
 import BookingEquipmentDialog from './components/BookingEquipmentDialog';
 import BookingMaterialDialog from './components/BookingMaterialDialog';
 import { userRole } from '@/domain/User/UserRole';
+import { BookingStatus } from '@/domain/booking/BookingStatus';
 import BookingBadgeStatus from './components/BookingBadgeStatus';
 import { Badge } from '@/presentation/components/ui/badge';
 import BookingPriceDialog from './components/BookingPriceDialog';
@@ -127,7 +128,7 @@ export const BookingDetailPage: React.FC = () => {
         <div className="flex items-center justify-between flex-col-reverse sm:flex-row mb-2 gap-2">
           <BookingStepperDialog bookingId={bookingId} />
           <div className="flex gap-2 w-full sm:w-fit">
-            {booking.isVerifiedByLaboran && (
+            {(booking.status === BookingStatus.Approved || booking.status === BookingStatus.Returned) && (
               <Button
                 variant="outline"
                 className="gap-2 w-full sm:w-fit"

@@ -48,6 +48,59 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * Statistik jumlah pengguna per role + total (agregat, tanpa data pribadi).
+     */
+    public function getUserStatistics()
+    {
+        try {
+            $labels = [
+                'admin' => 'Admin',
+                'admin_pengujian' => 'Admin Pengujian',
+                'kepala_lab_terpadu' => 'Kepala Lab Terpadu',
+                'kepala_lab_jurusan' => 'Kepala Lab Jurusan',
+                'koorprodi' => 'Koordinator Prodi',
+                'laboran' => 'Laboran',
+                'dosen' => 'Dosen',
+                'mahasiswa' => 'Mahasiswa',
+                'pihak_luar' => 'Pihak Luar',
+            ];
+
+            $counts = User::query()
+                ->selectRaw('role, COUNT(*) as total')
+                ->groupBy('role')
+                ->pluck('total', 'role');
+
+            $perRole = [];
+            foreach ($labels as $role => $label) {
+                $perRole[] = [
+                    'role' => $role,
+                    'label' => $label,
+                    'total' => (int) ($counts[$role] ?? 0),
+                ];
+            }
+
+            // Role di luar daftar label (kalau ada data lama yang tidak terpetakan)
+            foreach ($counts as $role => $total) {
+                if (!isset($labels[$role])) {
+                    $perRole[] = [
+                        'role' => $role,
+                        'label' => $role,
+                        'total' => (int) $total,
+                    ];
+                }
+            }
+
+            return $this->sendResponse([
+                'per_role' => $perRole,
+                'total_semua' => (int) $counts->sum(),
+                'generated_at' => now()->toIso8601String(),
+            ], 'Statistik pengguna berhasil diambil');
+        } catch (\Exception $e) {
+            return $this->sendError('Gagal mengambil statistik pengguna', [$e->getMessage()], 500);
+        }
+    }
+
     public function store(UserRequest $request)
     {
         try {

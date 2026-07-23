@@ -133,6 +133,58 @@ class BookingController extends BaseController
         }
     }
 
+    /**
+     * Data laporan peminjaman (paginated) — difilter per jenis peminjaman.
+     * Selalu memakai pagination; tidak menarik seluruh data sekaligus.
+     */
+    public function getBookingsReport(Request $request)
+    {
+        try {
+            $query = Booking::query();
+            $query->with(['academicYear', 'user.studyProgram', 'user.institution']);
+            $query->where('status', '<>', 'draft');
+
+            if ($request->booking_type) {
+                $query->where('booking_type', $request->booking_type);
+            }
+
+            if ($request->filter_status) {
+                $query->where('status', $request->filter_status);
+            }
+
+            if ($request->filter_academic_year) {
+                $query->where('academic_year_id', $request->filter_academic_year);
+            }
+
+            if ($request->has('search') && strlen($request->search) > 0) {
+                $searchTerm = $request->search;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('purpose', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('activity_name', 'LIKE', "%{$searchTerm}%");
+                });
+            }
+
+            $perPage = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
+
+            $query->orderBy('created_at', 'desc');
+
+            $bookings = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $response = [
+                'current_page' => $bookings->currentPage(),
+                'last_page' => $bookings->lastPage(),
+                'per_page' => $bookings->perPage(),
+                'total' => $bookings->total(),
+                'data' => BookingResource::collectionWithApprovals($bookings),
+            ];
+
+            return $this->sendResponse($response, 'Booking Report Data Retrieved Successfully');
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to retrieve booking report data', [$e->getMessage()], 500);
+        }
+    }
+
     public function getBookingsForVerification(Request $request)
     {
         try {

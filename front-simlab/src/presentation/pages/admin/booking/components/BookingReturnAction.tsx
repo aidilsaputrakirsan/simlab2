@@ -42,7 +42,7 @@ const BookingReturnAction: React.FC<BookingReturnActionProps> = ({
             {booking.isRequestorCanReturn && (
                 <Button variant={'success'} onClick={() => openReturnConfirmation?.(booking.id)}>Kembalikan Alat</Button>
             )}
-            {booking.isVerifiedByLaboran && (
+            {(booking.status === BookingStatus.Approved || booking.status === BookingStatus.Returned) && (
                 <Button
                     variant="outline"
                     size="sm"
