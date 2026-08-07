@@ -4,13 +4,14 @@ import { LaboratoryEquipmentColumn } from "./LaboratoryEquipmentColumn";
 import Header from "@/presentation/components/Header";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/presentation/components/ui/card";
 import { Button } from "@/presentation/components/ui/button";
-import { Plus } from "lucide-react";
+import { Download, Plus } from "lucide-react";
 import { LaboratoryEquipmentInputDTO } from "@/application/laboratory-equipment/LaboratoryEquipmentDTO";
 import { toast } from "sonner";
 import ConfirmationDialog from "@/presentation/components/custom/ConfirmationDialog";
 import LaboratoryEquipmentFormDialog from "./components/LaboratoryEquipmentFormDialog";
 import { Combobox } from "@/presentation/components/custom/combobox";
 import LaboratoryEquipmentDetailDialog from "./components/LaboratoryEquipmentDetailDialog";
+import LaboratoryEquipmentExportDialog from "./components/LaboratoryEquipmentExportDialog";
 import { useLaboratoryRoomSelect } from "../laboratory-room/hooks/useLaboratoryRoomSelect";
 import { useDepedencies } from "@/presentation/contexts/useDepedencies";
 import { useLaboratoryEquipmentDataTable } from "./hooks/useLaboratoryEquipmentDataTable";
@@ -41,6 +42,7 @@ const LaboratoryEquipmentPage = () => {
     const [isModalDetailOpen, setIsModalDetailOpen] = useState<boolean>(false)
     const [selectedLaboratoryEquipment, setSelectedEquipment] = useState<LaboratoryEquipmentView | undefined>(undefined)
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
+    const [isExportOpen, setIsExportOpen] = useState<boolean>(false)
 
     const isEdit = !!selectedLaboratoryEquipment
 
@@ -83,6 +85,16 @@ const LaboratoryEquipmentPage = () => {
         setConfirmOpen(false)
     }
 
+    const handleExport = async (laboratoryRoomIds: number[]) => {
+        try {
+            await laboratoryEquipmentService.exportData(laboratoryRoomIds)
+            toast.success('Data alat berhasil diunduh')
+            setIsExportOpen(false)
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'Gagal mengunduh data alat')
+        }
+    }
+
     return (
         <>
             <Header title="Menu Alat Laboratorium" />
@@ -91,10 +103,16 @@ const LaboratoryEquipmentPage = () => {
                     <CardHeader>
                         <CardTitle>Menu Alat Laboratorium</CardTitle>
                         <CardAction>
-                            <Button variant={"default"} onClick={() => openAdd()}>
-                                Tambah
-                                <Plus />
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button variant={"outline"} onClick={() => setIsExportOpen(true)}>
+                                    Download
+                                    <Download />
+                                </Button>
+                                <Button variant={"default"} onClick={() => openAdd()}>
+                                    Tambah
+                                    <Plus />
+                                </Button>
+                            </div>
                         </CardAction>
                     </CardHeader>
                     <CardContent>
@@ -139,10 +157,15 @@ const LaboratoryEquipmentPage = () => {
                 handleSave={handleSave}
                 title={!isEdit ? 'Tambah Alat Laboratorium' : 'Edit Alat Laboratorium'}
             />
-            <LaboratoryEquipmentDetailDialog 
+            <LaboratoryEquipmentDetailDialog
                 laboratoryEquipment={selectedLaboratoryEquipment}
-                open={isModalDetailOpen} 
+                open={isModalDetailOpen}
                 onOpenChange={setIsModalDetailOpen} />
+            <LaboratoryEquipmentExportDialog
+                open={isExportOpen}
+                onOpenChange={setIsExportOpen}
+                laboratoryRooms={laboratoryRooms}
+                onExport={handleExport} />
         </>
     )
 }

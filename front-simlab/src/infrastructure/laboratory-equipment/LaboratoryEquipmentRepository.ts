@@ -82,6 +82,28 @@ export class LaboratoryEquipmentRepository implements ILaboratoryEquipmentReposi
         throw json
     }
 
+    async exportData(laboratoryRoomIds: number[]): Promise<void> {
+        const params = new URLSearchParams()
+        laboratoryRoomIds.forEach((id) => params.append('laboratory_room_ids[]', String(id)))
+        const queryString = params.toString()
+
+        const response = await fetchApi(`/laboratory-equipments/export${queryString ? `?${queryString}` : ''}`, { method: 'GET' });
+
+        if (!response.ok) {
+            throw new Error('Gagal mengunduh data alat laboratorium')
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `master_alat_${new Date().toISOString().split('T')[0]}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    }
+
     async deleteData(id: number): Promise<ApiResponse> {
         const response = await fetchApi(`/laboratory-equipments/${id}`, {
             method: 'DELETE',

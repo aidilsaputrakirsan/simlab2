@@ -125,6 +125,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['role:admin|laboran'])->group(function () {
         Route::resource('laboratory-rooms', LaboratoryRoomController::class)->except(['index']);
+        // Export Master Alat (harus didefinisikan sebelum resource agar tidak tertangkap {id})
+        Route::get('/laboratory-equipments/export', [LaboratoryEquipmentController::class, 'export']);
         Route::resource('laboratory-equipments', LaboratoryEquipmentController::class)->except(['index']);
         // Import Master Bahan (harus didefinisikan sebelum resource agar tidak tertangkap {id})
         Route::get('/laboratory-materials/import/template', [LaboratoryMaterialController::class, 'downloadTemplate']);

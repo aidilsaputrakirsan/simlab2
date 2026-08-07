@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\LaboratoryEquipmentExport;
 use App\Http\Requests\LaboratoryEquipmentRequest;
 use App\Models\LaboratoryEquipment;
+use App\Models\LaboratoryRoom;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaboratoryEquipmentController extends BaseController
 {
@@ -36,6 +40,44 @@ class LaboratoryEquipmentController extends BaseController
             return $this->sendResponse($laboratory_equipments, "Laboratory Equipments Retreive Successfully");
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve Laboratory Equipments', [$e->getMessage()], 500);
+        }
+    }
+
+    public function export(Request $request)
+    {
+        try {
+            // Terima laboratory_room_ids[]=1&laboratory_room_ids[]=2 maupun "1,2"
+            $roomIds = $request->input('laboratory_room_ids', []);
+            if (is_string($roomIds)) {
+                $roomIds = explode(',', $roomIds);
+            }
+
+            $roomIds = collect((array) $roomIds)
+                ->map(fn($id) => (int) $id)
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+
+            $rooms = !empty($roomIds)
+                ? LaboratoryRoom::whereIn('id', $roomIds)->pluck('name', 'id')
+                : collect();
+
+            if (!empty($roomIds) && $rooms->isEmpty()) {
+                return $this->sendError('Laboratorium yang dipilih tidak ditemukan', [], 404);
+            }
+
+            $suffix = match (true) {
+                empty($roomIds) => 'semua_laboratorium',
+                $rooms->count() === 1 => Str::slug($rooms->first(), '_'),
+                default => $rooms->count() . '_laboratorium',
+            };
+
+            $fileName = "master_alat_{$suffix}_" . date('Y-m-d_H-i-s') . '.xlsx';
+
+            return Excel::download(new LaboratoryEquipmentExport($roomIds), $fileName);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to export Laboratory Equipments', [$e->getMessage()], 500);
         }
     }
 

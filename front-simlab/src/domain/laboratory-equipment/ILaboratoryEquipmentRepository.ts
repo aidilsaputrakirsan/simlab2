@@ -37,4 +37,5 @@ export interface ILaboratoryEquipmentRepository {
         asset_code: string
     }): Promise<ApiResponse>
     deleteData(id: number): Promise<ApiResponse>
+    exportData(laboratoryRoomIds: number[]): Promise<void>
 }

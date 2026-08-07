@@ -26,4 +26,9 @@ export class LaboratoryEquipmentService {
     async deleteData(id: number) {
         return await this.laboratoryEquipmentRepository.deleteData(id)
     }
+
+    /** Daftar id kosong berarti mengunduh alat dari seluruh laboratorium */
+    async exportData(laboratoryRoomIds: number[] = []) {
+        return await this.laboratoryEquipmentRepository.exportData(laboratoryRoomIds)
+    }
 }
