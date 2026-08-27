@@ -1,4 +1,4 @@
-import { LoginCredentials, RegisterCredentials } from "../../domain/Auth/Auth";
+import { ForgotPasswordCredentials, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from "../../domain/Auth/Auth";
 import { IAuthRepository } from "../../domain/Auth/IAuthRepository";
 import { User } from "../../domain/User/User";
 import { ApiResponse } from "../../presentation/shared/Types";
@@ -50,6 +50,32 @@ export class AuthRepository implements IAuthRepository {
         const json = await response.json()
         if (response.ok) {
             return 
+        }
+        throw json
+    }
+
+    async forgotPassword(credentials: ForgotPasswordCredentials): Promise<string> {
+        const response = await fetchApi('/forgot-password', {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+        });
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            return json.message
+        }
+        throw json
+    }
+
+    async resetPassword(credentials: ResetPasswordCredentials): Promise<string> {
+        const response = await fetchApi('/reset-password', {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+        });
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            return json.message
         }
         throw json
     }

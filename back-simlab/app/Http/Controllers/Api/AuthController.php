@@ -3,14 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Models\Institution;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends BaseController
 {
@@ -47,6 +52,54 @@ class AuthController extends BaseController
         }
 
         return $this->sendError('Unauthorized', ['error' => 'Unauthorized'], 401);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $status = Password::sendResetLink($request->validated());
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return $this->sendResponse([], 'Tautan reset password telah dikirim ke email Anda.');
+        }
+
+        if ($status === Password::RESET_THROTTLED) {
+            return $this->sendError('Terlalu banyak permintaan', [
+                'email' => ['Anda baru saja meminta reset password. Silakan tunggu beberapa saat lagi.'],
+            ], 429);
+        }
+
+        return $this->sendError('Email tidak terdaftar', [
+            'email' => ['Email tidak terdaftar pada sistem!'],
+        ], 422);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $data = $request->validated();
+
+        $status = Password::reset(
+            [
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'token' => $data['token'],
+            ],
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => $password,
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return $this->sendResponse([], 'Password berhasil diubah. Silakan login kembali.');
+        }
+
+        return $this->sendError('Tautan reset password tidak valid', [
+            'token' => ['Tautan reset password tidak valid atau sudah kedaluwarsa. Silakan ajukan permintaan baru.'],
+        ], 422);
     }
 
     public function getCurrentUser()

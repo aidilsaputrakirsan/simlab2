@@ -95,8 +95,10 @@ export const Login: React.FC = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                             />
-                            
                         </FormGroup>
+                        <div className="flex justify-end -mt-2 text-sm">
+                            <NavLink to={'/forgot-password'} className='font-medium hover:text-blue-500'>Lupa Password?</NavLink>
+                        </div>
 
                         <Button type="submit" disabled={isLoading}>{isLoading ? 'Logging in...' : 'Login'}</Button>
                         <div className="flex gap-2 text-sm">

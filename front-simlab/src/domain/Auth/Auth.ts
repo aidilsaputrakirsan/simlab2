@@ -3,6 +3,17 @@ export interface LoginCredentials {
     password: string
 }
 
+export interface ForgotPasswordCredentials {
+    email: string
+}
+
+export interface ResetPasswordCredentials {
+    token: string,
+    email: string,
+    password: string,
+    c_password: string
+}
+
 export interface RegisterCredentials {
     name: string,
     identity_num: string,

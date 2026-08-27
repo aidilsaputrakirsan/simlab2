@@ -3,6 +3,17 @@ export interface LoginDTO {
     password: string
 }
 
+export interface ForgotPasswordDTO {
+    email: string
+}
+
+export interface ResetPasswordDTO {
+    token: string,
+    email: string,
+    password: string,
+    c_password: string
+}
+
 export interface RegisterDTO {
     name: string,
     identity_num: string,

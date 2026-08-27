@@ -1,6 +1,6 @@
 import { AuthRepository } from "@/infrastructure/auth/AuthRepository";
 import { UserView } from "../user/UserView";
-import { LoginDTO, RegisterDTO } from "./AuthDTO";
+import { ForgotPasswordDTO, LoginDTO, RegisterDTO, ResetPasswordDTO } from "./AuthDTO";
 
 export class AuthService {
     private authRepository = new AuthRepository()
@@ -17,6 +17,14 @@ export class AuthService {
 
     async register(credentials: RegisterDTO): Promise<void> {
         return await this.authRepository.register(credentials)
+    }
+
+    async forgotPassword(credentials: ForgotPasswordDTO): Promise<string> {
+        return await this.authRepository.forgotPassword(credentials)
+    }
+
+    async resetPassword(credentials: ResetPasswordDTO): Promise<string> {
+        return await this.authRepository.resetPassword(credentials)
     }
 
     async logout(): Promise<boolean> {

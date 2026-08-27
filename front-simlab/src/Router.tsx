@@ -12,6 +12,8 @@ import LaboranPage from "./presentation/pages/admin/user/laboran/LaboranPage";
 import MahasiswaPage from "./presentation/pages/admin/user/mahasiswa/MahasiswaPage";
 import PihakLuarPage from "./presentation/pages/admin/user/pihak-luar/PihakLuarPage";
 import { RegisterPage } from "./presentation/pages/RegisterPage";
+import { ForgotPasswordPage } from "./presentation/pages/ForgotPasswordPage";
+import { ResetPasswordPage } from "./presentation/pages/ResetPasswordPage";
 import LaboratoryRoomPage from "./presentation/pages/admin/laboratory-room/LaboratoryRoomPage";
 import LaboratoryEquipmentPage from "./presentation/pages/admin/laboratory-equipment/LaboratoryEquipmentPage";
 import LaboratoryEquipmentPageLanding from "./presentation/pages/landing/laboratory-equipment/LaboratoryEquipmentPage";
@@ -117,6 +119,14 @@ export const router = createBrowserRouter([
                         <RegisterPage />
                     </AuthProvider>
                 )
+            },
+            {
+                path: 'forgot-password',
+                element: <ForgotPasswordPage />
+            },
+            {
+                path: 'reset-password',
+                element: <ResetPasswordPage />
             },
         ]
     },

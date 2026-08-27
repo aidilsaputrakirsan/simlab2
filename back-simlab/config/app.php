@@ -60,6 +60,14 @@ return [
     'asset_url' => env('ASSET_URL'),
 
     /*
+    | Base URL SPA React, dipakai untuk menyusun tautan di dalam email.
+    | Di server dev/prod SPA dan API satu domain, jadi APP_URL sudah benar.
+    | FRONTEND_URL hanya perlu diisi saat keduanya beda origin (mis. local:
+    | Vite di :5173, Laravel di :8000).
+    */
+    'frontend_url' => env('FRONTEND_URL', env('APP_URL', 'http://localhost')),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
