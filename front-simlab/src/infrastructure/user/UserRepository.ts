@@ -118,6 +118,26 @@ export class UserRepository implements IUserRepository {
         throw json
     }
 
+    async searchDataForSelect(roles: userRole[], params: { search?: string, limit?: number, ids?: number[] }): Promise<ApiResponse<UserSelect[]>> {
+        const query = new URLSearchParams()
+        roles.forEach(role => query.append('roles[]', role))
+        params.ids?.forEach(id => query.append('ids[]', String(id)))
+        if (params.search) query.append('search', params.search)
+        if (params.limit) query.append('limit', String(params.limit))
+
+        const response = await fetchApi(`/users/select?${query.toString()}`, { method: 'GET' })
+
+        const json = await response.json() as ApiResponse
+        if (response.ok) {
+            const data = json.data as UserSelectAPI[]
+            return {
+                ...json,
+                data: data.map(toUserSelect)
+            }
+        }
+        throw json
+    }
+
     async toggleManager(id: number): Promise<ApiResponse<User>> {
         const response = await fetchApi(`/users/${id}/toggle-manager`, {
             method: 'PUT',

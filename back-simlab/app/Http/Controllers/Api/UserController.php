@@ -224,6 +224,22 @@ class UserController extends BaseController
                 });
             }
 
+            if ($request->filled('search')) {
+                $searchTerm = $request->search;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('name', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('identity_num', 'LIKE', "%{$searchTerm}%");
+                });
+            }
+
+            if ($request->has('ids')) {
+                $query->whereIn('id', (array) $request->ids);
+            }
+
+            if ($request->filled('limit')) {
+                $query->orderBy('name')->limit(min(max((int) $request->limit, 1), 50));
+            }
+
             $users = $query->get();
             return $this->sendResponse($users, 'Data pengguna berhasil diambil');
         } catch (\Exception $e) {

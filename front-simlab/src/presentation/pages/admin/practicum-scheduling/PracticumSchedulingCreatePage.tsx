@@ -17,12 +17,11 @@ import { DateTimePicker } from '@/presentation/components/ui/datetime-picker';
 import { usePracticumSchedulingForm } from './hooks/usePracticumSchedulingForm';
 import { PracticumModuleSelectView } from '@/application/practicum-module/PracticumModuleSelectView';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/components/ui/table';
-import { userRole } from '@/domain/User/UserRole';
 import { usePracticumScheduling } from './context/PracticumSchedulingContext';
 import { useDepedencies } from '@/presentation/contexts/useDepedencies';
 import { useLaboratoryRoomSelect } from '../laboratory-room/hooks/useLaboratoryRoomSelect';
 import { usePracticumSelect } from '../practicum/hooks/usePracticumSelect';
-import { useUserSelect } from '../user/hooks/useUserSelect';
+import { LecturerSearchCombobox } from './components/LecturerSearchCombobox';
 import ConfirmationDialog from '@/presentation/components/custom/ConfirmationDialog';
 import { RoomScheduleInfo } from '@/presentation/components/custom/RoomScheduleInfo';
 import { RoomScheduleData } from '@/domain/laboratory-room/RoomSchedule';
@@ -69,17 +68,6 @@ const PracticumSchedulingCreatePage = () => {
 
     const { laboratoryRooms } = useLaboratoryRoomSelect()
     const { practicums } = usePracticumSelect()
-    const majorId = user?.role === userRole.KepalaLabJurusan ? user?.studyProgram?.majorId : undefined
-
-    const { users: lecturers } = useUserSelect({
-        roles: [
-            userRole.Dosen,
-            userRole.KepalaLabJurusan,
-            userRole.Kooprodi,
-            userRole.KepalaLabTerpadu
-        ],
-        major_id: majorId
-    })
     const { practicumSchedulingService, laboratoryRoomService } = useDepedencies()
 
     const [practicumModules, setPracticumModules] = useState<PracticumModuleSelectView[]>([])
@@ -304,20 +292,16 @@ const PracticumSchedulingCreatePage = () => {
                                     <div className="flex flex-col gap-2">
                                         <Label htmlFor=''>Dosen Pengampu <span className="text-red-500">*</span></Label>
                                         <div>
-                                            <Combobox
-                                                options={lecturers}
-                                                value={classes.lecturer_id?.toString() || ''}
-                                                onChange={val => {
+                                            <LecturerSearchCombobox
+                                                value={classes.lecturer_id}
+                                                onChange={lecturerId => {
                                                     setFormData(prev => ({
                                                         ...prev,
                                                         classes: prev.classes.map((cls, idx) =>
-                                                            idx === cidx ? { ...cls, lecturer_id: Number(val) } : cls
+                                                            idx === cidx ? { ...cls, lecturer_id: lecturerId } : cls
                                                         )
                                                     }));
                                                 }}
-                                                placeholder="Pilih Dosen Pengampu"
-                                                optionLabelKey='name'
-                                                optionValueKey='id'
                                             />
                                             {errors[`classes.${cidx}.lecturer_id`] && (
                                                 <span className="text-xs text-red-500 mt-1">{errors[`classes.${cidx}.lecturer_id`]}</span>
