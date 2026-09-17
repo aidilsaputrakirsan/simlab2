@@ -37,7 +37,7 @@ type LecturerSearchComboboxProps = {
 export function LecturerSearchCombobox({
     value,
     onChange,
-    placeholder = "Pilih Dosen Pengampu"
+    placeholder = "Cari nama dosen pengampu"
 }: LecturerSearchComboboxProps) {
     const { userService } = useDepedencies()
     const [open, setOpen] = useState(false)
